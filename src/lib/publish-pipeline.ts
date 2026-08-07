@@ -93,6 +93,7 @@ export async function runPublishPipeline(
   onProgress?: (progress: PublishProgress) => void,
 ): Promise<PublishResult> {
   const { pageId, userId, templateId, title, slug, content } = params;
+  const extTemplate = getExternalTemplate(templateId);
 
   function report(step: PublishStep, message: string, progressPercent: number) {
     if (onProgress) {
