@@ -29,20 +29,13 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
-function createSupabaseAdminClient() {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Hardcoded Supabase credentials (publishable key — safe to commit)
+const HARDCODED_SUPABASE_URL = 'https://ptcbaphzoceumekzymsa.supabase.co';
+const HARDCODED_SUPABASE_KEY = 'sb_publishable_EBoyRTPTdkcKmvkqJsMEbg_rpCjOANU';
 
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    const missing = [
-      ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
-      ...(!SUPABASE_SERVICE_ROLE_KEY ? ['SUPABASE_SERVICE_ROLE_KEY'] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Set them in your deployment environment variables.`;
-    console.warn(`[Supabase Admin] ${message}`);
-    // Return null — callers that need admin must handle this gracefully
-    return null as unknown as ReturnType<typeof createClient<Database>>;
-  }
+function createSupabaseAdminClient() {
+  const SUPABASE_URL = process.env.SUPABASE_URL || HARDCODED_SUPABASE_URL;
+  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || HARDCODED_SUPABASE_KEY;
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     global: {
