@@ -212,7 +212,7 @@ export function FieldWidget({ field, value, onChange, defaultValue }: Props) {
 
     // Dynamically detect slot count from schema field limits or template default array
     const slotCount =
-      field.maxCount ??
+      (field as any).maxCount ??
       field.max ??
       (defaultList.length > 0 ? defaultList.length : valList.length > 0 ? valList.length : 6);
 

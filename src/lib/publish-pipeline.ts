@@ -126,11 +126,11 @@ export async function runPublishPipeline(
         id: templateId,
         name: extTemplate?.manifest.name || templateId,
         category: extTemplate?.manifest.category || "General",
-        version: extTemplate?.manifest.version || "1.0.0",
+        version: (extTemplate?.manifest as any)?.version || "1.0.0",
         defaults: (extTemplate?.defaults || {}) as any,
         schema: (extTemplate?.schema || []) as any,
         is_active: true,
-      }, { onConflict: "id" });
+      } as any, { onConflict: "id" });
     } catch (e) {
       console.warn("Template seed warning:", e);
     }
@@ -173,11 +173,11 @@ export async function runPublishPipeline(
           id: templateId,
           name: extTemplate?.manifest.name || templateId,
           category: extTemplate?.manifest.category || "General",
-          version: extTemplate?.manifest.version || "1.0.0",
+          version: (extTemplate?.manifest as any)?.version || "1.0.0",
           defaults: (extTemplate?.defaults || {}) as any,
           schema: (extTemplate?.schema || []) as any,
           is_active: true,
-        }, { onConflict: "id" });
+        } as any, { onConflict: "id" });
 
         const retryRes = await supabase.from("pages").upsert(pagePayload as any).select("id, slug").single();
         if (retryRes.error) {

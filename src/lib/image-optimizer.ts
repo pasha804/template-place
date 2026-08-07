@@ -148,7 +148,7 @@ export async function uploadToSupabaseStorage(
           file_path: uploadRes.data.path,
           mime_type: "image/webp",
           size_bytes: blob.size,
-        });
+        } as any);
       } catch {}
 
       return publicUrl;

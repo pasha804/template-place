@@ -315,7 +315,7 @@ function TemplateEditorPage() {
       className="relative flex h-screen flex-col overflow-hidden bg-[#08071a]"
       style={{ fontFamily: "'Manrope', sans-serif" }}
     >
-      <EditorTopBar onSave={doSave} onPublish={doPublish} />
+      <EditorTopBar onSave={async () => { await doSave(); }} onPublish={doPublish} />
       {/* Full-width configuration form — no sidebar, no preview */}
       <div className="flex-1 overflow-y-auto">
         <EditorFormPanel plugin={plugin} />
