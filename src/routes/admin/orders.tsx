@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { useAuthStore } from "@/store/auth";
 import {
-  useAllOrders, useApproveOrder, useRejectOrder,
+  useAllOrders, useApproveOrder, useVerifyPayment, useRejectOrder,
   useRequestChanges, useUnpublishPage, formatPKR,
 } from "@/hooks/use-orders";
 import { AdminNav } from "@/components/admin/AdminNav";
@@ -29,11 +29,12 @@ export const Route = createFileRoute("/admin/orders")({
 });
 
 const STATUS_STYLES: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  pending:   { label: "Pending",   color: "#fbbf24", bg: "rgba(251,191,36,0.12)",  border: "rgba(251,191,36,0.3)" },
-  paid:      { label: "Paid",      color: "#34d399", bg: "rgba(52,211,153,0.12)",  border: "rgba(52,211,153,0.3)" },
-  failed:    { label: "Rejected",  color: "#f87171", bg: "rgba(248,113,113,0.12)", border: "rgba(248,113,113,0.3)" },
-  refunded:  { label: "Refunded",  color: "#a78bfa", bg: "rgba(167,139,250,0.12)", border: "rgba(167,139,250,0.3)" },
-  cancelled: { label: "Cancelled", color: "#6b7280", bg: "rgba(107,114,128,0.12)", border: "rgba(107,114,128,0.3)" },
+  pending:          { label: "Pending Review",   color: "#fbbf24", bg: "rgba(251,191,36,0.12)",  border: "rgba(251,191,36,0.3)" },
+  payment_verified: { label: "Payment Verified", color: "#38bdf8", bg: "rgba(56,189,248,0.12)",  border: "rgba(56,189,248,0.3)" },
+  paid:             { label: "Published & Paid", color: "#34d399", bg: "rgba(52,211,153,0.12)",  border: "rgba(52,211,153,0.3)" },
+  failed:           { label: "Rejected",         color: "#f87171", bg: "rgba(248,113,113,0.12)", border: "rgba(248,113,113,0.3)" },
+  refunded:         { label: "Refunded",         color: "#a78bfa", bg: "rgba(167,139,250,0.12)", border: "rgba(167,139,250,0.3)" },
+  cancelled:        { label: "Cancelled",        color: "#6b7280", bg: "rgba(107,114,128,0.12)", border: "rgba(107,114,128,0.3)" },
 };
 
 type OrderRow = {
@@ -63,7 +64,7 @@ function AdminOrdersPage() {
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [showChangeForm, setShowChangeForm] = useState(false);
 
-  const { data: orders = [], isLoading } = useAllOrders(statusFilter !== "all" ? statusFilter : undefined);
+  const verifyPayment = useVerifyPayment();
   const approve       = useApproveOrder();
   const reject        = useRejectOrder();
   const requestChange = useRequestChanges();
@@ -73,6 +74,15 @@ function AdminOrdersPage() {
     if (!user)    { navigate({ to: "/auth/login" }); return; }
     if (!isAdmin) { navigate({ to: "/dashboard" }); return; }
   }, [user, isAdmin, navigate]);
+
+  async function handleVerifyPayment(order: OrderRow) {
+    try {
+      await verifyPayment.mutateAsync({ orderId: order.id });
+      toast.success("Payment proof verified! Ready to publish live.");
+    } catch (err: any) {
+      toast.error(`Failed to verify payment: ${err?.message || "Unknown error"}`);
+    }
+  }
 
   async function handleApprove(order: OrderRow) {
     if (!order.page_id) { toast.error("No page linked to this order"); return; }
@@ -104,11 +114,11 @@ function AdminOrdersPage() {
   }
 
   const statusTabs: { label: string; value: OrderStatus | "all" }[] = [
-    { label: "All",       value: "all" },
-    { label: "Pending",   value: "pending" },
-    { label: "Paid",      value: "paid" },
-    { label: "Rejected",  value: "failed" },
-    { label: "Cancelled", value: "cancelled" },
+    { label: "All",              value: "all" },
+    { label: "Pending Review",   value: "pending" as OrderStatus },
+    { label: "Payment Verified", value: "payment_verified" as OrderStatus },
+    { label: "Published & Paid", value: "paid" as OrderStatus },
+    { label: "Rejected",         value: "failed" as OrderStatus },
   ];
 
   if (!isAdmin) return null;
@@ -333,14 +343,29 @@ function AdminOrdersPage() {
                   </motion.div>
                 )}
 
-                {/* Action buttons */}
+                {/* Action buttons — 3-step Pipeline */}
                 {selected.status === "pending" && (
+                  <div className="flex flex-wrap gap-3 border-t border-white/[0.06] pt-5">
+                    <button type="button" onClick={() => handleVerifyPayment(selected)}
+                      disabled={verifyPayment.isPending}
+                      className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(56,189,248,0.3)] hover:scale-[1.02] transition-all disabled:opacity-50">
+                      {verifyPayment.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+                      Step 1: Verify Payment
+                    </button>
+                    <button type="button" onClick={() => { setShowRejectForm(true); setShowChangeForm(false); }}
+                      className="flex items-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/15 transition-colors">
+                      <XCircle className="h-4 w-4" /> Reject Order
+                    </button>
+                  </div>
+                )}
+
+                {(selected.status as string) === "payment_verified" && (
                   <div className="flex flex-wrap gap-3 border-t border-white/[0.06] pt-5">
                     <button type="button" onClick={() => handleApprove(selected)}
                       disabled={approve.isPending}
                       className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-3 text-sm font-bold text-white shadow-[0_0_20px_rgba(52,211,153,0.3)] hover:scale-[1.02] transition-all disabled:opacity-50">
                       {approve.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-                      Approve & Publish
+                      Step 2: Publish Live
                     </button>
                     <button type="button" onClick={() => { setShowChangeForm(true); setShowRejectForm(false); }}
                       className="flex items-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-3 text-sm font-semibold text-amber-400 hover:bg-amber-500/15 transition-colors">
@@ -348,7 +373,7 @@ function AdminOrdersPage() {
                     </button>
                     <button type="button" onClick={() => { setShowRejectForm(true); setShowChangeForm(false); }}
                       className="flex items-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/15 transition-colors">
-                      <XCircle className="h-4 w-4" /> Reject
+                      <XCircle className="h-4 w-4" /> Reject Order
                     </button>
                   </div>
                 )}
@@ -359,8 +384,9 @@ function AdminOrdersPage() {
                       await unpublish.mutateAsync(selected.page_id!);
                       toast.success("Page unpublished");
                       setSelected(null);
-                    }} className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white/60 hover:text-white transition-colors">
-                      Unpublish
+                    }}
+                      className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/20 transition-colors">
+                      Unpublish Website
                     </button>
                   </div>
                 )}

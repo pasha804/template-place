@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStore } from "@/store/auth";
-import { useApproveOrder, useRejectOrder, useRequestChanges, formatPKR, usePendingWebsites } from "@/hooks/use-orders";
+import { useApproveOrder, useVerifyPayment, useRejectOrder, useRequestChanges, formatPKR, usePendingWebsites } from "@/hooks/use-orders";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { getExternalTemplate } from "@/engine/registry";
 import type { Database } from "@/integrations/supabase/types";
@@ -35,9 +35,20 @@ function AdminPendingWebsitesPage() {
   const { user, isAdmin } = useAuthStore();
   const { data: pendingItems = [], isLoading, refetch } = usePendingWebsites();
 
+  const verifyPayment = useVerifyPayment();
   const approve = useApproveOrder();
   const reject = useRejectOrder();
   const requestChange = useRequestChanges();
+
+  async function handleVerifyPayment(orderId: string) {
+    try {
+      await verifyPayment.mutateAsync({ orderId });
+      toast.success("Payment screenshot verified! Ready to publish live.");
+      refetch();
+    } catch (err: any) {
+      toast.error(`Verification failed: ${err?.message || "Unknown error"}`);
+    }
+  }
 
   const [previewItem, setPreviewItem] = useState<{ page: PageRow; order: OrderRow | null } | null>(null);
   const [screenshotModal, setScreenshotModal] = useState<string | null>(null);
@@ -200,14 +211,27 @@ function AdminPendingWebsitesPage() {
                           Preview Website
                         </button>
 
-                        <button
-                          type="button"
-                          onClick={() => handlePublish(order?.id, page.id)}
-                          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-all"
-                        >
-                          <CheckCircle2 className="h-4 w-4" />
-                          Publish Live
-                        </button>
+                        {order && order.status === "pending" ? (
+                          <button
+                            type="button"
+                            onClick={() => handleVerifyPayment(order.id)}
+                            disabled={verifyPayment.isPending}
+                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-sky-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
+                          >
+                            <CheckCircle2 className="h-4 w-4" />
+                            Verify Payment
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handlePublish(order?.id, page.id)}
+                            disabled={approve.isPending}
+                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
+                          >
+                            <CheckCircle2 className="h-4 w-4" />
+                            Publish Live
+                          </button>
+                        )}
 
                         {order && (
                           <button

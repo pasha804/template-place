@@ -280,7 +280,25 @@ export function useMarkWhatsappSent() {
   });
 }
 
-/* ── Admin: approve + publish ── */
+/* ── Admin: verify payment proof (step 2) ── */
+export function useVerifyPayment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ orderId }: { orderId: string }) => {
+      const { error } = await (supabase.from("orders") as ReturnType<typeof supabase.from>)
+        .update({ status: "payment_verified" })
+        .eq("id", orderId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-orders"] });
+      qc.invalidateQueries({ queryKey: ["pending-websites"] });
+      qc.invalidateQueries({ queryKey: ["admin-stats"] });
+    },
+  });
+}
+
+/* ── Admin: approve + publish (step 3) ── */
 export function useApproveOrder() {
   const qc = useQueryClient();
   return useMutation({
@@ -434,9 +452,10 @@ export function useAdminStats() {
       return {
         totalOrders:   o.length,
         pendingOrders: o.filter(x => x.status === "pending").length,
+        verifiedOrders: o.filter(x => (x.status as string) === "payment_verified").length,
         paidOrders:    o.filter(x => x.status === "paid").length,
         failedOrders:  o.filter(x => x.status === "failed").length,
-        totalRevenuePaisa: o.filter(x => x.status === "paid").reduce((s, x) => s + (x.total_cents ?? 0), 0),
+        totalRevenuePaisa: o.filter(x => x.status === "paid" || (x.status as string) === "payment_verified").reduce((s, x) => s + (x.total_cents ?? 0), 0),
         publishedPages: p.filter(x => x.status === "published").length,
         pendingPages:   p.filter(x => x.status === "pending_approval").length,
         totalUsers:    (users.data ?? []).length,
