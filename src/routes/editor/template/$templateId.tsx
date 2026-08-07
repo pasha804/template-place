@@ -139,7 +139,13 @@ function TemplateEditorPage() {
         }
 
         // Final fallback: LocalStorage page draft if Supabase insert fails completely
-        const finalPageId = (data?.id as string) || `draft-${Date.now()}`;
+        const fallbackUuid = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+              const r = (Math.random() * 16) | 0;
+              return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+            });
+        const finalPageId = (data?.id as string) || fallbackUuid;
         const finalSlug = (data?.slug as string) || slug;
         const pageObj = {
           id: finalPageId,

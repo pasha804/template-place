@@ -72,6 +72,11 @@ export async function validatePageBeforePublish(
   return { valid: true };
 }
 
+export function isValidUUID(str: string | null | undefined): boolean {
+  if (!str) return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+}
+
 /**
  * Executes an atomic transactional publish pipeline.
  * If any step fails, all progress is safely stopped and marked as failed.
@@ -113,8 +118,10 @@ export async function runPublishPipeline(
 
     // ── STEP 4: SAVING CONTENT ──
     report("SAVING_CONTENT", "Saving content and template schema...", 65);
-    const isDraftId = pageId.startsWith("draft-");
-    const dbPageId = isDraftId ? undefined : pageId;
+
+    // If pageId is a draft string or invalid UUID format, pass undefined to let Supabase assign a real UUID
+    const isInvalidUuid = !isValidUUID(pageId);
+    const dbPageId = isInvalidUuid ? undefined : pageId;
 
     const pagePayload = {
       id: dbPageId,
@@ -141,7 +148,10 @@ export async function runPublishPipeline(
       }
     }
 
-    const resolvedPageId = upsertRes.data?.id || pageId;
+    const resolvedPageId = upsertRes.data?.id || (isValidUUID(pageId) ? pageId : null);
+    if (!resolvedPageId) {
+      throw new Error("Failed to resolve a valid database page ID.");
+    }
 
     // ── STEP 5: PUBLISHING DATABASE ──
     report("PUBLISHING_DATABASE", "Publishing page record live to Supabase...", 85);

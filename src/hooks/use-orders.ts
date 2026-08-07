@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { runPublishPipeline } from "@/lib/publish-pipeline";
+import { runPublishPipeline, isValidUUID } from "@/lib/publish-pipeline";
 
 type Order = Database["public"]["Tables"]["orders"]["Row"] & {
   payment_method?: string;
@@ -241,10 +241,12 @@ export function useApproveOrder() {
     mutationFn: async ({ orderId, pageId }: { orderId: string; pageId: string }) => {
       // 1. Fetch page data from Supabase or localStorage fallback
       let pageRecord: Database["public"]["Tables"]["pages"]["Row"] | null = null;
-      try {
-        const { data } = await supabase.from("pages").select("*").eq("id", pageId).maybeSingle();
-        if (data) pageRecord = data;
-      } catch {}
+      if (isValidUUID(pageId)) {
+        try {
+          const { data } = await supabase.from("pages").select("*").eq("id", pageId).maybeSingle();
+          if (data) pageRecord = data;
+        } catch {}
+      }
 
       if (!pageRecord && typeof window !== "undefined") {
         const cached = localStorage.getItem(`page_${pageId}`);
