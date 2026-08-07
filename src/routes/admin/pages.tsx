@@ -87,12 +87,10 @@ function AdminPagesPage() {
   });
 
   const statusTabs = [
-    { label: "All",             value: "all" as const },
-    { label: "Pending Approval",value: "pending_approval" as PageStatus },
-    { label: "Published",       value: "published"        as PageStatus },
-    { label: "Draft",           value: "draft"            as PageStatus },
-    { label: "Expired",         value: "expired"          as PageStatus },
-    { label: "Archived",        value: "archived"         as PageStatus },
+    { label: "Published (Live)", value: "published" as PageStatus },
+    { label: "All Pages",       value: "all"       as const },
+    { label: "Archived",        value: "archived"  as PageStatus },
+    { label: "Expired",         value: "expired"   as PageStatus },
   ];
 
   if (!isAdmin) return null;
@@ -102,7 +100,10 @@ function AdminPagesPage() {
       <AdminNav />
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-black text-white">Pages</h1>
+          <div>
+            <h1 className="text-2xl font-black text-white">Published Websites</h1>
+            <p className="mt-1 text-xs text-white/50">Manage live published dedication pages and public access links.</p>
+          </div>
           <span className="rounded-full bg-white/[0.06] px-3 py-1 text-xs text-white/40">
             {pages.length} pages
           </span>
@@ -128,14 +129,14 @@ function AdminPagesPage() {
         ) : pages.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-white/[0.07] py-20 text-center">
             <AlertCircle className="mb-3 h-10 w-10 text-white/20" />
-            <p className="text-white/50">No pages found</p>
+            <p className="text-white/50">No published pages found</p>
           </div>
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-white/[0.07]">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/[0.06] bg-white/[0.03]">
-                  {["Title", "User", "Slug", "Views", "Status", "Updated", "Actions"].map(h => (
+                  {["Title & Template", "Public Slug", "Views", "Status", "Published Date", "Actions"].map(h => (
                     <th key={h} className="px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-widest text-white/30">{h}</th>
                   ))}
                 </tr>
@@ -144,26 +145,26 @@ function AdminPagesPage() {
                 {pages.map((page, i) => {
                   const st = STATUS_STYLES[page.status] ?? STATUS_STYLES.draft;
                   const liveUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/p/${page.slug}`;
+                  const templateId = page.template_id || (page.content as Record<string, unknown>)?._template_id as string || "anniversary-galaxy";
+                  
                   return (
                     <motion.tr key={page.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.02 }}
                       className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
                       <td className="px-4 py-3">
-                        <span className="font-medium text-white/80 truncate max-w-[180px] block">{page.title}</span>
-                      </td>
-                      <td className="px-4 py-3 text-white/40 text-xs font-mono truncate max-w-[120px]">
-                        {page.user_id.slice(0, 12)}…
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-white/90 truncate max-w-[220px]">{page.title}</span>
+                          <span className="text-[11px] text-violet-400 font-mono">{templateId}</span>
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs text-white/40">/p/{page.slug}</span>
-                          {page.status === "published" && (
-                            <button type="button"
-                              onClick={() => { navigator.clipboard.writeText(liveUrl); toast.success("Link copied!"); }}
-                              className="shrink-0 rounded-lg bg-violet-500/15 border border-violet-500/30 px-2 py-0.5 text-[10px] font-semibold text-violet-400 hover:bg-violet-500/25 transition-colors">
-                              Copy link
-                            </button>
-                          )}
+                          <span className="font-mono text-xs text-white/50">/p/{page.slug}</span>
+                          <button type="button"
+                            onClick={() => { navigator.clipboard.writeText(liveUrl); toast.success("Link copied!"); }}
+                            className="shrink-0 rounded-lg bg-violet-500/15 border border-violet-500/30 px-2 py-0.5 text-[10px] font-semibold text-violet-400 hover:bg-violet-500/25 transition-colors">
+                            Copy link
+                          </button>
                         </div>
                       </td>
                       <td className="px-4 py-3 text-white/50 text-xs">{page.view_count.toLocaleString()}</td>
@@ -173,42 +174,42 @@ function AdminPagesPage() {
                           {page.status.replace("_", " ")}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-white/30 text-xs">
-                        {format(new Date(page.updated_at), "MMM d")}
+                      <td className="px-4 py-3 text-white/40 text-xs">
+                        {page.published_at ? format(new Date(page.published_at), "MMM d, yyyy") : format(new Date(page.updated_at), "MMM d, yyyy")}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1">
-                          {page.status === "published" && (
-                            <a href={liveUrl} target="_blank" rel="noopener noreferrer"
-                              className="flex h-7 w-7 items-center justify-center rounded-lg text-white/40 hover:bg-white/[0.06] hover:text-white transition-colors">
-                              <ExternalLink className="h-3.5 w-3.5" />
-                            </a>
-                          )}
+                        <div className="flex items-center gap-1.5">
+                          {/* Live Preview Button */}
+                          <a href={liveUrl} target="_blank" rel="noopener noreferrer"
+                            className="flex h-8 px-2.5 items-center gap-1 rounded-lg bg-white/[0.06] border border-white/10 text-xs text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                            title="Preview Live Website">
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            <span>Preview</span>
+                          </a>
+
+                          {/* Edit Button */}
+                          <button type="button"
+                            onClick={() => navigate({ to: "/editor/template/$templateId", params: { templateId }, search: { pageId: page.id } })}
+                            className="flex h-8 px-2.5 items-center gap-1 rounded-lg bg-violet-600/20 border border-violet-500/30 text-xs text-violet-300 hover:bg-violet-600/30 transition-colors">
+                            Edit
+                          </button>
+
+                          {/* Unpublish Button */}
                           {page.status === "published" && (
                             <button type="button"
                               onClick={() => updatePageStatus.mutate({ pageId: page.id, status: "archived" })}
-                              className="flex h-7 w-7 items-center justify-center rounded-lg text-white/40 hover:bg-amber-500/10 hover:text-amber-400 transition-colors"
-                              title="Unpublish">
+                              className="flex h-8 px-2.5 items-center gap-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-xs text-amber-400 hover:bg-amber-500/25 transition-colors"
+                              title="Unpublish Website">
                               <EyeOff className="h-3.5 w-3.5" />
+                              <span>Unpublish</span>
                             </button>
                           )}
-                          {page.status === "pending_approval" && (
-                            <>
-                              <button type="button"
-                                onClick={() => updatePageStatus.mutate({ pageId: page.id, status: "published" })}
-                                className="rounded-lg bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 text-[10px] font-bold text-emerald-400 hover:bg-emerald-500/30 transition-colors">
-                                Publish
-                              </button>
-                              <button type="button"
-                                onClick={() => updatePageStatus.mutate({ pageId: page.id, status: "draft" })}
-                                className="rounded-lg border border-white/[0.08] px-2.5 py-1 text-[10px] font-medium text-white/50 hover:text-white transition-colors">
-                                Revert
-                              </button>
-                            </>
-                          )}
+
+                          {/* Delete Button */}
                           <button type="button"
-                            onClick={() => { if (confirm("Delete this page?")) deletePage.mutate(page.id); }}
-                            className="flex h-7 w-7 items-center justify-center rounded-lg text-white/40 hover:bg-red-500/10 hover:text-red-400 transition-colors">
+                            onClick={() => { if (confirm("Are you sure you want to delete this published page?")) deletePage.mutate(page.id); }}
+                            className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+                            title="Delete Page">
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
                         </div>

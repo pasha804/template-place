@@ -75,19 +75,65 @@ export function useOrder(orderId: string | undefined) {
   });
 }
 
-/* ── Admin: all orders ── */
+/* ── Admin: all orders with Realtime Sync ── */
 export function useAllOrders(statusFilter?: OrderStatus) {
+  const qc = useQueryClient();
+
+  useEffect(() => {
+    // Realtime Supabase Postgres channel for instant order updates
+    const channel = supabase
+      .channel("admin-orders-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders" },
+        () => {
+          qc.invalidateQueries({ queryKey: ["admin-orders"] });
+          qc.invalidateQueries({ queryKey: ["pending-websites"] });
+          qc.invalidateQueries({ queryKey: ["admin-stats"] });
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [qc]);
+
   return useQuery({
     queryKey: ["admin-orders", statusFilter],
     queryFn: async () => {
-      let q = supabase
-        .from("orders")
-        .select("*, order_items(*)")
-        .order("created_at", { ascending: false });
-      if (statusFilter) q = q.eq("status", statusFilter);
-      const { data, error } = await q;
-      if (error) throw error;
-      return data as Order[];
+      let ordersList: Order[] = [];
+
+      try {
+        let q = supabase
+          .from("orders")
+          .select("*, order_items(*)")
+          .order("created_at", { ascending: false });
+        if (statusFilter) q = q.eq("status", statusFilter);
+        const { data, error } = await q;
+        if (!error && data) {
+          ordersList = data as Order[];
+        }
+      } catch (err) {
+        console.warn("[Orders Fetch Join Warning]:", err);
+      }
+
+      // Fallback query without foreign key join if main join returned empty/error
+      if (ordersList.length === 0) {
+        try {
+          let q2 = supabase
+            .from("orders")
+            .select("*")
+            .order("created_at", { ascending: false });
+          if (statusFilter) q2 = q2.eq("status", statusFilter);
+          const { data: data2 } = await q2;
+          if (data2) {
+            ordersList = data2 as Order[];
+          }
+        } catch {}
+      }
+
+      return ordersList;
     },
   });
 }

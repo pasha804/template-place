@@ -55,15 +55,10 @@ function AdminPendingWebsitesPage() {
         const res = await approve.mutateAsync({ orderId, pageId });
         toast.success(`Published successfully! Live at /p/${res.slug}`);
       } else {
-        // Fallback if no order record exists yet
-        const { data, error } = await supabase
-          .from("pages")
-          .update({ status: "published", is_public: true, published_at: new Date().toISOString() })
-          .eq("id", pageId)
-          .select("slug")
-          .single();
-        if (error) throw error;
-        toast.success(`Published successfully! Live at /p/${data.slug}`);
+        // Fallback if no order record exists yet using robust publish pipeline
+        const pageItem = pendingItems.find(x => x.page.id === pageId)?.page;
+        const res = await approve.mutateAsync({ orderId: "manual-approval", pageId });
+        toast.success(`Published successfully! Live at /p/${res.slug}`);
       }
       refetch();
       setPreviewItem(null);
