@@ -7,7 +7,7 @@ import { Upload, X, Plus, RefreshCw, Loader2, Image as ImageIcon, Trash2 } from 
 import { toast } from "sonner";
 import type { FieldDef } from "@/engine/types";
 import { cn } from "@/lib/utils";
-import { compressImage, validateImageFile } from "@/lib/image-optimizer";
+import { compressImage, validateImageFile, uploadToSupabaseStorage } from "@/lib/image-optimizer";
 
 interface Props {
   field: FieldDef;
@@ -392,12 +392,17 @@ function MediaUploadWidget({ field, value, onChange }: { field: FieldDef; value:
   const inputRef = useRef<HTMLInputElement>(null);
   const isImage = field.kind === "image" || field.kind === "gif";
 
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => onChange(reader.result as string);
-    reader.readAsDataURL(file);
+    try {
+      const url = await uploadToSupabaseStorage(file, { bucket: "template-assets" });
+      onChange(url);
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => onChange(reader.result as string);
+      reader.readAsDataURL(file);
+    }
   }
 
   const accept =
@@ -487,8 +492,8 @@ function ImageSlotTile({
 
     setLoading(true);
     try {
-      const compressedUrl = await compressImage(file);
-      onUpdate(compressedUrl);
+      const uploadedUrl = await uploadToSupabaseStorage(file, { bucket: "template-assets" });
+      onUpdate(uploadedUrl);
       toast.success(`Photo #${index + 1} updated`);
     } catch (err: any) {
       toast.error(err?.message || "Failed to process image.");

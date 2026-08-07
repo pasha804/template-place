@@ -98,3 +98,64 @@ export async function compressImage(file: File, options: CompressionOptions = {}
     reader.readAsDataURL(file);
   });
 }
+
+/**
+ * Uploads an image file or Data URL to Supabase Storage.
+ * Falls back gracefully to compressed Data URL if Storage bucket is not available.
+ */
+export async function uploadToSupabaseStorage(
+  fileOrDataUrl: File | string,
+  options: { bucket?: string; folder?: string; pageId?: string } = {},
+): Promise<string> {
+  const { supabase } = await import("@/integrations/supabase/client");
+  const bucket = options.bucket || "template-assets";
+  const folder = options.folder || "uploads";
+
+  let compressedDataUrl = typeof fileOrDataUrl === "string" ? fileOrDataUrl : "";
+
+  if (typeof fileOrDataUrl !== "string") {
+    compressedDataUrl = await compressImage(fileOrDataUrl);
+  }
+
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData?.user?.id;
+
+    if (!userId) {
+      return compressedDataUrl;
+    }
+
+    // Convert data URL to Blob
+    const res = await fetch(compressedDataUrl);
+    const blob = await res.blob();
+    const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+
+    const uploadRes = await supabase.storage.from(bucket).upload(filename, blob, {
+      contentType: "image/webp",
+      upsert: true,
+    });
+
+    if (uploadRes.data?.path) {
+      const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(uploadRes.data.path);
+      const publicUrl = publicUrlData?.publicUrl || compressedDataUrl;
+
+      // Register asset record in public.storage_objects metadata table
+      try {
+        await supabase.from("storage_objects").insert({
+          user_id: userId,
+          page_id: options.pageId || null,
+          bucket_name: bucket,
+          file_path: uploadRes.data.path,
+          mime_type: "image/webp",
+          size_bytes: blob.size,
+        });
+      } catch {}
+
+      return publicUrl;
+    }
+  } catch (err) {
+    console.warn("[Supabase Storage] Fallback to data URL:", err);
+  }
+
+  return compressedDataUrl;
+}
