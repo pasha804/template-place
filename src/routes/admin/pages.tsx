@@ -68,6 +68,9 @@ function AdminPagesPage() {
       qc.invalidateQueries({ queryKey: ["admin-pages"] });
       toast.success("Page updated");
     },
+    onError: (err: any) => {
+      toast.error(`Failed to update status: ${err?.message || "Unknown error"}`);
+    },
   });
 
   const deletePage = useMutation({

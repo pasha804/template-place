@@ -2,21 +2,24 @@
  * FieldWidget — renders the right input control for any FieldDef.
  * Generic: works for every external template, no template-specific logic.
  */
-import { useRef } from "react";
-import { Upload, X, Plus, GripVertical, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { Upload, X, Plus, RefreshCw, Loader2, Image as ImageIcon, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import type { FieldDef } from "@/engine/types";
 import { cn } from "@/lib/utils";
+import { compressImage, validateImageFile } from "@/lib/image-optimizer";
 
 interface Props {
   field: FieldDef;
   value: unknown;
   onChange: (value: unknown) => void;
+  defaultValue?: unknown;
 }
 
 const inputCls =
   "w-full rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2.5 text-sm text-white/90 outline-none transition-all focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/15 placeholder:text-white/25";
 
-export function FieldWidget({ field, value, onChange }: Props) {
+export function FieldWidget({ field, value, onChange, defaultValue }: Props) {
   const { kind } = field;
 
   /* ── text / pin ── */
@@ -202,32 +205,44 @@ export function FieldWidget({ field, value, onChange }: Props) {
     );
   }
 
-  /* ── list-image ── */
+  /* ── list-image (Dynamic Schema-Driven Fixed Slot Grid) ── */
   if (kind === "list-image") {
-    const list = (value as string[]) ?? [];
+    const defaultList = Array.isArray(defaultValue) ? (defaultValue as string[]) : [];
+    const valList = Array.isArray(value) ? (value as string[]) : [];
+
+    // Dynamically detect slot count from schema field limits or template default array
+    const slotCount =
+      field.maxCount ??
+      field.max ??
+      (defaultList.length > 0 ? defaultList.length : valList.length > 0 ? valList.length : 6);
+
+    // Normalize array to exact slotCount length
+    const slots: string[] = Array.from({ length: slotCount }, (_, i) => {
+      if (typeof valList[i] === "string") return valList[i];
+      if (typeof defaultList[i] === "string") return defaultList[i];
+      return "";
+    });
+
     return (
       <div className="space-y-2">
         <div className="grid grid-cols-3 gap-2">
-          {list.map((src, i) => (
-            <div key={i} className="relative group aspect-square overflow-hidden rounded-xl border border-white/10">
-              <img src={src} alt="" className="w-full h-full object-cover" />
-              <button
-                type="button"
-                onClick={() => onChange(list.filter((_, j) => j !== i))}
-                className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <X className="h-3 w-3" />
-              </button>
-              <div className="absolute bottom-0 left-0 right-0 text-center text-[9px] bg-black/50 text-white/50 py-0.5">
-                {i + 1}
-              </div>
-            </div>
+          {slots.map((src, i) => (
+            <ImageSlotTile
+              key={i}
+              index={i}
+              src={src}
+              onUpdate={(newUrl) => {
+                const next = [...slots];
+                next[i] = newUrl;
+                onChange(next);
+              }}
+              onRemove={() => {
+                const next = [...slots];
+                next[i] = "";
+                onChange(next);
+              }}
+            />
           ))}
-          <UploadButton
-            accept="image/*"
-            label="Add photo"
-            onUpload={(url) => onChange([...list, url])}
-          />
         </div>
         {field.help && <p className="text-[10px] text-white/35">{field.help}</p>}
       </div>
@@ -447,27 +462,125 @@ function MediaUploadWidget({ field, value, onChange }: { field: FieldDef; value:
   );
 }
 
-/* ── Upload button (used inside list-image grid) ── */
-function UploadButton({ accept, label, onUpload }: { accept: string; label: string; onUpload: (url: string) => void }) {
-  const ref = useRef<HTMLInputElement>(null);
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => onUpload(reader.result as string);
-    reader.readAsDataURL(file);
+/* ── ImageSlotTile (Fixed Slot Grid Item) ── */
+function ImageSlotTile({
+  index,
+  src,
+  onUpdate,
+  onRemove,
+}: {
+  index: number;
+  src: string;
+  onUpdate: (url: string) => void;
+  onRemove: () => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+
+  async function processAndUpload(file: File) {
+    const check = validateImageFile(file);
+    if (!check.valid) {
+      toast.error(check.error || "Invalid file");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const compressedUrl = await compressImage(file);
+      onUpdate(compressedUrl);
+      toast.success(`Photo #${index + 1} updated`);
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to process image.");
+    } finally {
+      setLoading(false);
+    }
   }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) processAndUpload(file);
+    e.target.value = "";
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processAndUpload(file);
+  }
+
+  const hasImage = Boolean(src && src.trim());
+
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => ref.current?.click()}
-        className="aspect-square flex flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-white/15 text-white/30 hover:border-violet-500/40 hover:text-white/60 transition-colors"
-      >
-        <Plus className="h-5 w-5" />
-        <span className="text-[9px]">{label}</span>
-      </button>
-      <input ref={ref} type="file" accept={accept} className="hidden" onChange={handleFile} />
-    </>
+    <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragOver(true);
+      }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={handleDrop}
+      className={cn(
+        "relative group aspect-square overflow-hidden rounded-xl border transition-all flex flex-col items-center justify-center text-center select-none",
+        dragOver ? "border-violet-500 bg-violet-500/20 scale-[1.02]" : "border-white/10 bg-white/[0.03]",
+        !hasImage && "border-dashed hover:border-violet-500/40 hover:bg-white/[0.05]",
+      )}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
+      {loading && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-white">
+          <Loader2 className="h-5 w-5 animate-spin text-violet-400 mb-1" />
+          <span className="text-[9px] text-white/70">Optimizing...</span>
+        </div>
+      )}
+
+      {hasImage ? (
+        <>
+          <img src={src} alt={`Slot #${index + 1}`} className="w-full h-full object-cover" />
+
+          {/* Slot Badge */}
+          <div className="absolute top-1 left-1 rounded-md bg-black/70 px-1.5 py-0.5 text-[9px] font-bold text-white/80">
+            #{index + 1}
+          </div>
+
+          {/* Action Overlay */}
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 p-1">
+            <button
+              type="button"
+              title="Replace Image"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-600/90 text-white hover:bg-violet-500 transition-colors shadow"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              title="Remove Image"
+              onClick={onRemove}
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-600/90 text-white hover:bg-red-500 transition-colors shadow"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="flex h-full w-full flex-col items-center justify-center gap-1 p-2 text-white/40 hover:text-white/80 transition-colors"
+        >
+          <ImageIcon className="h-5 w-5 text-white/30 group-hover:text-violet-400 transition-colors" />
+          <span className="text-[9px] font-semibold">Slot #{index + 1}</span>
+          <span className="text-[8px] text-white/25">Upload / Drop</span>
+        </button>
+      )}
+    </div>
   );
 }

@@ -157,6 +157,7 @@ export function EditorFormPanel({ plugin }: Props) {
                           <FieldWidget
                             field={field}
                             value={config[field.key]}
+                            defaultValue={plugin?.defaults?.[field.key]}
                             onChange={(v) => setField(field.key, v)}
                           />
                         </div>
@@ -218,6 +219,7 @@ export function EditorFormPanel({ plugin }: Props) {
                         <FieldWidget
                           field={field}
                           value={config[field.key]}
+                          defaultValue={plugin?.defaults?.[field.key]}
                           onChange={(v) => setField(field.key, v)}
                         />
                       </div>

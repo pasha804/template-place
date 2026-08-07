@@ -80,7 +80,9 @@ function AdminOrdersPage() {
       const result = await approve.mutateAsync({ orderId: order.id, pageId: order.page_id });
       toast.success(`Published at /p/${result.slug}`);
       setSelected(null);
-    } catch { toast.error("Failed to approve order"); }
+    } catch (err: any) {
+      toast.error(`Failed to approve order: ${err?.message || "Unknown error"}`);
+    }
   }
 
   async function handleReject(order: OrderRow) {

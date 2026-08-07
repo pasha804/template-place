@@ -67,8 +67,8 @@ function AdminPendingWebsitesPage() {
       }
       refetch();
       setPreviewItem(null);
-    } catch {
-      toast.error("Failed to publish website");
+    } catch (err: any) {
+      toast.error(`Publishing failed: ${err?.message || "Unknown error"}`);
     }
   }
 

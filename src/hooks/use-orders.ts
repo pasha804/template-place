@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { runPublishPipeline } from "@/lib/publish-pipeline";
 
 type Order = Database["public"]["Tables"]["orders"]["Row"] & {
   payment_method?: string;
@@ -238,42 +239,67 @@ export function useApproveOrder() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ orderId, pageId }: { orderId: string; pageId: string }) => {
-      // 1. Mark order paid
+      // 1. Fetch page data from Supabase or localStorage fallback
+      let pageRecord: Database["public"]["Tables"]["pages"]["Row"] | null = null;
+      try {
+        const { data } = await supabase.from("pages").select("*").eq("id", pageId).maybeSingle();
+        if (data) pageRecord = data;
+      } catch {}
+
+      if (!pageRecord && typeof window !== "undefined") {
+        const cached = localStorage.getItem(`page_${pageId}`);
+        if (cached) {
+          try { pageRecord = JSON.parse(cached); } catch {}
+        }
+      }
+
+      if (!pageRecord) {
+        throw new Error(`Page record #${pageId} not found in database or local backup.`);
+      }
+
+      const userId = pageRecord.user_id;
+      const templateId = pageRecord.template_id || (pageRecord.content as Record<string, unknown>)?._template_id as string || "anniversary-galaxy";
+      const title = pageRecord.title || "Untitled Dedicated Website";
+      const slug = pageRecord.slug || pageId;
+      const content = (pageRecord.content as Record<string, unknown>) || {};
+
+      // 2. Run Atomic Publish Pipeline
+      const pubResult = await runPublishPipeline({
+        pageId,
+        userId,
+        templateId,
+        title,
+        slug,
+        content,
+      });
+
+      if (!pubResult.success) {
+        throw new Error(pubResult.error || "Failed to publish page.");
+      }
+
+      // 3. Mark order as paid
       try {
         await (supabase.from("orders") as ReturnType<typeof supabase.from>)
           .update({ status: "paid", paid_at: new Date().toISOString() })
           .eq("id", orderId);
       } catch {}
 
-      // 2. Publish the page in Supabase
-      let slug = pageId;
-      try {
-        const { data, error } = await supabase
-          .from("pages")
-          .update({ status: "published" as Database["public"]["Enums"]["page_status"], published_at: new Date().toISOString(), is_public: true })
-          .eq("id", pageId)
-          .select("slug")
-          .single();
-
-        if (!error && data) slug = data.slug;
-      } catch {}
-
-      // 3. Update localStorage backup
+      // 4. Backup localStorage
       if (typeof window !== "undefined") {
-        const cached = localStorage.getItem(`page_${pageId}`);
-        if (cached) {
-          try {
+        try {
+          const cached = localStorage.getItem(`page_${pubResult.pageId}`);
+          if (cached) {
             const parsed = JSON.parse(cached);
             parsed.status = "published";
             parsed.is_public = true;
             parsed.published_at = new Date().toISOString();
-            slug = parsed.slug || slug;
-            localStorage.setItem(`page_${pageId}`, JSON.stringify(parsed));
-          } catch {}
-        }
+            parsed.slug = pubResult.slug;
+            localStorage.setItem(`page_${pubResult.pageId}`, JSON.stringify(parsed));
+          }
+        } catch {}
       }
 
-      return { slug };
+      return { slug: pubResult.slug, pageId: pubResult.pageId };
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-orders"] });
