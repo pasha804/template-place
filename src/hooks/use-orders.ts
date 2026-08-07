@@ -102,6 +102,7 @@ export function useAllOrders(statusFilter?: OrderStatus) {
 
   return useQuery({
     queryKey: ["admin-orders", statusFilter],
+    refetchInterval: 10000, // Auto refresh every 10s
     queryFn: async () => {
       let ordersList: Order[] = [];
 
@@ -440,6 +441,7 @@ export function useUnpublishPage() {
 export function useAdminStats() {
   return useQuery({
     queryKey: ["admin-stats"],
+    refetchInterval: 10000, // Auto refresh every 10s
     queryFn: async () => {
       const [orders, pages, users] = await Promise.all([
         supabase.from("orders").select("id, status, total_cents"),

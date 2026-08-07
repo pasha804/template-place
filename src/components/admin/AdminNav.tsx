@@ -1,13 +1,35 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   LayoutDashboard, ShoppingCart, Users, Globe,
-  Clock, ArrowLeft, Shield, Sparkles,
+  Clock, ArrowLeft, Shield, RefreshCw,
 } from "lucide-react";
 import { usePendingWebsites } from "@/hooks/use-orders";
 
 export function AdminNav() {
+  const queryClient = useQueryClient();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const { data: pendingItems = [] } = usePendingWebsites();
   const pendingCount = pendingItems.length;
+
+  async function handleRefreshAll() {
+    setIsRefreshing(true);
+    try {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin-stats"] }),
+        queryClient.invalidateQueries({ queryKey: ["admin-orders"] }),
+        queryClient.invalidateQueries({ queryKey: ["pending-websites"] }),
+        queryClient.invalidateQueries({ queryKey: ["admin-pages"] }),
+      ]);
+      toast.success("Admin dashboard refreshed!");
+    } catch {
+      toast.error("Failed to refresh database data.");
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
+    }
+  }
 
   const navItems = [
     { to: "/admin",         label: "Dashboard",        icon: LayoutDashboard, exact: true },
@@ -27,6 +49,18 @@ export function AdminNav() {
         <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-red-400">
           Admin only
         </span>
+
+        {/* 1-Click Refresh Data Button */}
+        <button
+          type="button"
+          onClick={handleRefreshAll}
+          disabled={isRefreshing}
+          className="flex items-center gap-1 rounded-lg bg-white/[0.06] border border-white/10 px-2.5 py-1 text-[11px] font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all ml-2"
+          title="Refresh all admin database queries"
+        >
+          <RefreshCw className={`h-3 w-3 ${isRefreshing ? "animate-spin text-violet-400" : ""}`} />
+          <span>{isRefreshing ? "Refreshing..." : "Refresh Data"}</span>
+        </button>
       </div>
 
       <div className="flex items-center gap-0.5">
