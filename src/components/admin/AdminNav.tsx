@@ -31,6 +31,24 @@ export function AdminNav() {
     }
   }
 
+  async function handleResetTestData() {
+    if (!confirm("Are you sure you want to clean all test data? This will remove local test drafts and testing records.")) return;
+    try {
+      if (typeof window !== "undefined") {
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith("page_") || key.startsWith("order_") || key.includes("draft"))) {
+            localStorage.removeItem(key);
+          }
+        }
+      }
+      await handleRefreshAll();
+      toast.success("Test data cleared successfully! Clean testing environment ready.");
+    } catch (e) {
+      toast.error("Failed to clean test data.");
+    }
+  }
+
   const navItems = [
     { to: "/admin",         label: "Dashboard",        icon: LayoutDashboard, exact: true },
     { to: "/admin/pending", label: "Pending Websites", icon: Clock, badge: pendingCount },
@@ -60,6 +78,16 @@ export function AdminNav() {
         >
           <RefreshCw className={`h-3 w-3 ${isRefreshing ? "animate-spin text-violet-400" : ""}`} />
           <span>{isRefreshing ? "Refreshing..." : "Refresh Data"}</span>
+        </button>
+
+        {/* Reset Test Data Button */}
+        <button
+          type="button"
+          onClick={handleResetTestData}
+          className="flex items-center gap-1 rounded-lg bg-red-500/10 border border-red-500/20 px-2.5 py-1 text-[11px] font-semibold text-red-400 hover:bg-red-500/20 transition-all"
+          title="Clean development/testing data"
+        >
+          <span>Reset Test Data</span>
         </button>
       </div>
 

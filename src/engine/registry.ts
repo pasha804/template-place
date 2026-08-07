@@ -22,10 +22,13 @@ export const externalTemplateSlugIndex = new Map(
 
 export const allExternalTemplates = plugins;
 
-export function getExternalTemplate(id: string): ExternalTemplatePlugin | undefined {
-  return externalTemplateRegistry.get(id);
+export function getExternalTemplate(idOrSlug: string | null | undefined): ExternalTemplatePlugin | undefined {
+  if (!idOrSlug) return undefined;
+  return externalTemplateRegistry.get(idOrSlug) ?? externalTemplateSlugIndex.get(idOrSlug);
 }
 
-export function getExternalTemplateBySlug(slug: string): ExternalTemplatePlugin | undefined {
-  return externalTemplateSlugIndex.get(slug);
+export function getExternalTemplateBySlug(slug: string | null | undefined): ExternalTemplatePlugin | undefined {
+  if (!slug) return undefined;
+  return externalTemplateSlugIndex.get(slug) ?? externalTemplateRegistry.get(slug);
 }
+

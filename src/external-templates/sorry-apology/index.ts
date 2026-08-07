@@ -4,7 +4,7 @@ import { schema, defaults } from "./schema";
 
 export default defineExternalTemplate({
   manifest: {
-    id:           "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+    id:           "b2c3d4e5-f6a7-8901-bcde-f23456789099",
     slug:         "sorry-apology",
     name:         "Sorry Apology",
     tagline:      "A soft, interactive apology note with a runaway NO button",

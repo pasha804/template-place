@@ -326,7 +326,7 @@ export function useApproveOrder() {
       }
 
       const userId = pageRecord.user_id;
-      const templateId = pageRecord.template_id || (pageRecord.content as Record<string, unknown>)?._template_id as string || "anniversary-galaxy";
+      const templateId = pageRecord.template_id || ((pageRecord.content as Record<string, unknown>)?._template_id as string) || pageRecord.template_id;
       const title = pageRecord.title || "Untitled Dedicated Website";
       const slug = pageRecord.slug || pageId;
       const content = (pageRecord.content as Record<string, unknown>) || {};
@@ -526,7 +526,7 @@ export function usePendingWebsites() {
           o.order_items?.some((item: { page_id?: string }) => item.page_id === page.id)
         ) || null;
 
-        const templateId = page.template_id || (page.content as Record<string, unknown>)?._template_id as string || "anniversary-galaxy";
+        const templateId = page.template_id || ((page.content as Record<string, unknown>)?._template_id as string) || page.template_id;
 
         return {
           page: { ...page, template_id: templateId },

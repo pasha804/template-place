@@ -145,7 +145,7 @@ function AdminPagesPage() {
                 {pages.map((page, i) => {
                   const st = STATUS_STYLES[page.status] ?? STATUS_STYLES.draft;
                   const liveUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/p/${page.slug}`;
-                  const templateId = page.template_id || (page.content as Record<string, unknown>)?._template_id as string || "anniversary-galaxy";
+                  const templateId = page.template_id || ((page.content as Record<string, unknown>)?._template_id as string) || page.template_id;
                   
                   return (
                     <motion.tr key={page.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}

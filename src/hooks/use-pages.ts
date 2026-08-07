@@ -49,7 +49,7 @@ export function useUserPages(userId: string | undefined, status?: PageStatus) {
 
       return combined.map(p => ({
         ...p,
-        template_id: p.template_id || (p.content as Record<string, unknown>)?._template_id as string || "birthday-bloom"
+        template_id: p.template_id || ((p.content as Record<string, unknown>)?._template_id as string) || p.template_id
       }));
     },
     enabled: !!userId,
