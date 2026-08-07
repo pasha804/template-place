@@ -119,6 +119,21 @@ export async function runPublishPipeline(
     // ── STEP 4: SAVING CONTENT ──
     report("SAVING_CONTENT", "Saving content and template schema...", 65);
 
+    // Ensure template record exists in 'templates' table to satisfy FK constraint
+    try {
+      await supabase.from("templates").upsert({
+        id: templateId,
+        name: extTemplate?.manifest.name || templateId,
+        category: extTemplate?.manifest.category || "General",
+        version: extTemplate?.manifest.version || "1.0.0",
+        defaults: (extTemplate?.defaults || {}) as any,
+        schema: (extTemplate?.schema || []) as any,
+        is_active: true,
+      }, { onConflict: "id" });
+    } catch (e) {
+      console.warn("Template seed warning:", e);
+    }
+
     // If pageId is a draft string or invalid UUID format, pass undefined to let Supabase assign a real UUID
     const isInvalidUuid = !isValidUUID(pageId);
     const dbPageId = isInvalidUuid ? undefined : pageId;
@@ -135,14 +150,25 @@ export async function runPublishPipeline(
       updated_at: new Date().toISOString(),
     };
 
-    const upsertRes = await supabase.from("pages").upsert(pagePayload as any).select("id, slug").single();
+    let upsertRes = await supabase.from("pages").upsert(pagePayload as any).select("id, slug").single();
     if (upsertRes.error) {
-      // Fallback if template_id foreign key constraint occurs
+      // If foreign key constraint failed, re-seed template and retry
       if (upsertRes.error.code === "23503") {
-        const fbRes = await supabase.from("pages").upsert({ ...pagePayload, template_id: null } as any).select("id, slug").single();
-        if (fbRes.error) {
-          throw new Error(`Failed to save page data: ${fbRes.error.message}`);
+        await supabase.from("templates").upsert({
+          id: templateId,
+          name: extTemplate?.manifest.name || templateId,
+          category: extTemplate?.manifest.category || "General",
+          version: extTemplate?.manifest.version || "1.0.0",
+          defaults: (extTemplate?.defaults || {}) as any,
+          schema: (extTemplate?.schema || []) as any,
+          is_active: true,
+        }, { onConflict: "id" });
+
+        const retryRes = await supabase.from("pages").upsert(pagePayload as any).select("id, slug").single();
+        if (retryRes.error) {
+          throw new Error(`Failed to save page data: ${retryRes.error.message}`);
         }
+        upsertRes = retryRes;
       } else {
         throw new Error(`Failed to save page content: ${upsertRes.error.message}`);
       }

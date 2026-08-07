@@ -1,6 +1,12 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import type { User, Session } from "@supabase/supabase-js";
+
+const dummyStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+};
 
 interface AuthState {
   user: User | null;
@@ -30,8 +36,7 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "shaukat-auth",
       partialize: (s) => ({ user: s.user, session: s.session }),
-      // SSR-safe: localStorage is not available on the server (Vercel/Cloudflare)
-      storage: typeof window !== "undefined" ? undefined : { getItem: () => null, setItem: () => {}, removeItem: () => {} },
+      storage: createJSONStorage(() => (typeof window !== "undefined" && typeof localStorage !== "undefined" ? localStorage : dummyStorage)),
     },
   ),
 );
