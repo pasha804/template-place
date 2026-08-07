@@ -118,12 +118,12 @@ function Intro({ onNext, personName }: { onNext: () => void, personName: string 
 }
 
 /* ── Hey ── */
-function Hey({ onNext }: { onNext: () => void }) {
+function Hey({ onNext, personName }: { onNext: () => void; personName: string }) {
   return (
     <motion.section {...fadeUp} className="text-center">
       <img src="/templates/sorry-apology/tears.gif" alt="" className="mx-auto mb-4 h-32" />
       <h2 style={{ fontFamily: DISPLAY_FONT, color: PINK }} className="text-5xl md:text-6xl">
-        Hey, Kashaf...
+        Hey, {personName}...
       </h2>
       <p className="mt-4 max-w-md mx-auto text-lg" style={{ color: "rgba(100,20,50,0.7)" }}>
         I know aap thora naraz ho, but can you please give me 1 minute? Just 1 minute.
@@ -171,25 +171,26 @@ function Chances({ mood, onNext }: { mood: Mood; onNext: () => void }) {
 }
 
 /* ── Sorry ── */
-const sorryCopy: Record<Mood, { title: string; body: string }> = {
-  boht:  { title: "I'm Really Really Sorry, Kashaf!", body: "Mujhe pata hai maine boht bara mistake kiya. Tumhara itna gussa deserve karta hun main. But please, ek aakhri mauka? Main promise karta hun ab kabhi aisa nahi hoga. Tumhari smile ke bina sab suna suna lagta hai. 🥺" },
-  thora: { title: "I'm So Sorry, Kashaf!", body: "Life is way too short to stay mad at someone who thinks you're the most amazing person on earth. Tumhari smile, tumhare baalo ki khushboo, tumhari har baat — sab kuch miss kar raha hun. I promise I'll try to be better. Maan jao na please? 🌷" },
-  nahi:  { title: "Chup ho? Main bolta hun phir...", body: "Tum kuch mat bolo, bas suno. Tum meri sabse pyari ho, aur main tumhe kabhi hurt nahi karna chahta tha. Chalo, thora sa muskura do — main jaanta hun andar se tum maan chuki ho. 😚" },
-};
+function getSorryCopy(name: string): Record<Mood, { title: string; body: string }> {
+  return {
+    boht:  { title: `I'm Really Really Sorry, ${name}!`, body: `Mujhe pata hai maine boht bara mistake kiya. Tumhara itna gussa deserve karta hun main. But please, ek aakhri mauka? Main promise karta hun ab kabhi aisa nahi hoga. Tumhari smile ke bina sab suna suna lagta hai. 🥺` },
+    thora: { title: `I'm So Sorry, ${name}!`, body: `Life is way too short to stay mad at someone who thinks you're the most amazing person on earth. Tumhari smile, tumhare baalo ki khushboo, tumhari har baat — sab kuch miss kar raha hun. I promise I'll try to be better. Maan jao na please? 🌷` },
+    nahi:  { title: `Chup ho? Main bolta hun phir...`, body: `Tum kuch mat bolo, bas suno. Tum meri sabse pyari ho, aur main tumhe kabhi hurt nahi karna chahta tha. Chalo, thora sa muskura do — main jaanta hun andar se tum maan chuki ho. 😚` },
+  };
+}
 
-function Sorry({ mood, onNext }: { mood: Mood; onNext: () => void }) {
-  const s = sorryCopy[mood];
+function Sorry({ mood, onNext, personName }: { mood: Mood; onNext: () => void; personName: string }) {
+  const copy = getSorryCopy(personName);
+  const c = copy[mood];
   return (
-    <motion.section {...fadeUp}>
-      <div className="bg-white/50 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 text-center border border-white/60">
-        <h2 style={{ fontFamily: DISPLAY_FONT, color: PINK }} className="text-5xl md:text-6xl">{s.title}</h2>
-        <p className="mt-6 font-medium text-lg leading-relaxed" style={{ color: "rgba(30,10,15,0.85)" }}>{s.body}</p>
-        <img src="/templates/sorry-apology/9.gif" alt="" className="mx-auto my-8 h-32 drop-shadow-md" />
-        <p className="italic text-sm font-semibold mb-6" style={{ color: PINK }}>
-          (I also brought these for you 💐 🍫 🧸 ✨)
-        </p>
-        <button onClick={onNext} className="btn-cute text-lg">Acha, last cheez...</button>
-      </div>
+    <motion.section {...fadeUp} className="text-center">
+      <h2 style={{ fontFamily: DISPLAY_FONT, color: PINK }} className="text-4xl md:text-5xl mb-4">
+        {c.title}
+      </h2>
+      <p className="text-base md:text-lg max-w-lg mx-auto leading-relaxed bg-white/40 p-6 rounded-2xl border border-white/50" style={{ color: "#7c1040" }}>
+        {c.body}
+      </p>
+      <button onClick={onNext} className="btn-cute mt-8">One last question... 💖</button>
     </motion.section>
   );
 }
