@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #f8f8ff;
+  --color-deep-rose: #e11d48;
+  --color-blush: #fda4af;
+  --color-magenta: #d946ef;
+  --color-gold: #fbbf24;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: #0a0a0f;
+  color: var(--foreground);
+  font-family: "Inter", "Geist Sans", sans-serif;
+  user-select: none;
+  overflow-x: hidden;
+}
+
+.font-cute {
+  font-family: "Shantell Sans", cursive;
+}
+
+.font-heading {
+  font-family: "Shantell Sans", cursive;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ─── Aurora background ─── */
+@keyframes aurora-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.aurora-bg {
+  background: linear-gradient(
+    135deg,
+    #0a0a0f 0%,
+    #0d0820 20%,
+    #130a1e 40%,
+    #0a0a0f 60%,
+    #0d0820 80%,
+    #0a0a0f 100%
+  );
+}
+
+.aurora-orb-1 {
+  background: radial-gradient(ellipse at center, rgba(217,70,239,0.18) 0%, transparent 70%);
+  animation: float-orb1 12s ease-in-out infinite;
+}
+.aurora-orb-2 {
+  background: radial-gradient(ellipse at center, rgba(225,29,72,0.15) 0%, transparent 70%);
+  animation: float-orb2 15s ease-in-out infinite;
+}
+.aurora-orb-3 {
+  background: radial-gradient(ellipse at center, rgba(99,102,241,0.12) 0%, transparent 70%);
+  animation: float-orb3 18s ease-in-out infinite;
+}
+
+@keyframes float-orb1 {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33%       { transform: translate(8%,5%) scale(1.1); }
+  66%       { transform: translate(-5%, 8%) scale(0.95); }
+}
+@keyframes float-orb2 {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  50%       { transform: translate(-10%,-6%) scale(1.15); }
+}
+@keyframes float-orb3 {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  40%       { transform: translate(6%,-8%) scale(1.08); }
+  80%       { transform: translate(-4%, 4%) scale(0.92); }
+}
+
+/* ─── Glassmorphism ─── */
+.glass {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.glass-card {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ─── Glow utilities ─── */
+.glow-pink {
+  box-shadow: 0 0 40px rgba(236,72,153,0.4);
+}
+.glow-gold {
+  box-shadow: 0 0 30px rgba(251,191,36,0.5);
+}
+.text-glow-pink {
+  filter: drop-shadow(0 0 20px rgba(236,72,153,0.5));
+}
+
+/* ─── Shimmer sweep ─── */
+@keyframes shimmer-sweep {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(150%); }
+}
+.shimmer-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+  animation: shimmer-sweep 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─── Gradient text animation ─── */
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animated-gradient-text {
+  background: linear-gradient(135deg, #fda4af, #e11d48, #d946ef, #fbbf24, #fda4af);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 4s ease infinite;
+}
+
+/* ─── Typewriter cursor ─── */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: #d946ef;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(217,70,239,0.8);
+  animation: blink-cursor 0.75s ease infinite;
+}
+
+/* ─── Custom Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #fda4af, #d946ef);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #f472b6, #a855f7);
+}
+
+/* ─── Swiper pagination ─── */
+.swiper-pagination-bullet {
+  background: rgba(217,70,239,0.3) !important;
+  opacity: 0.9 !important;
+  width: 8px !important;
+  height: 8px !important;
+  margin: 0 5px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 0 6px rgba(244,114,182,0.3);
+  transition: all 0.3s ease-in-out !important;
+}
+.swiper-pagination-bullet-active {
+  background: linear-gradient(135deg, #e11d48, #d946ef) !important;
+  transform: scale(1.4) !important;
+  box-shadow: 0 0 10px rgba(225,29,72,0.7) !important;
+  width: 20px !important;
+  border-radius: 4px !important;
+}
+
+/* ─── Envelope 3D ─── */
+.envelope-scene {
+  perspective: 800px;
+}
+.flap-open {
+  transform-origin: top center;
+  transform: rotateX(-180deg);
+  transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ─── Coverflow active slide glow ─── */
+.swiper-slide-active .photo-slide {
+  border: 2px solid rgba(236,72,153,0.5);
+  box-shadow: 0 0 30px rgba(217,70,239,0.3), 0 0 60px rgba(225,29,72,0.15);
+  transform: scale(1.02);
+  transition: all 0.4s ease;
+}
+
+/* ─── Forever Yours signature ─── */
+.signature-text {
+  font-family: 'Shantell Sans', cursive;
+  font-style: italic;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fbbf24, #fda4af, #d946ef);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── Balloon string ─── */
+.balloon-string {
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+}
+
+/* ─── Music toggle ─── */
+.music-toggle {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+/* ─── Particle ─── */
+@keyframes float-particle {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.15; }
+  90%  { opacity: 0.1; }
+  100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* ─── Signature glow pulse ─── */
+/* Note: filter animates on the element, not on the text fill */
+@keyframes signature-glow {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(251,191,36,0.5)) drop-shadow(0 0 2px rgba(217,70,239,0.3)); }
+  50%       { filter: drop-shadow(0 0 20px rgba(251,191,36,0.9)) drop-shadow(0 0 10px rgba(217,70,239,0.6)); }
+}
+.signature-text {
+  animation: signature-glow 2.5s ease-in-out infinite;
+}
+
+/* ─── Mosaic grid responsive ─── */
+@media (max-width: 480px) {
+  .mosaic-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-auto-rows: clamp(65px, 22vw, 100px) !important;
+  }
+}
+
+/* ─── Print styles for "Save Memory" ─── */
+@media print {
+  body {
+    background: white !important;
+    color: #1a1a2e !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .fixed, canvas, button, [class*="aurora"], [class*="particle"] {
+    display: none !important;
+  }
+  .font-cute {
+    font-family: "Shantell Sans", cursive !important;
+    color: #1a1a2e !important;
+  }
+  .signature-text {
+    background: linear-gradient(135deg, #e11d48, #d946ef) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: none !important;
+    animation: none !important;
+  }
+}

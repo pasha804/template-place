@@ -1,0 +1,640 @@
+================================================================================
+                       SHAUKAT TECHS TEMPLATES PLATFORM
+                        COMPLETE SYSTEM DOCUMENTATION
+================================================================================
+Document Version: 1.1.0
+Last Updated: August 7, 2026
+Author: Antigravity AI Engineering & Shaukat Techs Core Team
+Target Audience: Senior Software Engineers, Systems Architects, Maintainers
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+ 1. PROJECT ARCHITECTURE OVERVIEW
+ 2. DIRECTORY & FOLDER STRUCTURE
+ 3. ROUTING SYSTEM (TANSTACK ROUTER)
+ 4. AUTHENTICATION SYSTEM (SUPABASE AUTH)
+ 5. DATABASE SCHEMA & DATA MODEL (SUPABASE POSTGRES)
+ 6. TEMPLATE PLUGIN ENGINE
+ 7. RENDERING PIPELINE & ISOLATION
+ 8. EDITOR SYSTEM & FORM CONFIGURATION
+ 9. SCHEMA & FIELD SYSTEM
+10. RENDERER ENGINE & ANIMATIONS
+11. MANIFEST SYSTEM & METADATA
+12. ASSETS MANAGEMENT
+13. FRONTEND COMPONENTS DIRECTORY
+14. HOOKS ARCHITECTURE
+15. UTILITIES & HELPERS
+16. STATE MANAGEMENT (ZUSTAND & TANSTACK QUERY)
+17. API & BACKEND INTEGRATION
+18. SUPABASE STRUCTURE, RLS & TRIGGERS
+19. ENVIRONMENT VARIABLES
+20. DEPLOYMENT PROCESS & BUILD TARGETS
+21. PRODUCTION DEPLOYMENT CLEANUP GUIDE (SAFE TO DELETE VS REQUIRED)
+22. PERFORMANCE & BUNDLE OPTIMIZATIONS
+23. IMAGE & MEDIA OPTIMIZATIONS
+24. DEPLOYMENT CHECKLIST
+25. SECURITY CHECKLIST
+26. KNOWN LIMITATIONS & FUTURE ROADMAP
+27. EXHAUSTIVE FILE & FOLDER MAP
+
+================================================================================
+1. PROJECT ARCHITECTURE OVERVIEW
+================================================================================
+Shaukat Techs Templates is a high-performance, full-stack digital web template 
+and personalized dedication web page platform. It enables users to browse, 
+customize, save, order, and publish Awwwards-quality interactive event pages 
+(Weddings, Birthdays, Anniversaries, Proposals, Apologies, Congratulations).
+
+Core Technology Stack:
+- Framework: React 18 / Vite 5 / TanStack Start (SSR/SSG Hybrid Output)
+- Router: TanStack Router (Strictly typed file-based routing)
+- Data Fetching & Caching: TanStack Query (React Query v5)
+- State Management: Zustand v4 (Template Editor Store & Auth Store)
+- Database & Auth: Supabase (PostgreSQL with Row Level Security, RPCs, GoTrue Auth)
+- Design System & Styling: TailwindCSS v3, Custom Vanilla CSS Modules, OKLCH Color Spaces
+- Animation Libraries: Framer Motion v11, Canvas Confetti, Lucide Icons
+- Server/Build Engine: Nitro Engine / Wrangler Target for Cloudflare & Vercel deployment
+
+Architecture Diagram:
+[ User / Browser ] 
+       │
+       ├──> [ TanStack Router (file-based: /templates, /editor, /checkout, /p/$slug) ]
+       │          │
+       │          ├──> [ Editor Engine (Zustand Store + FieldWidgets) ]
+       │          │          │
+       │          │          └──> [ LocalStorage Backup & Supabase Pages Table ]
+       │          │
+       │          └──> [ Public View Engine (/p/$slug) ]
+       │                     │
+       │                     └──> [ Dynamic Plugin Auto-Discovery (import.meta.glob) ]
+       │                                │
+       │                                └──> [ External Template Renderer (Zero-wrapper iframe-less DOM) ]
+       │
+       └──> [ Backend (Supabase PostgreSQL + RLS + Storage + Edge Functions) ]
+
+================================================================================
+2. DIRECTORY & FOLDER STRUCTURE
+================================================================================
+The workspace is structured cleanly into core application logic (`src/`), 
+external template plugins (`src/external-templates/`), static public assets 
+(`public/`), build outputs (`.output/`), and legacy unimported reference folders.
+
+e:\template-weaver-main\
+├── .gemini/                     -> Assistant configuration and metadata
+├── .output/                     -> Nitro build bundle output (generated on build)
+├── public/                      -> Static public assets (images, audio, favicon)
+│   ├── templates/               -> Template cover cards and default image assets
+│   └── favicon.ico
+├── src/                         -> Core Application Source Code
+│   ├── assets/                  -> Shared images, logos, icons
+│   ├── blocks/                  -> Block-based fallback schemas (legacy block builder)
+│   ├── components/              -> Modular React components
+│   │   ├── home/                -> Homepage sections (Hero, Features, Categories, Stats, CTAs)
+│   │   ├── layout/              -> Global layout (Navbar, Footer, MobileNav)
+│   │   ├── template-editor/     -> Editor components (EditorFormPanel, FieldWidget, EditorTopBar)
+│   │   └── ui/                  -> Reusable UI primitives (Buttons, Cards, Modals, Inputs)
+│   ├── engine/                  -> Core plugin registry & template engine definition
+│   │   ├── registry.ts          -> Auto-discovers plugins via import.meta.glob
+│   │   └── types.ts             -> Schema, FieldDef, TemplateConfig, and Plugin interfaces
+│   ├── external-templates/      -> 16 Imported External Template Plugins
+│   │   ├── anniversary-galaxy/  -> Galaxy Theme (Starfield Canvas, Floating Audio)
+│   │   ├── anniversary-romantic/-> Romantic Theme (Glow Cards, Love Letter)
+│   │   ├── birthday-aurora/     -> Aurora Theme (Particle Waves, Age Reveal)
+│   │   ├── birthday-bloom/      -> Bloom Floral Theme
+│   │   ├── birthday-galaxy/     -> Galaxy Birthday Theme
+│   │   ├── birthday-magical/    -> Magical Wishes Theme
+│   │   ├── birthday-rose/       -> Rose Floral Birthday Theme
+│   │   ├── birthday-surprise/   -> 3D Vault Keypad & Gift Box Theme
+│   │   ├── congratulations-triumph/ -> 3D Envelope & Vinyl Record Player Theme
+│   │   ├── proposal-cook/       -> Interactive Recipe & Question Reveal
+│   │   ├── proposal-romantic/   -> Heart Particles & Proposal Ring Reveal
+│   │   ├── sorry-apology/       -> Gentle Letter & Apology Card
+│   │   ├── sorry-sweet/         -> Sweet Forgiveness Card
+│   │   ├── sorry-teddy/         -> Animated Bear & Heart Card
+│   │   ├── wedding-eternal/     -> Royal Navy & Gold Parallax Wedding Theme
+│   │   └── wedding-petals/      -> Falling Petals & Plum-Copper Wedding Theme
+│   ├── hooks/                   -> Custom React hooks (useAuth, usePages, useOrders)
+│   ├── integrations/            -> Database integrations & generated Supabase types
+│   ├── lib/                     -> Helper utilities (cn tailwind merge, formatters)
+│   ├── routes/                  -> TanStack Router File-Based Routes
+│   │   ├── __root.tsx           -> Root layout wrapper (QueryClient, Toaster, Meta)
+│   │   ├── index.tsx            -> Homepage
+│   │   ├── templates/           -> Templates catalog page
+│   │   ├── editor/              -> Editor route (/editor/template/$templateId)
+│   │   ├── checkout/            -> Checkout route (/checkout/$pageId)
+│   │   ├── p/                   -> Public page viewer route (/p/$slug)
+│   │   ├── auth/                -> Login, Signup, Forgot Password, Reset Password
+│   │   ├── dashboard/           -> User Dashboard (My Pages, Orders, Settings)
+│   │   └── admin/               -> Admin Control Panel
+│   ├── store/                   -> Zustand state stores (templateEditor.ts, auth.ts)
+│   ├── styles.css               -> Global Tailwind directives, CSS variables, OKLCH colors
+│   └── main.tsx                 -> React DOM hydration entry point
+├── package.json                 -> Dependencies & scripts
+├── tsconfig.json                -> TypeScript configuration
+├── vite.config.ts               -> Vite build configuration
+├── tailwind.config.js           -> Tailwind CSS configuration
+├── DETAILS.txt                  -> Complete System Documentation (THIS FILE)
+└── LEGACY UNIMPORTED FOLDERS (Safe to delete before production deployment):
+    ├── anniversarytemplate2/    -> Source folder for anniversary-galaxy (already imported)
+    ├── congratulationstemplate1/ -> Source folder for congratulations-triumph (already imported)
+    ├── weadding template1/       -> Source folder for wedding-eternal (already imported)
+    └── weeding template2/        -> Source folder for wedding-petals (already imported)
+
+================================================================================
+3. ROUTING SYSTEM (TANSTACK ROUTER)
+================================================================================
+The application utilizes TanStack Router with strict TypeScript route typing 
+and file-based routing located in `src/routes/`.
+
+Key Routes Summary:
+- `/` (`src/routes/index.tsx`): Main landing page with HeroSection, FeaturesShowcase, 
+  CategoriesSection, StatsSection, TestimonialsSection, FAQSection, CTABanner.
+- `/templates/index.tsx`: Catalog page listing all 16 external templates with 
+  filters by category (Wedding, Birthday, Anniversary, Proposal, Sorry, Congratulations).
+- `/editor/template/$templateId`: Live template editor. Accepts `pageId` query search param.
+  Loads page config from Supabase or localStorage fallback.
+- `/checkout/$pageId`: 3-step checkout page (Plan selection -> Payment method & screenshot upload -> Order confirmation & WhatsApp link).
+- `/p/$slug`: Public published page viewer. Renders the external template engine 
+  with zero outer application wrappers, giving the template full control of the viewport.
+- `/auth/login`, `/auth/signup`, `/auth/forgot-password`, `/auth/reset-password`: 
+  Authentication routes.
+- `/dashboard/*`: User dashboard routes (`/dashboard/index.tsx`, `pages.tsx`, `orders.tsx`, `profile.tsx`, `settings.tsx`).
+- `/admin/*`: Admin management panel for site administrators to review orders, 
+  approve page publications, and manage users.
+
+================================================================================
+4. AUTHENTICATION SYSTEM (SUPABASE AUTH)
+================================================================================
+Authentication is managed via Supabase GoTrue Auth integrated through custom hooks 
+and Zustand state (`src/hooks/use-auth.ts`, `src/store/auth.ts`).
+
+Authentication Flow:
+1. `signInWithPassword`: Validates credentials against Supabase.
+   - If invalid: Catches error, displays toast notification ("Incorrect password or email", 
+     "Account does not exist"), and halts execution. Never displays false "Welcome" message.
+   - If valid: Establishes session, updates `useAuthStore`, and redirects to `/dashboard`.
+2. OAuth Integration: Supports Google OAuth via `signInWithOAuth`.
+3. Session Persistence: Listens to `supabase.auth.onAuthStateChange` to synchronize 
+  session token and user roles.
+4. Role Checks: Executes RPC `checkAdminRole` against `user_roles` table to grant 
+  admin panel access to authorized users.
+
+================================================================================
+5. DATABASE SCHEMA & DATA MODEL (SUPABASE POSTGRES)
+================================================================================
+The database operates on PostgreSQL with Row Level Security (RLS) policies.
+
+Primary Tables:
+1. `pages`:
+   - `id`: UUID (Primary Key, default `gen_random_uuid()`)
+   - `user_id`: UUID (FK to `auth.users.id`)
+   - `template_id`: String (References template plugin ID; nullable for custom external IDs)
+   - `title`: Text
+   - `slug`: Text (Unique index for `/p/$slug` routing)
+   - `status`: Text (`'draft'`, `'pending_approval'`, `'published'`, `'archived'`)
+   - `content`: JSONB (Holds full `TemplateConfig` object including `_template_id`)
+   - `blocks`: JSONB (Legacy array)
+   - `theme`: JSONB (Theme overrides)
+   - `is_public`: Boolean
+   - `expires_at`: Timestamp
+   - `created_at` / `updated_at`: Timestamps
+
+2. `orders`:
+   - `id`: UUID (Primary Key)
+   - `user_id`: UUID (FK to `auth.users.id`)
+   - `page_id`: UUID (FK to `pages.id`)
+   - `template_id`: Text
+   - `template_name`: Text
+   - `plan_key`: Text (`'basic'`, `'premium'`, `'deluxe'`)
+   - `price_paisa`: BigInt (Amount in PKR paisa)
+   - `payment_method`: Text (`'easypaisa'`, `'bank'`, `'paypal'`)
+   - `payment_screenshot`: Text (Base64 or URL of payment receipt)
+   - `status`: Text (`'pending'`, `'verified'`, `'rejected'`, `'completed'`)
+   - `reference`: Text (Human-readable Order Ref: `ORD-XXXXXX`)
+   - `whatsapp_sent`: Boolean
+
+3. `page_views`:
+   - `id`: UUID (Primary Key)
+   - `page_id`: UUID (FK to `pages.id`)
+   - `device`: Text (`'mobile'`, `'tablet'`, `'desktop'`)
+   - `referrer`: Text
+   - `created_at`: Timestamp
+
+4. `user_roles`:
+   - `user_id`: UUID (FK to `auth.users.id`)
+   - `role`: Text (`'admin'`, `'moderator'`, `'user'`)
+
+Foreign Key Violation & Local Fallback Strategy:
+External templates use string IDs (e.g. `'wedding-eternal'`). If direct DB insertion 
+fails due to FK constraints on remote `templates` table, the engine automatically:
+1. Retries DB insertion with `template_id: null` while storing `_template_id` in `content`.
+2. Creates a backup draft entry in `localStorage` under `page_${pageId}`.
+This ensures 100% offline and local resilience for page creation, editing, and checkout.
+
+================================================================================
+6. TEMPLATE PLUGIN ENGINE
+================================================================================
+The platform features an extensible plugin architecture located in `src/engine/`.
+
+Auto-Discovery Mechanism (`src/engine/registry.ts`):
+Plugins are automatically discovered at compile time using Vite's `import.meta.glob`:
+```ts
+const modules = import.meta.glob<{ default: ExternalTemplatePlugin }>(
+  "../external-templates/*/index.ts",
+  { eager: true }
+);
+```
+To register a new template, developers simply create a new directory inside 
+`src/external-templates/<template-name>/` with an `index.ts` file exporting 
+the `ExternalTemplatePlugin` interface. No central registry edits are needed.
+
+Plugin Interface (`src/engine/types.ts`):
+```ts
+export interface ExternalTemplatePlugin {
+  manifest: TemplateManifest;
+  schema: SectionDef[];
+  defaults: TemplateConfig;
+  Renderer: React.ComponentType<{ config?: TemplateConfig; mode?: "edit" | "view" }>;
+}
+```
+
+Registered External Templates (16 Total):
+1. `anniversary-galaxy`: Dark galaxy starfield theme with floating music and love letter.
+2. `anniversary-romantic`: Romantic glow card theme.
+3. `birthday-aurora`: Aurora particle wave theme with age reveal.
+4. `birthday-bloom`: Floral bloom birthday theme.
+5. `birthday-galaxy`: Celestial birthday theme.
+6. `birthday-magical`: Magical wishes theme.
+7. `birthday-rose`: Rose petal floral theme.
+8. `birthday-surprise`: Interactive 3D vault keypad lock & gift reveal.
+9. `congratulations-triumph`: 3D envelope spring tilt card & vinyl record player.
+10. `proposal-cook`: Interactive culinary recipe & question reveal.
+11. `proposal-romantic`: Heart particle glow & proposal ring reveal.
+12. `sorry-apology`: Heartfelt apology letter card.
+13. `sorry-sweet`: Sweet forgiveness dedication.
+14. `sorry-teddy`: Animated teddy bear & heart card.
+15. `wedding-eternal`: Royal navy & gold parallax theme with RSVP & schedule.
+16. `wedding-petals`: Falling petals, plum & copper theme.
+
+================================================================================
+7. RENDERING PIPELINE & ISOLATION
+================================================================================
+Templates require total stylistic isolation so that global platform styles (e.g. 
+dark marketplace navigation, administration styles) do not interfere with the 
+template's unique typography, backgrounds, or keyframe animations.
+
+Isolation Strategy:
+1. Outer Container Scope: Each template wraps its output in a root container class 
+   (e.g., `.we-root`, `.wp-root`, `.ct-root`, `.ag-root`).
+2. Scoped Styling: CSS tokens, variables, and fonts are scoped inside inline `<style>` 
+   blocks within the template `Renderer.tsx`.
+3. Body Class Injection: When viewing a page at `/p/$slug`, `document.body` is assigned 
+   the `.template-page` class to strip default margin/padding and background colors, 
+   allowing the template engine full viewport dominance.
+
+================================================================================
+8. EDITOR SYSTEM & FORM CONFIGURATION
+================================================================================
+The editor is located at `src/routes/editor/template/$templateId.tsx`. It provides 
+a clean, full-width configuration page designed for maximum data-entry focus.
+
+Core Editor Components:
+- `EditorTopBar.tsx`: Top bar displaying page title, unsaved status indicator, 
+  Undo/Redo buttons, Manual Save button, and "Continue → Checkout" button.
+- `EditorFormPanel.tsx`: Full-width form container rendering schema sections as 
+  collapsible accordion cards (`mainSections` and `pageSection`).
+- `FieldWidget.tsx`: Generic input control renderer mapping `FieldDef` definitions 
+  to actual interactive input controls.
+
+Supported Controls in `FieldWidget.tsx`:
+- `text`: Single-line text input.
+- `textarea`: Multi-line text area with adjustable rows.
+- `color`: Hex color picker with visual color preview box.
+- `boolean`: Smooth toggle switch.
+- `number` / `range`: Sliders and numeric inputs.
+- `select`: Dropdown selection widget.
+- `date`: HTML5 date picker.
+- `image` / `gif` / `audio` / `video`: Media file upload widget supporting local 
+  FileReader Data URLs and direct URL input.
+- `list-text`: Dynamic list of string items with add/delete actions.
+- `list-image`: Responsive grid of image thumbnails with add/remove capability.
+- `list-cards`: Dynamic card array editor supporting both string cards and structured 
+  object cards (e.g. story milestones with `title`, `date`, `text`, `imageUrl`).
+
+Autosave & State Synchronization:
+- Auto-saves every 30 seconds if `isDirty` is true.
+- Updates Zustand `useTemplateEditorStore` in real-time.
+- Writes full payload to both Supabase `pages` table and `localStorage` backup (`page_${pageId}`).
+
+================================================================================
+9. SCHEMA & FIELD SYSTEM
+================================================================================
+Each template defines a formal schema array (`SectionDef[]`) in its `schema.ts` file.
+
+Schema Structure:
+```ts
+export interface SectionDef {
+  key: string;
+  label: string;
+  icon?: string;
+  fields: FieldDef[];
+}
+
+export interface FieldDef {
+  key: string;
+  label: string;
+  kind: "text" | "textarea" | "color" | "boolean" | "number" | "range" | 
+        "select" | "date" | "image" | "gif" | "audio" | "video" | 
+        "list-text" | "list-image" | "list-cards" | "pin" | "gradient" | "font";
+  placeholder?: string;
+  help?: string;
+  options?: { label: string; value: string }[];
+  min?: number;
+  max?: number;
+  step?: number;
+  rows?: number;
+}
+```
+
+This generic schema system ensures that any newly added field in a template's `schema.ts` 
+automatically renders the corresponding UI input control in the editor without modifying 
+the core editor source code.
+
+================================================================================
+10. RENDERER ENGINE & ANIMATIONS
+================================================================================
+Every template's `Renderer.tsx` translates the `TemplateConfig` object into a live 
+DOM tree.
+
+Key Animation Technologies Used:
+- Framer Motion (`motion.div`, `AnimatePresence`, `useScroll`, `useTransform`, `whileHover`): 
+  Used for spring tilt cards, modal reveals, timeline scroll progress, and hero parallax.
+- HTML5 Canvas API: Used for real-time particle starfields (`GalaxyBackground.tsx`), 
+  aurora waves, and particle physics.
+- CSS Keyframes: Scoped CSS keyframes for falling rose petals (`@keyframes petal-fall`), 
+  text shimmer gradients (`@keyframes we-shimmer`), vinyl rotation (`@keyframes spin`), 
+  and ambient pulse rings.
+
+================================================================================
+11. MANIFEST SYSTEM & METADATA
+================================================================================
+Every template contains a `manifest` object defined in `manifest.ts` or `index.ts`.
+
+Manifest Fields:
+```ts
+export interface TemplateManifest {
+  id: string;
+  slug: string;
+  name: string;
+  category: "wedding" | "birthday" | "anniversary" | "proposal" | "sorry" | "congratulations";
+  tagline: string;
+  description: string;
+  priceCents: number;
+  accentEmoji: string;
+  coverGradient: string;
+  thumbnailUrl?: string;
+  tags: string[];
+}
+```
+
+The manifest is consumed by:
+- Templates catalog filter (`/templates`)
+- Homepage featured cards (`FeaturedTemplates.tsx`)
+- Features showcase cards (`FeaturesShowcase.tsx`)
+- Editor header (`EditorFormPanel.tsx`)
+- Checkout order summary (`/checkout/$pageId`)
+
+================================================================================
+12. ASSETS MANAGEMENT
+================================================================================
+Static assets are organized under `public/`:
+- `public/templates/<template-id>/`: Contains default cover thumbnails, hero images, 
+  and gallery assets for each template.
+- External templates import static assets using relative paths or public root URLs.
+- FileReader Data URLs (`data:image/...;base64,...`) are supported across all 
+  image upload controls for instant offline preview without remote S3 requirements.
+
+================================================================================
+13. FRONTEND COMPONENTS DIRECTORY
+================================================================================
+Components inside `src/components/` follow a modular, domain-driven structure:
+
+1. `src/components/home/`:
+   - `HeroSection.tsx`: Main hero banner with CTA buttons and animated floating badges.
+   - `FeaturesShowcase.tsx`: Platform capabilities grid and Awwwards-quality template showcase cards.
+   - `CategoriesSection.tsx`: Interactive category cards for browsing template categories.
+   - `FeaturedTemplates.tsx`: Grid displaying top featured templates.
+   - `StatsSection.tsx`: Metrics showcase (100+ templates, 99.9% uptime, 10k+ pages).
+   - `TestimonialsSection.tsx`: User reviews carousel and quotes.
+   - `FAQSection.tsx`: Accordion list for frequently asked questions.
+   - `CTABanner.tsx`: Bottom call-to-action banner leading to catalog.
+
+2. `src/components/layout/`:
+   - `Navbar.tsx`: Fixed blur header with theme toggle, navigation links, user profile dropdown.
+   - `Footer.tsx`: Global footer with social links, copyright, and category sitemap.
+
+3. `src/components/template-editor/`:
+   - `EditorFormPanel.tsx`: Full-width editor configuration form.
+   - `FieldWidget.tsx`: Generic field control factory.
+   - `EditorTopBar.tsx`: Top navigation bar for save, undo, redo, checkout.
+
+4. `src/components/ui/`:
+   - Reusable primitives: `button.tsx`, `card.tsx`, `dialog.tsx`, `input.tsx`, `dropdown-menu.tsx`.
+
+================================================================================
+14. HOOKS ARCHITECTURE
+================================================================================
+Custom React hooks encapsulate all data-fetching and side-effects:
+
+- `useAuth()` (`src/hooks/use-auth.ts`): Manages authentication state, session token, 
+  admin status check, and sign-out triggers.
+- `useUserPages()`, `usePage()` (`src/hooks/use-pages.ts`): Queries pages from Supabase 
+  by ID or slug with fallback to `localStorage`.
+- `usePlaceOrder()`, `useMarkWhatsappSent()` (`src/hooks/use-orders.ts`): Handles order 
+  creation, PKR price conversions, payment receipt storage, and order state updates.
+
+================================================================================
+15. UTILITIES & HELPERS
+================================================================================
+Located in `src/lib/`:
+- `utils.ts`: Contains `cn(...inputs)` combining `clsx` and `tailwind-merge` for clean 
+  conditional class joining.
+- Currency Formatter: `formatPKR(paisa)` formats integer paisa to `Rs. X,XXX` currency strings.
+- Slug Generator: Creates URL-safe slugs with unique hash suffixes (e.g. `zara-rayan-wedding-x8a2f`).
+
+================================================================================
+16. STATE MANAGEMENT (ZUSTAND & TANSTACK QUERY)
+================================================================================
+The application employs a dual-tier state management strategy:
+
+1. Client Interactive State (Zustand):
+   - `useTemplateEditorStore` (`src/store/templateEditor.ts`): Tracks active `templateId`, 
+     `pageId`, `config` object, `isDirty` state, `isSaving` state, `lastSaved` timestamp, 
+     and manages an undo/redo history stack up to 30 snapshots.
+   - `useAuthStore` (`src/store/auth.ts`): Stores current auth `user`, `session`, `isAdmin` flag.
+
+2. Server Data & Cache (TanStack Query):
+   - Handles asynchronous API calls to Supabase, query invalidation, background refetching, 
+     and mutation caching for pages, views, and orders.
+
+================================================================================
+17. API & BACKEND INTEGRATION
+================================================================================
+The application connects directly to Supabase via `@supabase/supabase-js` client initialized 
+in `src/integrations/supabase/client.ts`.
+
+RPC Endpoints & Operations:
+- `supabase.rpc("is_admin")`: Verifies if the authenticated user possesses admin privileges.
+- `supabase.from("pages").insert(...)`: Inserts page drafts.
+- `supabase.from("pages").update(...)`: Updates draft configs or publishes pages.
+- `supabase.from("orders").insert(...)`: Places customer orders with payment receipts.
+- `supabase.from("page_views").insert(...)`: Logs anonymous page view analytics.
+
+================================================================================
+18. SUPABASE STRUCTURE, RLS & TRIGGERS
+================================================================================
+Row Level Security (RLS) Policies:
+- `pages`: Users can read/write their own pages (`auth.uid() = user_id`). Published pages 
+  (`is_public = true` AND `status = 'published'`) are readable by anonymous users (`public`).
+- `orders`: Users can insert orders and view their own orders (`auth.uid() = user_id`). 
+  Admins can view and update all orders.
+- `page_views`: Insertable by public/anonymous visitors for analytics tracking.
+
+================================================================================
+19. ENVIRONMENT VARIABLES
+================================================================================
+Required Environment Variables (`.env` or production deployment settings):
+
+```env
+VITE_SUPABASE_URL=https://your-supabase-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+Notes:
+- Both variables must be prefixed with `VITE_` to be exposed to Vite client-side bundles.
+
+================================================================================
+20. DEPLOYMENT PROCESS & BUILD TARGETS
+================================================================================
+Build Command: `npm run build`
+Output Directory: `.output/` (Nitro / TanStack Start hybrid output) & `dist/`
+
+Deployment Steps:
+1. Set Environment Variables in host dashboard (Vercel / Netlify / Cloudflare Pages).
+2. Execute `npm run build` to verify clean compilation.
+3. Deploy `.output/` or configure automatic git deployment via Vercel/Netlify.
+
+Vercel Configuration (`vercel.json`):
+```json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".output/public",
+  "framework": "vite"
+}
+```
+
+================================================================================
+21. PRODUCTION DEPLOYMENT CLEANUP GUIDE
+================================================================================
+To optimize deployment archive size and build speed, review folder classifications:
+
+Folders SAFE TO DELETE Before Deployment:
+- `anniversarytemplate2/` (Unimported original raw template folder; code is fully imported under `src/external-templates/anniversary-galaxy/`)
+- `congratulationstemplate1/` (Unimported original raw template folder; code is fully imported under `src/external-templates/congratulations-triumph/`)
+- `weadding template1/` (Unimported original raw template folder; code is fully imported under `src/external-templates/wedding-eternal/`)
+- `weeding template2/` (Unimported original raw template folder; code is fully imported under `src/external-templates/wedding-petals/`)
+- `scratch/` & `.gemini/` (Temporary working files)
+
+Folders REQUIRED in Production:
+- `src/` (Entire application source code)
+- `public/` (Static image assets, favicon)
+- `node_modules/` (Required for server-side SSR execution if using Node runtime)
+- `.output/` (Production build bundle)
+- `package.json`, `vite.config.ts`, `tsconfig.json`
+
+Folders Used ONLY During Development:
+- `scratch/`
+- `.system_generated/`
+- `.gemini/`
+
+================================================================================
+22. PERFORMANCE & BUNDLE OPTIMIZATIONS
+================================================================================
+- Code Splitting: Routes are dynamically code-split by TanStack Router into lightweight 
+  JavaScript chunks (e.g. `_templateId-*.mjs`, `_slug-*.mjs`).
+- Eager Asset Discovery: `import.meta.glob` eliminates bulky hardcoded import lists 
+  while keeping bundle tree-shaking active.
+- CSS Scope Scoping: Inline CSS styles scope template keyframe animations to prevent 
+  global layout reflows during page rendering.
+- Gzip Compression: Build bundles average 1.5 kB - 15 kB gzipped per route chunk.
+
+================================================================================
+23. IMAGE & MEDIA OPTIMIZATIONS
+================================================================================
+- Responsive `srcset` / `loading="lazy"` tags applied to image cards across all templates.
+- Data URL Fallbacks: Allows instant image uploads to render via FileReader without 
+  waiting for network round-trips.
+- WebP/JPG assets stored in `public/templates/` with optimal compression.
+
+================================================================================
+24. DEPLOYMENT CHECKLIST
+================================================================================
+ [x] Confirm `npm run build` succeeds with Exit code 0.
+ [x] Confirm `npx tsc --noEmit` returns 0 compilation errors across workspace.
+ [x] Complete end-to-end Quality Assurance (QA) audit for all 16 template plugins.
+ [x] Verify 100% dynamic field binding across editor accordion and rendered viewports.
+ [x] Verify default image, GIF, and audio asset paths in schema.ts match /public/templates/ files.
+ [x] Verify `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are configured.
+ [x] Ensure unimported reference folders (`weadding template1`, etc.) are excluded from git.
+ [x] Confirm public route `/p/$slug` renders templates with zero outer layout margin.
+ [x] Verify editor autosave & local storage backup function cleanly offline.
+ [x] Test login credential validation errors (prevent false "Welcome" toasts).
+ [x] Confirm Templates navbar link navigates on single click.
+
+================================================================================
+25. SECURITY CHECKLIST
+================================================================================
+ [x] RLS Enabled: All Supabase tables (`pages`, `orders`, `page_views`) enforced with RLS.
+ [x] Protected Admin RPC: Admin endpoints verify role against `user_roles` via server RPC.
+ [x] Input Sanitization: Zod schema validation applied across all form inputs and editor fields.
+ [x] Safe Auth Redirects: OAuth redirects locked to `window.location.origin`.
+
+================================================================================
+26. KNOWN LIMITATIONS & FUTURE ROADMAP
+================================================================================
+Known Limitations:
+- External templates using custom string IDs rely on local storage backup if remote Postgres 
+  `templates` table foreign key constraint is strict.
+- Local FileReader Data URLs are saved directly in local draft state; high-resolution 
+  5MB+ images should be hosted on Supabase Storage buckets for optimal load speed.
+
+Future Roadmap:
+- Direct In-Editor Live Preview Split Mode toggle.
+- Custom Domain Binding (e.g. `wedding.johnandzara.com`).
+- Direct Online Payment Gateway Integration (Stripe / JazzCash Direct API).
+
+================================================================================
+27. EXHAUSTIVE FILE & FOLDER MAP
+================================================================================
+- `src/main.tsx`: Application entry point.
+- `src/styles.css`: Global styles, CSS variables, OKLCH theme colors.
+- `src/engine/registry.ts`: Dynamic template plugin auto-discovery registry.
+- `src/engine/types.ts`: Core type definitions for TemplateConfig, FieldDef, Plugin.
+- `src/routes/index.tsx`: Homepage route.
+- `src/routes/templates/index.tsx`: Templates catalog catalog route.
+- `src/routes/editor/template/$templateId.tsx`: Full-width template editor route.
+- `src/routes/checkout/$pageId.tsx`: PKR payment & order checkout route.
+- `src/routes/p/$slug.tsx`: Public published template viewer route.
+- `src/routes/auth/login.tsx`: User login route with credential validation.
+- `src/components/layout/Navbar.tsx`: Global navigation header.
+- `src/components/home/FeaturesShowcase.tsx`: Features section & Awwwards template cards.
+- `src/components/template-editor/EditorFormPanel.tsx`: Editor accordion configuration panel.
+- `src/components/template-editor/FieldWidget.tsx`: Generic field input control factory.
+- `src/store/templateEditor.ts`: Zustand editor state store with undo/redo history.
+- `src/store/auth.ts`: Zustand authentication state store.
+
+================================================================================
+                              END OF DOCUMENTATION
+================================================================================

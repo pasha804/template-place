@@ -1,0 +1,500 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Caveat:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500&display=swap');
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(:root:not(.light) *));
+
+/*
+ * SHAUKAT TECHS TEMPLATES — "Cosmic Velvet" Design System
+ * Deep space dark backgrounds, electric violet–magenta gradients,
+ * warm gold accents, premium glass morphism with blur + saturate,
+ * cinematic shadows and rich glow effects.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 18px);
+  --radius-4xl: calc(var(--radius) + 28px);
+  --radius-full: 9999px;
+
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-violet: var(--violet);
+  --color-magenta: var(--magenta);
+  --color-gold: var(--gold);
+  --color-nebula: var(--nebula);
+  --color-star: var(--star);
+  --color-paper: var(--paper);
+  --color-paper-ink: var(--paper-ink);
+}
+
+/* ─────────────────────────── DARK (default) ─────────────────────────── */
+:root {
+  --radius: 0.9rem;
+
+  /* Deepest space backgrounds */
+  --background:  #08071a;
+  --foreground:  #f0eeff;
+  --surface:     #0f0d24;
+  --surface-2:   #17143a;
+  --card:        #120f2c;
+  --card-foreground: #f0eeff;
+  --popover:     #120f2c;
+  --popover-foreground: #f0eeff;
+
+  /* Electric violet primary */
+  --primary:          #a78bfa;   /* violet-400 */
+  --primary-foreground: #08071a;
+
+  /* Warm gold secondary */
+  --secondary:        #1a1735;
+  --secondary-foreground: #f0eeff;
+
+  /* Muted */
+  --muted:            #1e1b3f;
+  --muted-foreground: #8b87b8;
+
+  /* Hot pink accent */
+  --accent:           #f472b6;   /* pink-400 */
+  --accent-foreground: #08071a;
+
+  /* Semantic */
+  --destructive:      #f87171;
+  --destructive-foreground: #08071a;
+  --success:          #34d399;
+  --success-foreground: #08071a;
+  --warning:          #fbbf24;
+  --warning-foreground: #08071a;
+
+  /* Borders / inputs */
+  --border: rgba(167,139,250,0.12);
+  --input:  rgba(167,139,250,0.16);
+  --ring:   #a78bfa;
+
+  /* Charts */
+  --chart-1: #a78bfa;
+  --chart-2: #f472b6;
+  --chart-3: #38bdf8;
+  --chart-4: #34d399;
+  --chart-5: #fbbf24;
+
+  /* Sidebar */
+  --sidebar:            #0b0920;
+  --sidebar-foreground: #c4bef5;
+  --sidebar-primary:    #a78bfa;
+  --sidebar-primary-foreground: #08071a;
+  --sidebar-accent:     #1a1735;
+  --sidebar-accent-foreground: #c4bef5;
+  --sidebar-border:     rgba(167,139,250,0.10);
+  --sidebar-ring:       #a78bfa;
+
+  /* ── Design tokens ── */
+  --glass-bg:    rgba(15,13,36,0.55);
+  --glass-border: rgba(167,139,250,0.15);
+
+  /* Signature gradients */
+  --gradient-brand: linear-gradient(135deg, #7c3aed 0%, #a78bfa 40%, #f472b6 80%, #fb7185 100%);
+  --gradient-gold:  linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fcd34d 100%);
+  --gradient-cool:  linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #a78bfa 100%);
+  --gradient-warm:  linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #a78bfa 100%);
+  --gradient-card:  linear-gradient(160deg, rgba(167,139,250,0.08) 0%, rgba(244,114,182,0.04) 100%);
+
+  /* Mesh background */
+  --mesh-bg: radial-gradient(at 20% 20%, hsla(263,80%,45%,0.18) 0, transparent 50%),
+             radial-gradient(at 80% 10%, hsla(320,70%,60%,0.14) 0, transparent 50%),
+             radial-gradient(at 50% 80%, hsla(200,90%,55%,0.10) 0, transparent 50%),
+             radial-gradient(at 10% 80%, hsla(263,60%,30%,0.12) 0, transparent 45%);
+
+  /* Shadows */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.4), 0 4px 12px -4px rgba(0,0,0,.5);
+  --shadow-md:   0 4px 20px -6px rgba(0,0,0,.5), 0 12px 40px -12px rgba(0,0,0,.6);
+  --shadow-lg:   0 16px 60px -20px rgba(0,0,0,.75), 0 40px 80px -30px rgba(0,0,0,.5);
+  --shadow-glow-brand: 0 0 0 1px rgba(167,139,250,.25), 0 8px 40px -10px rgba(167,139,250,.55);
+  --shadow-glow-pink:  0 0 0 1px rgba(244,114,182,.25), 0 8px 40px -10px rgba(244,114,182,.45);
+  --shadow-glow-gold:  0 0 0 1px rgba(251,191,36,.2),   0 8px 40px -10px rgba(251,191,36,.4);
+  --shadow-glow: var(--shadow-glow-brand);
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-base: 240ms var(--ease-smooth);
+}
+
+/* ─────────────────────────── LIGHT MODE ─────────────────────────── */
+.light {
+  --background:  #faf9ff;
+  --foreground:  #1a1535;
+  --surface:     #ffffff;
+  --surface-2:   #f3f0ff;
+  --card:        #ffffff;
+  --card-foreground: #1a1535;
+  --popover:     #ffffff;
+  --popover-foreground: #1a1535;
+
+  --primary:          #7c3aed;
+  --primary-foreground: #ffffff;
+
+  --secondary:        #ede9fe;
+  --secondary-foreground: #1a1535;
+
+  --muted:            #f3f0ff;
+  --muted-foreground: #6d5fc5;
+
+  --accent:           #db2777;
+  --accent-foreground: #ffffff;
+
+  --destructive:      #dc2626;
+  --destructive-foreground: #fff;
+  --success:          #059669;
+  --success-foreground: #fff;
+  --warning:          #d97706;
+  --warning-foreground: #fff;
+
+  --border: rgba(124,58,237,0.12);
+  --input:  rgba(124,58,237,0.10);
+  --ring:   #7c3aed;
+
+  --chart-1: #7c3aed;
+  --chart-2: #db2777;
+  --chart-3: #0284c7;
+  --chart-4: #059669;
+  --chart-5: #d97706;
+
+  --sidebar:            #f5f3ff;
+  --sidebar-foreground: #4c3b9e;
+  --sidebar-primary:    #7c3aed;
+  --sidebar-primary-foreground: #fff;
+  --sidebar-accent:     #ede9fe;
+  --sidebar-accent-foreground: #4c3b9e;
+  --sidebar-border:     rgba(124,58,237,.10);
+  --sidebar-ring:       #7c3aed;
+
+  --glass-bg:    rgba(255,255,255,0.72);
+  --glass-border: rgba(124,58,237,0.12);
+
+  --gradient-brand: linear-gradient(135deg, #7c3aed 0%, #9f55f7 50%, #db2777 100%);
+  --gradient-cool:  linear-gradient(135deg, #0284c7 0%, #7c3aed 100%);
+  --gradient-warm:  linear-gradient(135deg, #e11d48 0%, #9f55f7 100%);
+  --gradient-card:  linear-gradient(160deg, rgba(124,58,237,0.06) 0%, rgba(219,39,119,0.03) 100%);
+
+  --mesh-bg: radial-gradient(at 20% 20%, hsla(263,80%,75%,0.10) 0, transparent 50%),
+             radial-gradient(at 80% 10%, hsla(320,70%,75%,0.08) 0, transparent 50%),
+             radial-gradient(at 50% 85%, hsla(200,80%,70%,0.07) 0, transparent 50%);
+
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 4px 12px -4px rgba(0,0,0,.08);
+  --shadow-md:   0 4px 20px -6px rgba(0,0,0,.08), 0 12px 40px -12px rgba(0,0,0,.10);
+  --shadow-lg:   0 16px 60px -20px rgba(0,0,0,.12), 0 40px 80px -30px rgba(0,0,0,.08);
+  --shadow-glow-brand: 0 0 0 1px rgba(124,58,237,.20), 0 8px 40px -10px rgba(124,58,237,.35);
+  --shadow-glow-pink:  0 0 0 1px rgba(219,39,119,.18), 0 8px 40px -10px rgba(219,39,119,.28);
+  --shadow-glow-gold:  0 0 0 1px rgba(217,119,6,.15),  0 8px 40px -10px rgba(217,119,6,.25);
+  --shadow-glow: var(--shadow-glow-brand);
+}
+
+/* ─────────────────────────── BASE ─────────────────────────── */
+@layer base {
+  * { border-color: var(--color-border); box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(167,139,250,.3) transparent;
+  }
+
+  body {
+    background-color: #0a0914;
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background-image: var(--mesh-bg);
+    background-attachment: fixed;
+    /* Ensure no browser-default margin/padding bleeds into template pages */
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Template page reset ──────────────────────────────────────
+     Applied to <body> on /demo/* and /p/* routes via JS.
+     Strips all marketplace body styles so templates own the viewport. */
+  body.template-page {
+    background-color: transparent !important;
+    background-image: none !important;
+    background-attachment: unset !important;
+    color: inherit !important;
+    font-family: inherit !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100dvh;
+  }
+
+  /* On template pages, override min-h-screen to use dynamic viewport height.
+     This prevents the blank-space-at-top bug on mobile Chrome where 100vh
+     includes the address bar but the visible viewport is shorter. */
+  body.template-page .min-h-screen {
+    min-height: 100dvh;
+  }
+
+  /* Ensure the html element doesn't clip template scrolling */
+  html:has(body.template-page) {
+    overflow-x: hidden;
+    scroll-behavior: auto;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  ::selection { background: rgba(167,139,250,.30); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(167,139,250,.25); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(167,139,250,.45); }
+}
+
+/* ── Outside @layer: maximum specificity viewport height overrides ─────
+   These override Tailwind's min-h-screen (100vh) with 100dvh on template
+   pages. Applied via body.template-page class set in JS on /demo/* /p/*
+   ───────────────────────────────────────────────────────────────────── */
+body.template-page .min-h-screen,
+body.template-page [style*="minHeight"],
+body.template-page [class*="min-h-screen"] {
+  min-height: 100dvh !important;
+}
+@supports not (min-height: 100dvh) {
+  body.template-page .min-h-screen {
+    min-height: 100vh !important;
+  }
+}
+
+/* ─────────────────────────── UTILITIES ─────────────────────────── */
+@utility glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+@utility glass-strong {
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(32px) saturate(200%);
+}
+
+@utility text-brand {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility text-aurora {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-aurora {
+  background: var(--gradient-brand);
+}
+
+@utility bg-brand {
+  background: var(--gradient-brand);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility shadow-lift {
+  box-shadow: var(--shadow-lg);
+}
+
+@utility shadow-soft {
+  box-shadow: var(--shadow-sm);
+}
+
+@utility card-shine {
+  background: var(--gradient-card);
+  border: 1px solid var(--glass-border);
+}
+
+/* ─────────────────────────── ANIMATIONS ─────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%  { transform: translateY(-18px) rotate(1deg); }
+  66%  { transform: translateY(-8px) rotate(-0.5deg); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-22px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.08); }
+}
+
+@keyframes aurora-flow {
+  0%, 100% { transform: translate3d(0,0,0) scale(1); opacity: 0.7; }
+  30% { transform: translate3d(3%,-5%,0) scale(1.05); opacity: 1; }
+  60% { transform: translate3d(-2%,4%,0) scale(0.97); opacity: 0.8; }
+}
+
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to   { background-position: 200% center; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes border-spin {
+  from { --angle: 0deg; }
+  to   { --angle: 360deg; }
+}
+
+@utility animate-float { animation: float 8s ease-in-out infinite; }
+@utility animate-float2 { animation: float2 6s ease-in-out infinite; }
+@utility animate-float-slow { animation: float 12s ease-in-out infinite; }
+@utility animate-aurora { animation: aurora-flow 18s ease-in-out infinite; }
+@utility animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+@utility animate-marquee { animation: marquee-x 32s linear infinite; }
+@utility animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(167,139,250,.15) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s ease-in-out infinite;
+}
+@utility animate-spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Birthday Surprise Template — Swiper dark theme overrides
+   Matches the original birthday template1/src/app/globals.css exactly
+   ═══════════════════════════════════════════════════════════════════════ */;
+
+
+/* Swiper dark red pagination bullets */
+.dark-cards-swiper .swiper-pagination-bullet {
+  background: rgba(200, 40, 40, 0.4) !important;
+  width: 8px !important;
+  height: 8px !important;
+  border: 1.5px solid rgba(255, 100, 100, 0.3) !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+}
+.dark-cards-swiper .swiper-pagination-bullet-active {
+  background: rgba(200, 40, 40, 0.9) !important;
+  transform: scale(1.3) !important;
+  box-shadow: 0 0 10px rgba(200, 40, 40, 0.8) !important;
+}
+
+/* Cards swiper slide shadows */
+.dark-cards-swiper .swiper-slide-shadow-left,
+.dark-cards-swiper .swiper-slide-shadow-right {
+  background: linear-gradient(to left, rgba(0,0,0,0.5), transparent) !important;
+}
+
+/* Coverflow memories swiper */
+.dark-memories-swiper {
+  width: 100%;
+  padding-bottom: 4px !important;
+}
+.dark-memories-swiper .swiper-slide {
+  border-radius: 20px;
+  overflow: hidden;
+}
+.dark-memories-swiper .swiper-slide-shadow-left {
+  background: linear-gradient(to left, rgba(80,0,0,0.55), transparent) !important;
+}
+.dark-memories-swiper .swiper-slide-shadow-right {
+  background: linear-gradient(to right, rgba(80,0,0,0.55), transparent) !important;
+}
+
+/* GPU acceleration for swiper */
+.dark-cards-swiper,
+.dark-memories-swiper,
+.dark-cards-swiper .swiper-slide,
+.dark-memories-swiper .swiper-slide {
+  will-change: transform;
+  transform: translateZ(0);
+
+  backface-visibility: hidden;
+}
+
+
+/* ── Editor Preview Viewport ───────────────────────────────────────────
+   The preview-viewport container has a fixed height (e.g. 844px for mobile).
+   Inside it, min-h-screen uses 100vh = full browser height, not container height.
+   This override makes min-h-screen behave like 100% of the container instead,
+   so templates fill the preview frame correctly without overflowing.
+   ─────────────────────────────────────────────────────────────────────── */
+.preview-viewport .min-h-screen,
+.preview-viewport [class*="min-h-screen"] {
+  min-height: 100% !important;
+}
+/* Also override inline minHeight:100vh styles set by some renderers */
+.preview-viewport > * {
+  min-height: 100%;
+}
