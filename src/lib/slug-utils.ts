@@ -60,7 +60,7 @@ export async function ensureUniqueSlug(rawSlug: string, currentPageId?: string):
   while (counter <= 20) {
     try {
       let query = supabase.from("pages").select("id").eq("slug", candidate);
-      if (currentPageId && !currentPageId.startsWith("draft-")) {
+      if (currentPageId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(currentPageId)) {
         query = query.neq("id", currentPageId);
       }
       const { data, error } = await query.maybeSingle();

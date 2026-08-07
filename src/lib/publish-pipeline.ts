@@ -134,9 +134,23 @@ export async function runPublishPipeline(
       console.warn("Template seed warning:", e);
     }
 
-    // If pageId is a draft string or invalid UUID format, pass undefined to let Supabase assign a real UUID
+    // If pageId is a draft string or invalid UUID format, resolve existing UUID from database or pass undefined
     const isInvalidUuid = !isValidUUID(pageId);
-    const dbPageId = isInvalidUuid ? undefined : pageId;
+    let dbPageId = isInvalidUuid ? undefined : pageId;
+
+    if (isInvalidUuid && userId) {
+      try {
+        const { data: existingRow } = await supabase
+          .from("pages")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("slug", finalSlug)
+          .maybeSingle();
+        if (existingRow?.id) {
+          dbPageId = existingRow.id;
+        }
+      } catch {}
+    }
 
     const pagePayload = {
       id: dbPageId,

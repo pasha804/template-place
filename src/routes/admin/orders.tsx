@@ -64,6 +64,7 @@ function AdminOrdersPage() {
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [showChangeForm, setShowChangeForm] = useState(false);
 
+  const { data: orders = [], isLoading } = useAllOrders(statusFilter !== "all" ? statusFilter : undefined);
   const verifyPayment = useVerifyPayment();
   const approve       = useApproveOrder();
   const reject        = useRejectOrder();
