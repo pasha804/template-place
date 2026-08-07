@@ -30,6 +30,9 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "shaukat-auth",
       partialize: (s) => ({ user: s.user, session: s.session }),
+      // SSR-safe: localStorage is not available on the server (Vercel/Cloudflare)
+      storage: typeof window !== "undefined" ? undefined : { getItem: () => null, setItem: () => {}, removeItem: () => {} },
     },
   ),
 );
+

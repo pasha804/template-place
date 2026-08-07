@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Use "vercel" preset when deploying to Vercel.
+  // Override with NITRO_PRESET env var in CI/CD if needed.
+  nitro: {
+    preset: "vercel",
+  },
 });
