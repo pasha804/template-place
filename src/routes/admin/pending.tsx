@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStore } from "@/store/auth";
-import { useApproveOrder, useVerifyPayment, useRejectOrder, useRequestChanges, formatPKR, usePendingWebsites } from "@/hooks/use-orders";
+import { useApproveOrder, useRejectOrder, useRequestChanges, formatPKR, usePendingWebsites } from "@/hooks/use-orders";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { getExternalTemplate } from "@/engine/registry";
 import type { Database } from "@/integrations/supabase/types";
@@ -35,20 +35,9 @@ function AdminPendingWebsitesPage() {
   const { user, isAdmin } = useAuthStore();
   const { data: pendingItems = [], isLoading, refetch } = usePendingWebsites();
 
-  const verifyPayment = useVerifyPayment();
   const approve = useApproveOrder();
   const reject = useRejectOrder();
   const requestChange = useRequestChanges();
-
-  async function handleVerifyPayment(orderId: string) {
-    try {
-      await verifyPayment.mutateAsync({ orderId });
-      toast.success("Payment screenshot verified! Ready to publish live.");
-      refetch();
-    } catch (err: any) {
-      toast.error(`Verification failed: ${err?.message || "Unknown error"}`);
-    }
-  }
 
   const [previewItem, setPreviewItem] = useState<{ page: PageRow; order: OrderRow | null } | null>(null);
   const [screenshotModal, setScreenshotModal] = useState<string | null>(null);
@@ -60,21 +49,15 @@ function AdminPendingWebsitesPage() {
     if (!isAdmin) { navigate({ to: "/dashboard" }); return; }
   }, [user, isAdmin, navigate]);
 
-  async function handlePublish(orderId: string | undefined, pageId: string) {
+  async function handlePublish(orderId: string | undefined, pageObj: PageRow) {
     try {
-      if (orderId) {
-        const res = await approve.mutateAsync({ orderId, pageId });
-        toast.success(`Published successfully! Live at /p/${res.slug}`);
-      } else {
-        // Fallback if no order record exists yet using robust publish pipeline
-        const pageItem = pendingItems.find(x => x.page.id === pageId)?.page;
-        const res = await approve.mutateAsync({ orderId: "manual-approval", pageId });
-        toast.success(`Published successfully! Live at /p/${res.slug}`);
-      }
+      const res = await approve.mutateAsync({ orderId, pageId: pageObj.id, pageData: pageObj });
+      toast.success(`Published successfully! Live at /p/${res.slug}`);
       refetch();
       setPreviewItem(null);
-    } catch (err: any) {
-      toast.error(`Publishing failed: ${err?.message || "Unknown error"}`);
+    } catch (e) {
+      console.error("Publish error:", e);
+      toast.error("Failed to publish website");
     }
   }
 
@@ -211,27 +194,14 @@ function AdminPendingWebsitesPage() {
                           Preview Website
                         </button>
 
-                        {order && order.status === "pending" ? (
-                          <button
-                            type="button"
-                            onClick={() => handleVerifyPayment(order.id)}
-                            disabled={verifyPayment.isPending}
-                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-sky-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            Verify Payment
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => handlePublish(order?.id, page.id)}
-                            disabled={approve.isPending}
-                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-all disabled:opacity-50"
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            Publish Live
-                          </button>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => handlePublish(order?.id, page)}
+                          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-emerald-500/20 hover:scale-[1.02] transition-all"
+                        >
+                          <CheckCircle2 className="h-4 w-4" />
+                          Publish Live
+                        </button>
 
                         {order && (
                           <button
@@ -275,7 +245,7 @@ function AdminPendingWebsitesPage() {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={() => handlePublish(previewItem.order?.id, previewItem.page.id)}
+                    onClick={() => handlePublish(previewItem.order?.id, previewItem.page)}
                     className="flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-600 transition-colors"
                   >
                     <CheckCircle2 className="h-4 w-4" /> Publish Now
@@ -296,8 +266,17 @@ function AdminPendingWebsitesPage() {
                   const plugin = getExternalTemplate(previewItem.page.template_id);
                   if (!plugin) {
                     return (
-                      <div className="flex h-full items-center justify-center text-white/50">
-                        Template plugin not found: {previewItem.page.template_id}
+                      <div className="flex h-full flex-col items-center justify-center gap-4 text-center px-4">
+                        <AlertCircle className="h-12 w-12 text-amber-400" />
+                        <div>
+                          <h3 className="text-lg font-bold text-white mb-2">Template Not Found</h3>
+                          <p className="text-white/50 text-sm mb-4">
+                            The template plugin for this page could not be loaded.
+                          </p>
+                          <p className="text-white/30 text-xs font-mono">
+                            Template ID: {previewItem.page.template_id || "missing"}
+                          </p>
+                        </div>
                       </div>
                     );
                   }

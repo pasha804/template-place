@@ -177,9 +177,12 @@ export function usePlaceOrder() {
         }
       }
 
-      // Guarantee the page is upserted in Supabase with pending_approval status
+      // Guarantee valid UUID for page ID in Supabase
+      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(input.pageId);
+      let pageIdToUse = isUuid ? input.pageId : crypto.randomUUID();
+
       const pagePayload = {
-        id: input.pageId.startsWith("draft-") ? undefined : input.pageId,
+        id: pageIdToUse,
         user_id: input.userId,
         template_id: input.templateId,
         title: localTitle,
@@ -191,11 +194,15 @@ export function usePlaceOrder() {
 
       try {
         const pageRes = await supabase.from("pages").upsert(pagePayload as any).select().single();
-        if (pageRes.error && pageRes.error.code === "23503") {
-          await supabase.from("pages").upsert({ ...pagePayload, template_id: null } as any);
+        if (pageRes.data?.id) {
+          pageIdToUse = pageRes.data.id;
+        } else if (pageRes.error) {
+          console.error("Page upsert error during order:", pageRes.error);
+          throw new Error("Page upsert failed: " + pageRes.error.message);
         }
       } catch (e) {
-        console.warn("Page upsert during order warning:", e);
+        console.error("Page upsert exception:", e);
+        throw e;
       }
 
       let order: Order | null = null;
@@ -215,7 +222,7 @@ export function usePlaceOrder() {
             ...({
               payment_method:     input.paymentMethod,
               payment_screenshot: input.paymentScreenshot,
-              page_id:            input.pageId,
+              page_id:            pageIdToUse,
               currency_display:   "PKR",
             } as object),
           })
@@ -226,7 +233,7 @@ export function usePlaceOrder() {
           order = {
             ...(data as Order),
             reference: (data as Order).reference || refCode,
-            page_id: input.pageId,
+            page_id: pageIdToUse,
             payment_method: input.paymentMethod,
             payment_screenshot: input.paymentScreenshot,
           };
@@ -234,7 +241,7 @@ export function usePlaceOrder() {
             await supabase.from("order_items").insert({
               order_id:         order.id,
               template_id:      input.templateId,
-              page_id:          input.pageId,
+              page_id:          pageIdToUse,
               label:            input.templateName,
               quantity:         1,
               unit_price_cents: plan.pricePaisa,
@@ -259,7 +266,7 @@ export function usePlaceOrder() {
           provider:           input.paymentMethod,
           payment_method:     input.paymentMethod,
           payment_screenshot: input.paymentScreenshot,
-          page_id:            input.pageId,
+          page_id:            pageIdToUse,
           created_at:         new Date().toISOString(),
         } as Order;
       }
@@ -526,10 +533,16 @@ export function usePendingWebsites() {
           o.order_items?.some((item: { page_id?: string }) => item.page_id === page.id)
         ) || null;
 
-        const templateId = page.template_id || ((page.content as Record<string, unknown>)?._template_id as string) || page.template_id;
+        // CRITICAL: Use explicit template_id or content._template_id without random fallback
+        const templateId = page.template_id || 
+          (page.content as Record<string, unknown>)?._template_id as string;
+
+        if (!templateId) {
+          console.error("Page missing template_id:", page.id, page.slug);
+        }
 
         return {
-          page: { ...page, template_id: templateId },
+          page: { ...page, template_id: templateId || page.template_id },
           order: matchingOrder,
           userProfile: profileMap.get(page.user_id) || null,
         };

@@ -4,7 +4,7 @@ import { schema, defaults } from "./schema";
 
 export default defineExternalTemplate({
   manifest: {
-    id:           "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+    id:           "b2c3d4e5-f6a7-8901-bcde-f12345678901",
     slug:         "birthday-galaxy",
     name:         "Birthday Galaxy",
     tagline:      "An 11-screen galaxy journey of memories, love, and wishes",

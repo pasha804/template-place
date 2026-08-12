@@ -82,25 +82,49 @@ function PublicPageViewer() {
   /* ── Granted — render the template ── */
   if (access === "granted" && page) {
     // External template (birthday, proposal, wedding, etc.)
-    // Render with zero wrapper — template owns the entire viewport
+    // Use template_id as primary source, with content._template_id as fallback
     const templateId = page.template_id || (page.content as Record<string, unknown>)?._template_id as string;
-    const extPlugin = templateId ? getExternalTemplate(templateId) : null;
-    if (extPlugin) {
-      const config = (page.content as TemplateConfig) ?? extPlugin.defaults;
-      return <extPlugin.Renderer config={config} mode="view" />;
+    
+    if (!templateId) {
+      return (
+        <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center bg-[#08071a]">
+          <AlertCircle className="h-12 w-12 text-red-400" />
+          <h1 className="text-2xl font-bold text-white">Template Error</h1>
+          <p className="text-white/40">This page is missing template information.</p>
+          <p className="text-xs text-white/25 font-mono">Page ID: {page.id}</p>
+        </div>
+      );
     }
 
-    // Block-based template
-    const blockPlugin = getTemplate(page.template_id);
+    const extPlugin = getExternalTemplate(templateId);
+    if (extPlugin) {
+      const config = (page.content as TemplateConfig) ?? extPlugin.defaults;
+      return (
+        <div className="template-runtime">
+          <extPlugin.Renderer config={config} mode="view" />
+        </div>
+      );
+    }
+
+    // Block-based template (legacy)
+    const blockPlugin = getTemplate(templateId);
     if (blockPlugin) {
       const blocks = page.blocks as unknown as BlockInstance[];
       const theme  = page.theme  as unknown as PageTheme;
-      return <blockPlugin.Renderer blocks={blocks} theme={theme} mode="view" />;
+      return (
+        <div className="template-runtime">
+          <blockPlugin.Renderer blocks={blocks} theme={theme} mode="view" />
+        </div>
+      );
     }
 
+    // Template not found in registry
     return (
-      <div className="flex min-h-screen items-center justify-center text-white/40 bg-[#08071a]">
-        Template renderer not found for: {page.template_id}
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center bg-[#08071a]">
+        <AlertCircle className="h-12 w-12 text-amber-400" />
+        <h1 className="text-2xl font-bold text-white">Template Not Found</h1>
+        <p className="text-white/40">The template for this page is not available.</p>
+        <p className="text-xs text-white/25 font-mono">Template ID: {templateId}</p>
       </div>
     );
   }

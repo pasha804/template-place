@@ -6,9 +6,9 @@
  * User fills in fields → Save → Continue → Checkout.
  */
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useCallback, useRef, useState } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { z } from "zod";
-import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getExternalTemplate } from "@/engine/registry";
 import { useTemplateEditorStore } from "@/store/templateEditor";
@@ -18,13 +18,12 @@ import type { Json } from "@/integrations/supabase/types";
 import { EditorTopBar }      from "@/components/template-editor/EditorTopBar";
 import { EditorFormPanel }   from "@/components/template-editor/EditorFormPanel";
 import type { TemplateConfig } from "@/engine/types";
-import { runPublishPipeline } from "@/lib/publish-pipeline";
 
 const searchSchema = z.object({ pageId: z.string().optional() });
 
 export const Route = createFileRoute("/editor/template/$templateId")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Edit Template — Shaukat Techs" }] }),
+  head: () => ({ meta: [{ title: "Edit Template — Greeting Vibes" }] }),
   component: TemplateEditorPage,
 });
 
@@ -96,8 +95,8 @@ function TemplateEditorPage() {
         const slug = generateSlug(plugin.manifest.name);
         let data: Record<string, unknown> | null = null;
 
-        // Try inserting with plugin.manifest.id
-        const res1 = await supabase
+        // Insert new page with template_id (FK constraint should be satisfied after migration)
+        const res = await supabase
           .from("pages")
           .insert({
             user_id:     user.id,
@@ -113,39 +112,17 @@ function TemplateEditorPage() {
           .select()
           .single();
 
-        if (res1.data) {
-          data = res1.data as Record<string, unknown>;
-        } else {
-          // Retry with template_id: null in case of foreign key constraint on templates table
-          const res2 = await supabase
-            .from("pages")
-            .insert({
-              user_id:     user.id,
-              template_id: null as unknown as string,
-              title:       (plugin.defaults._page_title as string) ?? plugin.manifest.name,
-              slug,
-              status:      "draft",
-              blocks:      [],
-              theme:       {},
-              content:     { ...plugin.defaults, _template_id: plugin.manifest.id } as unknown as Json,
-              is_public:   false,
-            })
-            .select()
-            .single();
-
-          if (res2.data) {
-            data = res2.data as Record<string, unknown>;
-          }
+        if (res.data) {
+          data = res.data as Record<string, unknown>;
+        } else if (res.error) {
+          console.error("Failed to create page:", res.error);
+          toast.error("Failed to create page. Please try again.");
+          navigate({ to: "/templates" });
+          return;
         }
 
-        // Final fallback: LocalStorage page draft if Supabase insert fails completely
-        const fallbackUuid = typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-              const r = (Math.random() * 16) | 0;
-              return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-            });
-        const finalPageId = (data?.id as string) || fallbackUuid;
+        // LocalStorage backup for offline resilience
+        const finalPageId = (data?.id as string) || `draft-${Date.now()}`;
         const finalSlug = (data?.slug as string) || slug;
         const pageObj = {
           id: finalPageId,
@@ -174,128 +151,110 @@ function TemplateEditorPage() {
   }, [user, plugin, pageId, templateId, navigate, store]);
 
   /* ── Save ── */
-  /* ── Save ── */
   const doSave = useCallback(async () => {
     const { config, pageId: pid, setIsSaving, setSaved } =
       useTemplateEditorStore.getState();
-    if (!pid || !user) return pid;
+    if (!pid || !user) return;
     setIsSaving(true);
 
     const title = (config._page_title as string) || plugin?.manifest.name || "Untitled";
-    const rawSlug = (config._page_slug as string) || pid;
+    const slug = (config._page_slug as string) || pid;
+    const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(pid);
 
     try {
       const payload = {
-        id: pid.startsWith("draft-") ? undefined : pid,
+        ...(isUuid ? { id: pid } : {}),
         user_id: user.id,
         template_id: plugin?.manifest.id || templateId,
         title,
-        slug: rawSlug,
+        slug,
         status: "draft",
         content: { ...config, _template_id: plugin?.manifest.id || templateId } as unknown as Json,
         is_public: Boolean(config._page_isPublic),
         updated_at: new Date().toISOString(),
       };
 
-      let resolvedId = pid;
-      const res1 = await supabase.from("pages").upsert(payload as any).select().single();
-      if (res1.data?.id) {
-        resolvedId = res1.data.id;
-        if (pid.startsWith("draft-")) {
-          useTemplateEditorStore.setState({ pageId: resolvedId });
-          navigate({
-            to: "/editor/template/$templateId",
-            params: { templateId },
-            search: { pageId: resolvedId },
-            replace: true,
-          });
-        }
-      } else if (res1.error && res1.error.code === "23503") {
-        const fb = await supabase.from("pages").upsert({ ...payload, template_id: null } as any).select().single();
-        if (fb.data?.id) resolvedId = fb.data.id;
+      const res = await supabase.from("pages").upsert(payload as any).select().single();
+      let realPageId = pid;
+      
+      if (res.data?.id) {
+        realPageId = res.data.id;
+        useTemplateEditorStore.setState({ pageId: realPageId });
+      } else if (res.error) {
+        console.error("Save failed:", res.error);
+        toast.error("Failed to save. Please check your connection.");
+        setIsSaving(false);
+        return;
       }
 
-      // Always update localStorage backup
-      const existing = localStorage.getItem(`page_${resolvedId}`);
-      const baseObj = existing ? JSON.parse(existing) : { id: resolvedId, user_id: user.id };
+      // Update localStorage backup
+      const existing = localStorage.getItem(`page_${realPageId}`);
+      const baseObj = existing ? JSON.parse(existing) : { id: realPageId, user_id: user.id };
       const updatedObj = {
         ...baseObj,
-        id: resolvedId,
+        id: realPageId,
         title,
-        slug: rawSlug,
+        slug,
         content: config,
         template_id: plugin?.manifest.id || templateId,
         updated_at: new Date().toISOString(),
       };
-      localStorage.setItem(`page_${resolvedId}`, JSON.stringify(updatedObj));
+      localStorage.setItem(`page_${realPageId}`, JSON.stringify(updatedObj));
+      if (pid !== realPageId) {
+        localStorage.setItem(`page_${pid}`, JSON.stringify(updatedObj));
+      }
 
       setSaved(new Date());
       toast.success("Saved");
-      return resolvedId;
-    } catch {
+      return realPageId;
+    } catch (e) {
+      console.error("Save failed error:", e);
       toast.error("Save failed");
-      return pid;
     } finally {
       setIsSaving(false);
     }
-  }, [plugin, user, templateId, navigate]);
+  }, [plugin, user, templateId]);
 
   /* ── Publish ── */
-  const [publishProgress, setPublishProgress] = useState<import("@/lib/publish-pipeline").PublishProgress | null>(null);
-
   const doPublish = useCallback(async () => {
-    const { config, pageId: pid, setIsSaving } = useTemplateEditorStore.getState();
-    if (!pid || !user) return;
+    const { pageId: pid, setIsSaving } = useTemplateEditorStore.getState();
+    if (!pid) return;
     setIsSaving(true);
+    try {
+      const activeId = (await doSave()) || pid;
+      const isUuid = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(activeId);
 
-    const savedId = await doSave();
-    const currentId = savedId || pid;
+      let query = supabase
+        .from("pages")
+        .update({
+          status:       "published",
+          published_at: new Date().toISOString(),
+          is_public:    true,
+        });
 
-    const title = (config._page_title as string) || plugin?.manifest.name || "Untitled";
-    const rawSlug = (config._page_slug as string) || currentId;
+      if (isUuid) {
+        query = query.eq("id", activeId);
+      } else {
+        query = query.eq("slug", activeId);
+      }
 
-    const result = await runPublishPipeline(
-      {
-        pageId: currentId,
-        userId: user.id,
-        templateId: plugin?.manifest.id || templateId,
-        title,
-        slug: rawSlug,
-        content: config as Record<string, unknown>,
-      },
-      (progress) => setPublishProgress(progress),
-    );
-
-    setIsSaving(false);
-
-    if (result.success) {
-      toast.success(`Website published live! 🎉 Live at /p/${result.slug}`);
-      setTimeout(() => setPublishProgress(null), 1500);
-    } else {
-      toast.error(`Publishing failed: ${result.error || "Unknown error"}`);
+      const { error } = await query;
+      if (error) throw error;
+      toast.success("Page published! 🎉");
+    } catch (e) {
+      console.error("Publish failed error:", e);
+      toast.error("Publish failed");
+    } finally {
+      useTemplateEditorStore.getState().setIsSaving(false);
     }
-  }, [doSave, plugin, user, templateId]);
+  }, [doSave]);
 
-  /* ── Autosave 2s after edit & interval sync ── */
+  /* ── Autosave every 30s when dirty ── */
   useEffect(() => {
     autosaveRef.current = setInterval(() => {
-      if (useTemplateEditorStore.getState().isDirty && navigator.onLine) {
-        doSave();
-      }
+      if (useTemplateEditorStore.getState().isDirty) doSave();
     }, 30_000);
-
-    const handleOnline = () => {
-      if (useTemplateEditorStore.getState().isDirty) {
-        toast.info("Back online — syncing changes...");
-        doSave();
-      }
-    };
-
-    window.addEventListener("online", handleOnline);
-    return () => {
-      if (autosaveRef.current) clearInterval(autosaveRef.current);
-      window.removeEventListener("online", handleOnline);
-    };
+    return () => { if (autosaveRef.current) clearInterval(autosaveRef.current); };
   }, [doSave]);
 
   /* ── Loading state ── */
@@ -310,58 +269,20 @@ function TemplateEditorPage() {
     );
   }
 
+  const handleSave = useCallback(async () => {
+    await doSave();
+  }, [doSave]);
+
   return (
     <div
-      className="relative flex h-screen flex-col overflow-hidden bg-[#08071a]"
-      style={{ fontFamily: "'Manrope', sans-serif" }}
+      className="app-ui flex h-screen flex-col overflow-hidden bg-[#08071a]"
+      style={{ fontFamily: "var(--font-poppins)" }}
     >
-      <EditorTopBar onSave={async () => { await doSave(); }} onPublish={doPublish} />
+      <EditorTopBar onSave={handleSave} onPublish={doPublish} />
       {/* Full-width configuration form — no sidebar, no preview */}
       <div className="flex-1 overflow-y-auto">
         <EditorFormPanel plugin={plugin} />
       </div>
-
-      {/* ── Publish Progress Modal ── */}
-      {publishProgress && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#120f2b] p-6 shadow-2xl space-y-4">
-            <div className="flex items-center gap-3">
-              {publishProgress.step === "COMPLETED" ? (
-                <CheckCircle2 className="h-6 w-6 text-emerald-400" />
-              ) : publishProgress.step === "FAILED" ? (
-                <AlertCircle className="h-6 w-6 text-red-400" />
-              ) : (
-                <Loader2 className="h-6 w-6 animate-spin text-violet-400" />
-              )}
-              <h3 className="text-base font-bold text-white">
-                {publishProgress.step === "COMPLETED" ? "Publish Complete!" : publishProgress.step === "FAILED" ? "Publish Failed" : "Publishing Website..."}
-              </h3>
-            </div>
-
-            <p className="text-xs text-white/70 leading-relaxed">
-              {publishProgress.message}
-            </p>
-
-            {/* Progress Bar */}
-            <div className="relative h-2 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full bg-gradient-to-r from-violet-500 to-pink-500 transition-all duration-300"
-                style={{ width: `${publishProgress.progressPercent}%` }}
-              />
-            </div>
-
-            {publishProgress.step === "FAILED" && (
-              <button
-                type="button"
-                onClick={() => setPublishProgress(null)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-white/5 py-2 text-xs font-semibold text-white/80 hover:bg-white/10 transition-colors"
-              >
-                Close & Fix Issue
-              </button>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
