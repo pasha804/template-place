@@ -65,7 +65,7 @@ function TemplateEditorPage() {
         let pageData: Record<string, unknown> | null = null;
         try {
           const { data: isAdminUser } = await supabase.rpc("is_admin");
-          let q = supabase.from("pages").select("*").eq("id", pageId);
+          let q = supabase.from("pages").select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, published_at, deleted_at, view_count, created_at, updated_at").eq("id", pageId);
           if (!isAdminUser) q = q.eq("user_id", user.id);
           const { data, error } = await q.single();
           if (!error && data) {

@@ -316,8 +316,8 @@ export function useApproveOrder() {
       let pageRecord: Database["public"]["Tables"]["pages"]["Row"] | null = null;
       if (isValidUUID(pageId)) {
         try {
-          const { data } = await supabase.from("pages").select("*").eq("id", pageId).maybeSingle();
-          if (data) pageRecord = data;
+          const { data } = await supabase.from("pages").select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, published_at, deleted_at, view_count, created_at, updated_at").eq("id", pageId).maybeSingle();
+          if (data) pageRecord = { ...data, expires_at: null } as any;
         } catch {}
       }
 
@@ -481,13 +481,14 @@ export function usePendingWebsites() {
     queryFn: async () => {
       let dbPages: Database["public"]["Tables"]["pages"]["Row"][] = [];
       try {
+        // Select specific columns to avoid issues with missing expires_at in old production DBs
         const { data, error } = await supabase
           .from("pages")
-          .select("*")
+          .select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, published_at, deleted_at, view_count, created_at, updated_at")
           .eq("status", "pending_approval")
           .is("deleted_at", null)
           .order("updated_at", { ascending: false });
-        if (!error && data) dbPages = data;
+        if (!error && data) dbPages = data as any[];
       } catch (e) {
         console.warn("Supabase fetch pending pages warning:", e);
       }
