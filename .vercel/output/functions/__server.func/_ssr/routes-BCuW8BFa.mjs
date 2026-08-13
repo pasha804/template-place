@@ -11,7 +11,7 @@ import { t as Navbar } from "./Navbar-wFLacLti.mjs";
 import { t as Footer } from "./Footer-BTWP9whH.mjs";
 import { i as useToggleFavorite, r as useFavorites, t as allUnifiedTemplates } from "./combined-BKJH_seF.mjs";
 import { n as PricingSection, t as FAQSection } from "./FAQSection-NT9vxkBs.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-F6fjRuF9.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BCuW8BFa.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var PHONES = [
@@ -815,7 +815,7 @@ var stats = [
 	{
 		icon: Users,
 		value: 5e3,
-		suffix: "+",
+		suffix: "K+",
 		label: "Happy Customers",
 		color: "#a78bfa"
 	},
@@ -915,14 +915,20 @@ function StatsSection() {
 								style: { color: s.color }
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "text-2xl font-black text-white sm:text-3xl",
+							className: "text-2xl font-black sm:text-3xl",
+							style: {
+								background: `linear-gradient(135deg, ${s.color}, ${s.color}dd)`,
+								WebkitBackgroundClip: "text",
+								backgroundClip: "text",
+								color: "transparent"
+							},
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AnimatedNumber, {
 								target: s.value,
 								suffix: s.suffix,
 								isDecimal: s.isDecimal
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "mt-0.5 text-xs text-white/40",
+							className: "mt-1 text-xs font-medium text-white/60",
 							children: s.label
 						})] })]
 					}, s.label))
@@ -2072,6 +2078,23 @@ function TestimonialsSection() {
 			behavior: "smooth"
 		});
 	}
+	(0, import_react.useEffect)(() => {
+		const interval = setInterval(() => {
+			if (scrollRef.current) {
+				const container = scrollRef.current;
+				const maxScroll = container.scrollWidth - container.clientWidth;
+				if (container.scrollLeft >= maxScroll - 10) container.scrollTo({
+					left: 0,
+					behavior: "smooth"
+				});
+				else container.scrollBy({
+					left: 300,
+					behavior: "smooth"
+				});
+			}
+		}, 2e3);
+		return () => clearInterval(interval);
+	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
 		className: "relative overflow-hidden py-3 sm:py-4",
 		id: "reviews",

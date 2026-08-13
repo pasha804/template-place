@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-D91xJVtZ.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-W0dG-2iB.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "D:/Project in Github/template-place/src/routes/__root.tsx",
@@ -35,7 +35,7 @@ var tsrStartManifest = () => ({ routes: {
 			"/editor/template/$templateId"
 		],
 		preloads: [
-			"/assets/index-DezFaclQ.js",
+			"/assets/index-CZoqFwox.js",
 			"/assets/jsx-runtime-CdArH33I.js",
 			"/assets/scheduler-DOzO4lrL.js",
 			"/assets/link-BGHpZFbT.js",
@@ -58,7 +58,7 @@ var tsrStartManifest = () => ({ routes: {
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-DezFaclQ.js"
+			src: "/assets/index-CZoqFwox.js"
 		} }]
 	},
 	"/": {
@@ -66,7 +66,7 @@ var tsrStartManifest = () => ({ routes: {
 		children: void 0,
 		css: ["/assets/registry-CuebgxFG.css"],
 		preloads: [
-			"/assets/routes-Bi2xw1q3.js",
+			"/assets/routes-PEQWtaN_.js",
 			"/assets/useNavigate-DfukCJb1.js",
 			"/assets/auth-9rjtomHM.js",
 			"/assets/proxy-BUjSPwpn.js",

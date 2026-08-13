@@ -14,7 +14,7 @@ import { t as Route$27 } from "../_slug-Ck9zeZD4.mjs";
 import { t as Route$28 } from "../_slug-D6yOz5oH.mjs";
 import { t as Route$29 } from "../_templateId-ZwvqjPcO.mjs";
 import { t as Route$30 } from "./new-zZLEoPq6.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-DLVh3ccG.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-NiM1Oi1I.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var styles_default = "/assets/styles-BgJU2Pxy.css";
@@ -208,7 +208,7 @@ function RootComponent() {
 		})]
 	});
 }
-var $$splitComponentImporter$22 = () => import("./routes-F6fjRuF9.mjs");
+var $$splitComponentImporter$22 = () => import("./routes-BCuW8BFa.mjs");
 var Route$22 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "Greeting Vibes Templates — Create Beautiful Moments" },

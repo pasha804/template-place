@@ -14,7 +14,7 @@ export function useUserPages(userId: string | undefined, status?: PageStatus) {
       try {
         let q = supabase
           .from("pages")
-          .select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, published_at, deleted_at, view_count, created_at, updated_at")
+          .select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, expires_at, published_at, deleted_at, view_count, created_at, updated_at")
           .eq("user_id", userId)
           .is("deleted_at", null)
           .order("updated_at", { ascending: false });
@@ -63,7 +63,7 @@ export function usePage(idOrSlug: string, mode: "id" | "slug" = "id") {
       try {
         const { data } = await supabase
           .from("pages")
-          .select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, published_at, deleted_at, view_count, created_at, updated_at")
+          .select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, expires_at, published_at, deleted_at, view_count, created_at, updated_at")
           .eq(mode === "id" ? "id" : "slug", idOrSlug)
           .is("deleted_at", null)
           .maybeSingle();
