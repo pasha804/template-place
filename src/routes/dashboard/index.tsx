@@ -122,7 +122,7 @@ function PageCard({ page }: { page: Page }) {
       </div>
 
       {/* Expiration timer for published pages */}
-      {page.status === "published" && (page as any).expires_at && (
+      {page.status === "published" && (page as any).expires_at && typeof (page as any).expires_at === 'string' && (
         <div className="mt-3">
           <ExpirationTimer 
             expiresAt={(page as any).expires_at} 
