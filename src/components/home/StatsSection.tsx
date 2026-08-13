@@ -3,9 +3,9 @@ import { useEffect, useRef } from "react";
 import { Users, Layers, Globe, Shield } from "lucide-react";
 
 const stats = [
-  { icon: Users,  value: 5000, suffix: "+", label: "Happy Customers",   color: "#a78bfa" },
-  { icon: Layers, value: 50,   suffix: "+",  label: "Premium Templates", color: "#f472b6" },
-  { icon: Globe,  value: 5000, suffix: "K+", label: "Websites Created",  color: "#38bdf8" },
+  { icon: Users,  value: 5000,  suffix: "K+", label: "Happy Customers",   color: "#a78bfa" },
+  { icon: Layers, value: 50,    suffix: "+",  label: "Premium Templates", color: "#f472b6" },
+  { icon: Globe,  value: 5000,  suffix: "K+", label: "Websites Created",  color: "#38bdf8" },
   { icon: Shield, value: 99.9,  suffix: "%",  label: "Uptime Guaranteed", color: "#34d399", isDecimal: true },
 ];
 
@@ -58,10 +58,18 @@ export function StatsSection() {
                   <s.icon className="h-5 w-5" style={{ color: s.color }} />
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-white sm:text-3xl">
+                  <p 
+                    className="text-2xl font-black sm:text-3xl"
+                    style={{
+                      background: `linear-gradient(135deg, ${s.color}, ${s.color}dd)`,
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      color: "transparent",
+                    }}
+                  >
                     <AnimatedNumber target={s.value} suffix={s.suffix} isDecimal={s.isDecimal} />
                   </p>
-                  <p className="mt-0.5 text-xs text-white/40">{s.label}</p>
+                  <p className="mt-1 text-xs font-medium text-white/60">{s.label}</p>
                 </div>
               </motion.div>
             ))}

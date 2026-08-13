@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -74,6 +74,26 @@ export function TestimonialsSection() {
       });
     }
   }
+
+  // Auto-scroll every 2 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const container = scrollRef.current;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        
+        // If at the end, scroll back to start
+        if (container.scrollLeft >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          // Otherwise scroll to next card (300px)
+          container.scrollBy({ left: 300, behavior: "smooth" });
+        }
+      }
+    }, 2000); // Every 2 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="relative overflow-hidden py-3 sm:py-4" id="reviews">
