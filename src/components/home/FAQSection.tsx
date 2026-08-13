@@ -124,7 +124,9 @@ export function FAQSection() {
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
                 >
-                  <span className={cn("text-sm font-semibold leading-snug transition-colors", isOpen ? "text-primary" : "text-foreground")}>
+                  <span 
+                    className={cn("text-sm font-semibold leading-snug transition-colors", isOpen ? "text-white" : "text-white/80")}
+                  >
                     {faq.q}
                   </span>
                   <span
@@ -132,7 +134,7 @@ export function FAQSection() {
                       "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
                       isOpen
                         ? "border-primary/40 bg-primary/15 text-primary rotate-0"
-                        : "border-[var(--glass-border)] text-muted-foreground"
+                        : "border-white/10 text-white/50"
                     )}
                   >
                     {isOpen ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
@@ -148,7 +150,7 @@ export function FAQSection() {
                       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <div className="border-t border-primary/10 px-6 pb-5 pt-4">
-                        <p className="text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
+                        <p className="text-sm leading-relaxed text-white/60">{faq.a}</p>
                       </div>
                     </motion.div>
                   )}
@@ -167,8 +169,8 @@ export function FAQSection() {
           className="mt-12 rounded-3xl border border-[var(--glass-border)] p-8 text-center"
           style={{ background: "var(--gradient-card)", backdropFilter: "blur(16px)" }}
         >
-          <p className="text-lg font-bold">Still have questions?</p>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-lg font-bold text-white">Still have questions?</p>
+          <p className="mt-2 text-sm text-white/60">
             Our team replies within 24 hours — always human, never a bot.
           </p>
           <a

@@ -10,9 +10,9 @@ import { useAuth } from "@/hooks/use-auth";
 
 const navLinks: { label: string; href: string; hasDropdown?: boolean }[] = [
   { label: "Home",      href: "/" },
-  { label: "Templates", href: "/templates" },
-  { label: "Pricing",   href: "/pricing" },
   { label: "Contact",   href: "/contact" },
+  { label: "Pricing",   href: "/pricing" },
+  { label: "Templates", href: "/templates" },
 ];
 
 function useDark() {

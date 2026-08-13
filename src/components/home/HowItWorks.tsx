@@ -130,8 +130,8 @@ export function HowItWorks() {
                 </span>
               </div>
 
-              <h3 className="relative mb-3 text-xl font-bold">{step.title}</h3>
-              <p className="relative text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+              <h3 className="relative mb-3 text-xl font-bold text-white">{step.title}</h3>
+              <p className="relative text-sm leading-relaxed text-white/60">{step.desc}</p>
             </motion.div>
           ))}
         </div>
