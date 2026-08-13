@@ -47,7 +47,7 @@ function AdminPagesPage() {
       // Simple query without join — avoids FK name issues
       let q = supabase
         .from("pages")
-        .select("*")
+        .select("id, user_id, template_id, slug, title, status, content, theme, blocks, seo_title, seo_description, og_image_url, password_hash, pin_code, is_public, published_at, deleted_at, view_count, created_at, updated_at")
         .is("deleted_at", null)
         .order("updated_at", { ascending: false });
       if (statusFilter !== "all") q = q.eq("status", statusFilter as PageStatus);

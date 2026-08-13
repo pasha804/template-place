@@ -174,7 +174,7 @@ function TemplateEditorPage() {
         updated_at: new Date().toISOString(),
       };
 
-      const res = await supabase.from("pages").upsert(payload as any).select().single();
+      const res = await supabase.from("pages").upsert(payload as any).select("id, slug, status").single();
       let realPageId = pid;
       
       if (res.data?.id) {

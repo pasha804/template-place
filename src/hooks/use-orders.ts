@@ -193,7 +193,7 @@ export function usePlaceOrder() {
       };
 
       try {
-        const pageRes = await supabase.from("pages").upsert(pagePayload as any).select().single();
+        const pageRes = await supabase.from("pages").upsert(pagePayload as any).select("id, slug, status").single();
         if (pageRes.data?.id) {
           pageIdToUse = pageRes.data.id;
         } else if (pageRes.error) {
