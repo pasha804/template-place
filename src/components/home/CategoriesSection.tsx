@@ -14,10 +14,10 @@ const categories = [
 
 export function CategoriesSection() {
   return (
-    <section className="relative py-20" id="categories">
+    <section className="relative py-3 sm:py-4" id="categories">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12 text-center">
+        <div className="mb-3 text-center sm:mb-4">
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

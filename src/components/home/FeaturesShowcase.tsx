@@ -174,7 +174,7 @@ function resolveGradientColors(gradient: string): [string, string] {
 
 export function FeaturesShowcase() {
   return (
-    <section className="relative py-28 overflow-hidden">
+    <section className="relative py-3 sm:py-4 overflow-hidden">
       {/* Ambient lighting */}
       <div
         aria-hidden
@@ -188,12 +188,12 @@ export function FeaturesShowcase() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* ── Section Header ── */}
-        <div className="mb-20 text-center">
+        <div className="mb-4 text-center sm:mb-5">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-bold text-primary tracking-wide uppercase"
+            className="mb-2 inline-flex items-center gap-2 rounded-full border border-pink-500/25 bg-pink-500/10 px-3 py-1 text-xs font-bold text-pink-400 tracking-wide uppercase"
           >
             <Sparkles className="h-3.5 w-3.5" /> Premium Platform Capabilities
           </motion.div>
@@ -202,7 +202,7 @@ export function FeaturesShowcase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl font-extrabold sm:text-6xl tracking-tight"
+            className="text-3xl font-extrabold text-white sm:text-5xl tracking-tight"
           >
             Crafted for{" "}
             <span
@@ -222,14 +222,14 @@ export function FeaturesShowcase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.18 }}
-            className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground"
+            className="mt-2 max-w-2xl mx-auto text-sm text-white/50"
           >
             Every template is built with Awwwards-level fidelity, interactive animations, and flawless mobile responsiveness.
           </motion.p>
         </div>
 
         {/* ── PREMIUM TEMPLATE SHOWCASE CARDS ── */}
-        <div className="mb-24">
+        <div className="mb-6">
           <div className="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div>
               <h3 className="text-2xl font-bold text-white flex items-center gap-2">

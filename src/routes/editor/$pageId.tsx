@@ -10,7 +10,7 @@ import { EditorSidebar } from "@/components/editor/EditorSidebar";
 import { EditorTopbar } from "@/components/editor/EditorTopbar";
 
 export const Route = createFileRoute("/editor/$pageId")({
-  head: () => ({ meta: [{ title: "Editor — Shaukat Techs Templates" }] }),
+  head: () => ({ meta: [{ title: "Editor — Greeting Vibes Templates" }] }),
   component: EditorPage,
 });
 

@@ -73,7 +73,7 @@ function SettingsPage() {
               <p className="mb-4 text-xs text-muted-foreground">These actions are permanent and cannot be undone.</p>
               <button
                 type="button"
-                onClick={() => toast.error("To delete your account, contact support at hello@shaukattechs.com")}
+                onClick={() => toast.error("To delete your account, contact support at greetingvibes786@gmail.com")}
                 className="flex items-center gap-2 rounded-xl border border-destructive/30 px-4 py-2.5 text-sm text-destructive transition-all hover:bg-destructive/10"
               >
                 <Trash2 className="h-4 w-4" /> Delete account

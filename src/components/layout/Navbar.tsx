@@ -62,10 +62,10 @@ export function Navbar() {
         {/* ── Logo ── */}
         <Link to="/" className="flex shrink-0 items-center gap-2.5 mr-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-violet-600 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
-            <span className="text-base font-black text-white">S</span>
+            <span className="text-base font-black text-white">G</span>
           </div>
           <div className="leading-tight">
-            <p className="text-sm font-bold text-white">Shaukat Techs</p>
+            <p className="text-sm font-bold text-white">Greeting Vibes</p>
             <p className="text-[10px] text-white/40">Templates</p>
           </div>
         </Link>

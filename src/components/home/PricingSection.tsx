@@ -55,7 +55,7 @@ export function PricingSection() {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
-    <section className="relative py-28 overflow-hidden" id="pricing">
+    <section className="relative py-3 sm:py-4 overflow-hidden" id="pricing">
       {/* Background glow */}
       <div
         aria-hidden
@@ -68,12 +68,12 @@ export function PricingSection() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-16 text-center">
+        <div className="mb-4 text-center sm:mb-5">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-4 py-1.5 text-xs font-semibold text-primary"
+            className="mb-2 inline-flex items-center gap-2 rounded-full border border-pink-500/25 bg-pink-500/8 px-3 py-1 text-xs font-semibold text-pink-400"
           >
             Simple Pricing
           </motion.div>
@@ -82,7 +82,7 @@ export function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl font-bold sm:text-5xl"
+            className="text-3xl font-black text-white sm:text-4xl"
           >
             Two packages. That's it.
           </motion.h2>
@@ -91,7 +91,7 @@ export function PricingSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.18 }}
-            className="mt-4 text-lg text-muted-foreground"
+            className="mt-2 text-sm text-white/50"
           >
             All prices in PKR. Pay once, your page goes live after admin approval.
           </motion.p>

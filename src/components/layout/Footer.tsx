@@ -27,7 +27,7 @@ const socials = [
   { icon: Instagram, href: "https://instagram.com", label: "Instagram", color: "#e1306c" },
   { icon: Youtube,   href: "https://youtube.com",   label: "YouTube",   color: "#ff0000" },
   { icon: Github,    href: "https://github.com",     label: "GitHub",    color: "#e6edf3" },
-  { icon: Mail,      href: "mailto:hello@shaukattechs.com", label: "Email", color: "#a78bfa" },
+  { icon: Mail,      href: "mailto:greetingvibes786@gmail.com", label: "Email", color: "#a78bfa" },
 ];
 
 export function Footer() {
@@ -42,10 +42,10 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link to="/" className="mb-5 flex items-center gap-2.5">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-violet-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                <span className="text-base font-black text-white">S</span>
+                <span className="text-base font-black text-white">G</span>
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Shaukat Techs</p>
+                <p className="text-sm font-bold text-white">Greeting Vibes</p>
                 <p className="text-[10px] text-white/35">Templates</p>
               </div>
             </Link>
@@ -90,7 +90,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/[0.05] pt-8 sm:flex-row">
           <p className="text-xs text-white/25">
-            © {new Date().getFullYear()} Shaukat Techs Templates. All rights reserved.
+            © {new Date().getFullYear()} Greeting Vibes Templates. All rights reserved.
           </p>
           <p className="flex items-center gap-1.5 text-xs text-white/25">
             Made with <Heart className="h-3 w-3 fill-pink-500 text-pink-500" /> for every occasion

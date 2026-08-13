@@ -30,7 +30,7 @@ export function TemplateSurface({
 
   return (
     <div
-      className="relative min-h-full w-full overflow-hidden"
+      className="template-runtime relative min-h-full w-full overflow-hidden"
       style={{
         background: theme.background,
         color: theme.foreground,

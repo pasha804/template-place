@@ -51,7 +51,11 @@ function AdminPendingWebsitesPage() {
 
   async function handlePublish(orderId: string | undefined, pageObj: PageRow) {
     try {
-      const res = await approve.mutateAsync({ orderId, pageId: pageObj.id, pageData: pageObj });
+      if (!orderId) {
+        toast.error("Order ID is required");
+        return;
+      }
+      const res = await approve.mutateAsync({ orderId, pageId: pageObj.id });
       toast.success(`Published successfully! Live at /p/${res.slug}`);
       refetch();
       setPreviewItem(null);

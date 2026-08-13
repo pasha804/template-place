@@ -125,10 +125,10 @@ function TemplateCard({ t, index }: { t: UnifiedTemplate; index: number }) {
 
 export function FeaturedTemplates() {
   return (
-    <section className="relative py-20">
+    <section className="relative py-3 sm:py-4">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="mb-3 flex flex-col items-start justify-between gap-4 sm:mb-4 sm:flex-row sm:items-center">
           <div>
             <motion.p initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-pink-400">

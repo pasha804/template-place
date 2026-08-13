@@ -26,8 +26,9 @@
   --radius-4xl: calc(var(--radius) + 28px);
   --radius-full: 9999px;
 
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins);
+  --font-sans: var(--font-poppins);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -79,6 +80,7 @@
 
 /* ─────────────────────────── DARK (default) ─────────────────────────── */
 :root {
+  --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --radius: 0.9rem;
 
   /* Deepest space backgrounds */
@@ -250,7 +252,7 @@
   body {
     background-color: #0a0914;
     color: var(--foreground);
-    font-family: var(--font-sans);
+    font-family: var(--font-poppins);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     background-image: var(--mesh-bg);
@@ -260,18 +262,46 @@
     padding: 0;
   }
 
-  /* ── Template page reset ──────────────────────────────────────
-     Applied to <body> on /demo/* and /p/* routes via JS.
-     Strips all marketplace body styles so templates own the viewport. */
+  /* ── Main platform typography scope ──────────────────────────── */
+  .app-ui,
+  body:not(.template-page) {
+    font-family: var(--font-poppins);
+  }
+
+  body:not(.template-page) h1,
+  body:not(.template-page) h2,
+  body:not(.template-page) h3,
+  body:not(.template-page) h4,
+  body:not(.template-page) h5,
+  body:not(.template-page) h6,
+  .app-ui h1,
+  .app-ui h2,
+  .app-ui h3,
+  .app-ui h4,
+  .app-ui h5,
+  .app-ui h6 {
+    font-family: var(--font-poppins);
+    letter-spacing: -0.025em;
+  }
+
+  /* ── Template page & runtime isolation reset ──────────────────
+     Applied to <body> on /demo/* and /p/* routes via JS, and to
+     .template-runtime wrappers around template renderers.
+     Strips platform body font so templates retain their original fonts. */
   body.template-page {
     background-color: transparent !important;
     background-image: none !important;
     background-attachment: unset !important;
     color: inherit !important;
-    font-family: inherit !important;
+    font-family: initial !important;
     overflow-x: hidden;
     overflow-y: auto;
     min-height: 100dvh;
+  }
+
+  .template-runtime,
+  body.template-page .template-runtime {
+    font-family: initial;
   }
 
   /* On template pages, override min-h-screen to use dynamic viewport height.

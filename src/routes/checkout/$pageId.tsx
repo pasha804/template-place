@@ -22,7 +22,7 @@ import { useAuthStore } from "@/store/auth";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/checkout/$pageId")({
-  head: () => ({ meta: [{ title: "Checkout — Shaukat Techs" }] }),
+  head: () => ({ meta: [{ title: "Checkout — Greeting Vibes" }] }),
   component: CheckoutPage,
 });
 
@@ -126,7 +126,7 @@ function CheckoutPage() {
 
   function buildWhatsAppMessage() {
     return encodeURIComponent(
-`Hello Shaukat Techs,
+`Hello Greeting Vibes,
 
 I have customized the following template and completed payment.
 
@@ -419,7 +419,7 @@ Thank you.`
                 {[
                   "Admin receives your order & payment screenshot",
                   "Payment is verified (usually within 2-4 hours)",
-                  "Your page goes live at shaukattechs.com/p/your-slug",
+                  "Your page goes live at greetingvibes.com/p/your-slug",
                   "You get notified when it's published",
                 ].map((step, i) => (
                   <div key={i} className="flex items-start gap-3 py-2 border-b border-white/[0.04] last:border-0">

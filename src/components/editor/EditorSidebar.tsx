@@ -203,7 +203,7 @@ function PageSettingsEditor() {
           onChange={(e) => updatePageMeta({ slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-") })}
           className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm font-mono outline-none focus:border-primary"
         />
-        <p className="mt-1 text-[10px] text-muted-foreground">shaukattechs.com/p/{page.slug}</p>
+        <p className="mt-1 text-[10px] text-muted-foreground">greetingvibes.com/p/{page.slug}</p>
       </Field>
 
       <Field label="PIN code (optional)">

@@ -15,7 +15,7 @@ import { TemplateSurface } from "@/templates/surface";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/demo/$slug")({
-  head: () => ({ meta: [{ title: "Live Demo — Shaukat Techs" }] }),
+  head: () => ({ meta: [{ title: "Live Demo — Greeting Vibes" }] }),
   component: DemoPage,
 });
 
@@ -49,8 +49,9 @@ function DemoPage() {
             <ArrowLeft className="h-3 w-3" /> Back
           </Link>
         </div>
-        {/* Template renders directly — no wrapper div adding height or flex context */}
-        <extPlugin.Renderer config={extPlugin.defaults} mode="view" />
+        <div className="template-runtime">
+          <extPlugin.Renderer config={extPlugin.defaults} mode="view" />
+        </div>
       </>
     );
   }
@@ -65,7 +66,9 @@ function DemoPage() {
             <ArrowLeft className="h-3 w-3" /> Back
           </Link>
         </div>
-        <TemplateSurface blocks={blockPlugin.blocks} theme={blockPlugin.theme} mode="view" />
+        <div className="template-runtime">
+          <TemplateSurface blocks={blockPlugin.blocks} theme={blockPlugin.theme} mode="view" />
+        </div>
       </>
     );
   }

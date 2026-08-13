@@ -1,10 +1,10 @@
 -- ============ ENUMS ============
-CREATE TYPE public.app_role AS ENUM ('admin','moderator','support','user');
-CREATE TYPE public.page_status AS ENUM ('draft','published','expired','archived');
-CREATE TYPE public.order_status AS ENUM ('pending','paid','failed','refunded','cancelled');
-CREATE TYPE public.plan_kind AS ENUM ('free','one_time','monthly','yearly');
-CREATE TYPE public.ticket_status AS ENUM ('open','pending','resolved','closed');
-CREATE TYPE public.review_status AS ENUM ('pending','approved','rejected');
+DO $$ BEGIN CREATE TYPE public.app_role AS ENUM ('admin','moderator','support','user'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+DO $$ BEGIN CREATE TYPE public.page_status AS ENUM ('draft','published','expired','archived'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+DO $$ BEGIN CREATE TYPE public.order_status AS ENUM ('pending','paid','failed','refunded','cancelled'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+DO $$ BEGIN CREATE TYPE public.plan_kind AS ENUM ('free','one_time','monthly','yearly'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+DO $$ BEGIN CREATE TYPE public.ticket_status AS ENUM ('open','pending','resolved','closed'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+DO $$ BEGIN CREATE TYPE public.review_status AS ENUM ('pending','approved','rejected'); EXCEPTION WHEN duplicate_object THEN null; END $$;
 
 -- ============ SHARED FUNCTIONS ============
 CREATE OR REPLACE FUNCTION public.set_updated_at()

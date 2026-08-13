@@ -6,6 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { useAuthStore } from "@/store/auth";
 import { useUserPages, useDeletePage } from "@/hooks/use-pages";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
+import { ExpirationTimer } from "@/components/dashboard/ExpirationTimer";
 import { getExternalTemplate } from "@/engine/registry";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -15,7 +16,7 @@ import type { Database } from "@/integrations/supabase/types";
 type Page = Database["public"]["Tables"]["pages"]["Row"];
 
 export const Route = createFileRoute("/dashboard/")({
-  head: () => ({ meta: [{ title: "Dashboard — Shaukat Techs Templates" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Greeting Vibes Templates" }] }),
   component: DashboardPage,
 });
 
@@ -119,6 +120,16 @@ function PageCard({ page }: { page: Page }) {
           {safeFormatDate(page.updated_at)}
         </span>
       </div>
+
+      {/* Expiration timer for published pages */}
+      {page.status === "published" && (page as any).expires_at && (
+        <div className="mt-3">
+          <ExpirationTimer 
+            expiresAt={(page as any).expires_at} 
+            pageSlug={page.slug || page.id} 
+          />
+        </div>
+      )}
     </motion.div>
   );
 }

@@ -7,7 +7,7 @@ import { FAQSection } from "@/components/home/FAQSection";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Plans & Pricing — Shaukat Techs Templates" },
+      { title: "Plans & Pricing — Greeting Vibes Templates" },
       { name: "description", content: "Simple, transparent pricing for every budget." },
     ],
   }),

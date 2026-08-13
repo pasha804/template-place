@@ -12,9 +12,10 @@ import {
 import { useAuthStore } from "@/store/auth";
 import { useAdminStats, formatPKR } from "@/hooks/use-orders";
 import { AdminNav } from "@/components/admin/AdminNav";
+import { useExpirationCleanup } from "@/hooks/use-expiration-cleanup";
 
 export const Route = createFileRoute("/admin/")({
-  head: () => ({ meta: [{ title: "Admin — Shaukat Techs" }] }),
+  head: () => ({ meta: [{ title: "Admin — Greeting Vibes" }] }),
   component: AdminDashboard,
 });
 
@@ -22,6 +23,9 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const { user, isAdmin } = useAuthStore();
   const { data: stats, isLoading } = useAdminStats();
+  
+  // Periodically clean up expired pages
+  useExpirationCleanup();
 
   useEffect(() => {
     if (!user) { navigate({ to: "/auth/login" }); return; }

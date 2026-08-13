@@ -80,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Shaukat Techs Templates — Dedications that Fall in Love" },
+      { title: "Greeting Vibes Templates — Dedications that Fall in Love" },
       { name: "description", content: "Create beautiful dedication pages for every occasion. Choose a template, add your story, share the link." },
-      { name: "author", content: "Shaukat Techs" },
-      { property: "og:title", content: "Shaukat Techs Templates" },
+      { name: "author", content: "Greeting Vibes" },
+      { property: "og:title", content: "Greeting Vibes Templates" },
       { property: "og:description", content: "Beautiful dedication pages for every occasion." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@ShaukatTechs" },
+      { name: "twitter:site", content: "@GreetingVibes" },
     ],
     links: [
       {
@@ -96,9 +96,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap",
       },
     ],
   }),
@@ -140,7 +141,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="app-ui font-sans antialiased text-foreground min-h-screen">
+        <Outlet />
+      </div>
       <Toaster
         position="bottom-right"
         theme="dark"
@@ -152,6 +155,7 @@ function RootComponent() {
             borderRadius: "16px",
             backdropFilter: "blur(20px)",
             boxShadow: "0 8px 40px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(167,139,250,0.08)",
+            fontFamily: "var(--font-poppins)",
           },
         }}
       />

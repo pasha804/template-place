@@ -279,7 +279,7 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-screen overflow-hidden pt-20">
+    <section className="relative overflow-hidden pt-14 pb-2 sm:pt-16 sm:pb-3">
       {/* ── Background layers ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         {/* Main deep purple center-right glow */}
@@ -297,12 +297,12 @@ export function HeroSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex min-h-[calc(100vh-80px)] flex-col items-start justify-center lg:flex-row lg:items-center lg:gap-12">
+        <div className="flex flex-col items-start justify-center lg:flex-row lg:items-center lg:gap-12">
 
           {/* ── LEFT ── */}
-          <div className="relative z-10 flex-1 py-16 lg:py-0 lg:max-w-[50%]">
+          <div className="relative z-10 flex-1 py-1 lg:py-2 lg:max-w-[50%]">
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-pink-500/30 bg-pink-500/10 px-4 py-2 text-[12px] font-bold text-pink-400">
+              className="mb-3 inline-flex items-center gap-2 rounded-full border border-pink-500/30 bg-pink-500/10 px-4 py-1.5 text-[12px] font-bold text-pink-400">
               <span>✨</span> Create. Personalize. Share.
             </motion.div>
 
@@ -369,7 +369,7 @@ export function HeroSection() {
           <div
             ref={containerRef}
             className="relative hidden flex-1 select-none lg:flex lg:items-center lg:justify-center"
-            style={{ height: 560, minWidth: 500 }}
+            style={{ height: 460, minWidth: 460 }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >

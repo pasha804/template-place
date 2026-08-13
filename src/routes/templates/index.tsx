@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/templates/")({
   head: () => ({
     meta: [
-      { title: "Templates — Shaukat Techs Templates" },
+      { title: "Templates — Greeting Vibes Templates" },
       { name: "description", content: "Browse interactive templates for every occasion." },
     ],
   }),

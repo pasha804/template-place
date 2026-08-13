@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/forgot-password")({
-  head: () => ({ meta: [{ title: "Reset password — Shaukat Techs Templates" }] }),
+  head: () => ({ meta: [{ title: "Reset password — Greeting Vibes Templates" }] }),
   component: ForgotPasswordPage,
 });
 

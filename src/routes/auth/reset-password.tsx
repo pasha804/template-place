@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/reset-password")({
-  head: () => ({ meta: [{ title: "Set new password — Shaukat Techs Templates" }] }),
+  head: () => ({ meta: [{ title: "Set new password — Greeting Vibes Templates" }] }),
   component: ResetPasswordPage,
 });
 
@@ -189,9 +189,9 @@ function ResetPasswordPage() {
                   color: "transparent",
                 }}
               >
-                Shaukat
+                Greeting
               </span>{" "}
-              <span>Techs</span>
+              <span>Vibes</span>
             </span>
           </Link>
           <h1 className="text-3xl font-bold">Set new password</h1>

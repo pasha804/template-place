@@ -11,7 +11,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({ meta: [{ title: "Contact — Shaukat Techs Templates" }] }),
+  head: () => ({ meta: [{ title: "Contact — Greeting Vibes Templates" }] }),
   component: ContactPage,
 });
 
@@ -98,7 +98,7 @@ function ContactPage() {
               <Mail className="h-5 w-5 text-primary shrink-0" />
               <div>
                 <p className="text-sm font-medium">Email us directly</p>
-                <a href="mailto:hello@shaukattechs.com" className="text-xs text-primary hover:underline">hello@shaukattechs.com</a>
+                <a href="mailto:greetingvibes786@gmail.com" className="text-xs text-primary hover:underline">greetingvibes786@gmail.com</a>
               </div>
             </div>
           </motion.div>

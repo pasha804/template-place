@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth/login")({
-  head: () => ({ meta: [{ title: "Sign in — Shaukat Techs Templates" }] }),
+  head: () => ({ meta: [{ title: "Sign in — Greeting Vibes Templates" }] }),
   component: LoginPage,
 });
 
@@ -80,8 +80,8 @@ function LoginPage() {
               <Sparkles className="h-5 w-5 text-white" />
             </div>
             <span className="font-display text-xl font-bold">
-              <span style={{ background: "var(--gradient-brand)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>Shaukat</span>
-              {" "}<span>Techs</span>
+              <span style={{ background: "var(--gradient-brand)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>Greeting</span>
+              {" "}<span>Vibes</span>
             </span>
           </Link>
           <h1 className="text-3xl font-bold">Welcome back</h1>
