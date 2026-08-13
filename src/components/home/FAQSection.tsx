@@ -125,7 +125,7 @@ export function FAQSection() {
                   aria-expanded={isOpen}
                 >
                   <span 
-                    className={cn("text-sm font-semibold leading-snug transition-colors", isOpen ? "text-white" : "text-white/80")}
+                    className={cn("text-sm font-semibold leading-snug transition-colors", isOpen ? "text-white" : "text-white/90")}
                   >
                     {faq.q}
                   </span>

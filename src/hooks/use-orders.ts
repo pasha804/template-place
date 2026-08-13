@@ -493,25 +493,9 @@ export function usePendingWebsites() {
         console.warn("Supabase fetch pending pages warning:", e);
       }
 
-      // Merge local storage pending_approval pages
-      const localPages: Database["public"]["Tables"]["pages"]["Row"][] = [];
-      if (typeof window !== "undefined") {
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith("page_")) {
-            try {
-              const item = JSON.parse(localStorage.getItem(key) || "{}");
-              if (item && item.id && item.status === "pending_approval") {
-                localPages.push(item);
-              }
-            } catch {}
-          }
-        }
-      }
-
-      const dbIds = new Set(dbPages.map(p => p.id));
-      const missingLocal = localPages.filter(p => !dbIds.has(p.id));
-      const pendingPages = [...dbPages, ...missingLocal];
+      // Admin panel: Only show pages from database that actually have pending_approval status
+      // Don't merge localStorage to avoid showing stale/test data on admin panel
+      const pendingPages = dbPages;
 
       // Fetch all orders
       const { data: orders } = await supabase
