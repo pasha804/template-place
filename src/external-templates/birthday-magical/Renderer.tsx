@@ -6,6 +6,7 @@
 import { useState, useEffect } from "react"
 import { AnimatePresence } from "framer-motion"
 import type { TemplateConfig } from "@/engine/types"
+import { defaults } from "./schema"
 
 import SpotlightCursor     from "./original/SpotlightCursor"
 import ParticleSystem      from "./original/ParticleSystem"
@@ -86,16 +87,20 @@ const BT7_CSS = `
   font-family: var(--bt7-font-display) !important;
   font-size: clamp(2.75rem, 6vw + 1.5rem, 5.5rem);
   font-weight: 700;
-  line-height: 1.08;
+  line-height: 1.18;
   letter-spacing: 0 !important;
+  padding-top: 0.08em;
+  padding-bottom: 0.08em;
 }
 
 .bt7-hero-title {
   font-family: var(--bt7-font-display) !important;
   font-size: clamp(3.25rem, 12vw + 0.75rem, 7.25rem);
   font-weight: 700;
-  line-height: 1.02;
+  line-height: 1.18;
   letter-spacing: 0 !important;
+  padding-top: 0.08em;
+  padding-bottom: 0.08em;
   filter: drop-shadow(0 0 28px rgba(251,191,36,0.45)) drop-shadow(0 0 56px rgba(225,29,72,0.22));
 }
 
@@ -146,21 +151,29 @@ const BT7_CSS = `
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function BirthdayMagicalRenderer({ config }: Props) {
+export function BirthdayMagicalRenderer({ config = {} }: Props) {
   const [screen, setScreen] = useState(0)
   const next = () => setScreen((s) => s + 1)
 
-  const personName = (config.birthdayName as string) || "Princess 👑"
-  const age = (config.age as number) || 21
+  const personName = (config.birthdayName as string) || (defaults.birthdayName as string) || "Princess 👑"
+  const age = (config.age as number) || (defaults.age as number) || 21
   
-  const photos = Array.isArray(config.photos) ? (config.photos as string[]).filter(Boolean) : [
-    "/templates/birthday-magical/1.jpg",
-    "/templates/birthday-magical/2.jpg",
-    "/templates/birthday-magical/3.jpg",
+  const defaultPhotos = [
+    "/templates/birthday-magical/images/1.jpeg",
+    "/templates/birthday-magical/images/2.jpeg",
+    "/templates/birthday-magical/images/3.jpeg",
+    "/templates/birthday-magical/images/4.jpeg",
+    "/templates/birthday-magical/images/5.jpeg",
   ]
+
+  const photos = Array.isArray(config.photos) && config.photos.length > 0
+    ? (config.photos as string[]).filter(Boolean)
+    : defaultPhotos
+
   const galleryPhotos = photos.map(src => ({ src, caption: "" }))
-  const gifUrl          = (config.gifUrl          as string) || "/templates/birthday-magical/gifs/heppi.gif"
-  const celebrateGifUrl = (config.celebrateGifUrl as string) || "/templates/birthday-magical/gifs/celebrate.gif"
+  const gifUrl          = (config.gifUrl          as string) || (defaults.gifUrl as string) || "/templates/birthday-magical/gifs/heppi.gif"
+  const celebrateGifUrl = (config.celebrateGifUrl as string) || (defaults.celebrateGifUrl as string) || "/templates/birthday-magical/gifs/celebrate.gif"
+  const audioSrc        = (config.audioSrc        as string) || (defaults.audioSrc as string)
 
   const reasons = Array.isArray(config.reasonsList) && config.reasonsList.length > 0
     ? (config.reasonsList as any[]).map(r => ({ emoji: "💖", title: r.title || "Reason", back: r.text || "" }))
@@ -195,6 +208,9 @@ export function BirthdayMagicalRenderer({ config }: Props) {
   return (
     <div style={{ position: "relative", minHeight: "100%", overflowX: "hidden" }}>
       <div className="bt7-root">
+        {Boolean(audioSrc) && (
+          <audio src={audioSrc} autoPlay loop style={{ display: "none" }} />
+        )}
         <main className="bt7-aurora-bg relative w-full" style={{ minHeight: "100dvh", overflowX: "hidden" }}>
           <SpotlightCursor />
           <ParticleSystem />

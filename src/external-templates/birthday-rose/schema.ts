@@ -100,7 +100,7 @@ export const defaults: TemplateConfig = {
 
   songTitle: "Our Song",
   songArtist: "Dedicated with love",
-  audioSrc: "/templates/birthday-rose/music.mp3",
+  audioSrc: "",
 
   finaleTitle: "Happy Birthday My Forever Love",
   finaleText: "May your life bloom as beautifully as a rose in full garden.",

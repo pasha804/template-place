@@ -140,7 +140,7 @@ export const defaults: TemplateConfig = {
 
   letterText: "My Dearest Madam Jii,\n\nOn this very special day, I want you to know how incredibly grateful I am to have you in my life.\n\nYou have this amazing ability to light up any room you enter, to make people smile even on their darkest days, and to spread kindness wherever you go.\n\nHappy Birthday, beautiful soul! 🎂✨\n\nWith all my love,",
   letterSignature: "Forever Yours 💕",
-  audioSrc: "/templates/birthday-aurora/music.mp3",
+  audioSrc: "",
 
   _page_title: "Happy Birthday — Aurora Surprise",
   _page_seoTitle: "Happy Birthday — Aurora Surprise",

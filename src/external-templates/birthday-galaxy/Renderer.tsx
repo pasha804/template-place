@@ -6,6 +6,7 @@
  */
 import { useState, useEffect } from "react"
 import type { TemplateConfig } from "@/engine/types"
+import { defaults } from "./schema"
 import { ButterflyTrail } from "./original/ButterflyTrail"
 import HeroPage     from "./original/index"
 import MemoriesPage from "./original/memories"
@@ -119,7 +120,7 @@ const GALAXY_CSS = `
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function BirthdayGalaxyRenderer({ config }: Props) {
+export function BirthdayGalaxyRenderer({ config = {} }: Props) {
   const [screen, setScreen] = useState(0)
 
   useEffect(() => {
@@ -135,25 +136,39 @@ export function BirthdayGalaxyRenderer({ config }: Props) {
   const next = (n: number) => () => setScreen(n)
 
   const photos = Array.isArray(config.memoryPhotos) && (config.memoryPhotos as string[]).length > 0
-    ? config.memoryPhotos as string[]
-    : [
-        config.photo1 as string,
-        config.photo2 as string,
-        config.photo3 as string,
-        config.photo4 as string,
-      ].filter(Boolean) as string[]
+    ? (config.memoryPhotos as string[]).filter(Boolean)
+    : (Array.isArray(config.photos) && (config.photos as string[]).length > 0
+      ? (config.photos as string[]).filter(Boolean)
+      : [
+          config.photo1 as string,
+          config.photo2 as string,
+          config.photo3 as string,
+          config.photo4 as string,
+        ].filter(Boolean) as string[])
+
+  const resolvedPhotos = photos.length > 0 ? photos : (defaults.memoryPhotos as string[])
+
+  const recipientName = (config.birthdayName as string) || (defaults.birthdayName as string) || "My Star"
+  const journeyTitle  = (config.journeyTitle as string) || (defaults.journeyTitle as string)
+  const milestones    = (config.milestones as any[]) || (defaults.milestones as any[])
+  const noteText      = (config.noteText as string) || (defaults.noteText as string)
+  const specialTitle  = (config.specialTitle as string) || (defaults.specialTitle as string)
+  const specialCards  = (config.specialCards as any[]) || (defaults.specialCards as any[])
+  const wishesTitle   = (config.wishesTitle as string) || (defaults.wishesTitle as string)
+  const wishesList    = (config.wishesList as any[]) || (defaults.wishesList as any[])
+  const loveLetterText = (config.loveLetterText as string) || (defaults.loveLetterText as string)
 
   const screens: Record<number, React.ReactNode> = {
-    0:  <HeroPage     onNext={next(1)}  recipientName={(config.birthdayName as string) || "My Star"} />,
-    1:  <MemoriesPage onNext={next(2)}  photos={photos} />,
-    2:  <JourneyPage  onNext={next(3)}  milestones={config.milestones as any[]} title={config.journeyTitle as string} />,
-    3:  <NotePage     onNext={next(4)}  noteText={config.noteText as string} />,
+    0:  <HeroPage     onNext={next(1)}  recipientName={recipientName} />,
+    1:  <MemoriesPage onNext={next(2)}  photos={resolvedPhotos} />,
+    2:  <JourneyPage  onNext={next(3)}  milestones={milestones} title={journeyTitle} />,
+    3:  <NotePage     onNext={next(4)}  noteText={noteText} />,
     4:  <SongPage     onNext={next(5)}  />,
-    5:  <SpecialPage  onNext={next(6)}  title={config.specialTitle as string} cards={config.specialCards as any[]} />,
+    5:  <SpecialPage  onNext={next(6)}  title={specialTitle} cards={specialCards} />,
     6:  <WishPage     onNext={next(7)}  />,
-    7:  <WishesPage   onNext={next(8)}  title={config.wishesTitle as string} wishesList={config.wishesList as any[]} />,
+    7:  <WishesPage   onNext={next(8)}  title={wishesTitle} wishesList={wishesList} />,
     8:  <SurprisePage onNext={next(9)}  />,
-    9:  <LovePage     onNext={next(10)} letterText={config.loveLetterText as string} />,
+    9:  <LovePage     onNext={next(10)} letterText={loveLetterText} />,
     10: <FinalPage    onNext={next(0)}  />,
   }
 

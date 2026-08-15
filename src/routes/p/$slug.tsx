@@ -98,7 +98,7 @@ function PublicPageViewer() {
 
     const extPlugin = getExternalTemplate(templateId);
     if (extPlugin) {
-      const config = (page.content as TemplateConfig) ?? extPlugin.defaults;
+      const config = { ...extPlugin.defaults, ...((page.content as TemplateConfig) ?? {}) };
       return (
         <div className="template-runtime">
           <extPlugin.Renderer config={config} mode="view" />

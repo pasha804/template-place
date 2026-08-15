@@ -4,14 +4,12 @@
  * Thin orchestrator that wraps the original birthday template1 components.
  * The original components are verbatim copies in ./original/.
  * This file ONLY:
- *   1. Reads config values
+ *   1. Reads config values with comprehensive dual-key fallbacks
  *   2. Manages the screen flow state (identical to original page.jsx)
  *   3. Passes config values as props to the original components
  *
  * ROOT DIV FIX: Uses minHeight:"100dvh" (not 100%) so the template always
  * occupies the full viewport regardless of how the parent is sized.
- * When rendered in the demo route (directly under <body>) with no wrapper,
- * minHeight:"100%" collapses to 0 — minHeight:"100dvh" does not.
  */
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -30,7 +28,7 @@ import RestartOverlay from "./original/RestartOverlay"
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function BirthdaySurpriseRenderer({ config }: Props) {
+export function BirthdaySurpriseRenderer({ config = {} }: Props) {
   // ── Screen flow state — identical to original page.jsx ──────────────────
   const [currentScreen,      setCurrentScreen]      = useState(-1)
   const [showIntro,          setShowIntro]           = useState(false)
@@ -60,41 +58,45 @@ export function BirthdaySurpriseRenderer({ config }: Props) {
     setShowRestartOverlay(false)
   }
 
-  // ── Config extraction with safe fallbacks ───────────────────────────────
-  const pin               = (config.pin               as string) || (defaults.pin as string)
-  const vaultAvatarUrl    = (config.vaultAvatarUrl    as string) || (defaults.vaultAvatarUrl as string)
-  const welcomeSubText    = (config.welcomeSubText    as string) || (defaults.welcomeSubText as string)
-  const welcomeButtonText = (config.welcomeButtonText as string) || (defaults.welcomeButtonText as string)
-  const welcomeGifUrl     = (config.welcomeGifUrl     as string) || (defaults.welcomeGifUrl as string)
-  const cakeHeadingUnlit  = (config.cakeHeadingUnlit  as string) || (defaults.cakeHeadingUnlit as string)
-  const cakeHeadingLit    = (config.cakeHeadingLit    as string) || (defaults.cakeHeadingLit as string)
-  const cakeBirthdayText  = (config.cakeBirthdayText  as string) || (defaults.cakeBirthdayText as string)
-  const wishCardsHeading  = (config.wishCardsHeading  as string) || (defaults.wishCardsHeading as string)
-  const memoriesHeading   = (config.memoriesHeading   as string) || (defaults.memoriesHeading as string)
-  const letterHeading     = (config.letterHeading     as string) || (defaults.letterHeading as string)
-  const letterText        = (config.letterText        as string) || (defaults.letterText as string)
-  const hugGifUrl         = (config.hugGifUrl         as string) || (defaults.hugGifUrl as string)
-  const bgGradientFrom    = (config.bgGradientFrom    as string) || (defaults.bgGradientFrom as string)
-  const bgGradientTo      = (config.bgGradientTo      as string) || (defaults.bgGradientTo as string)
+  // ── Config extraction with safe dual-alias fallbacks ────────────────────
+  const pin               = (config.pin as string) || (config.vaultPin as string) || (defaults.pin as string) || "1234"
+  const vaultAvatarUrl    = (config.vaultAvatarUrl as string) || (defaults.vaultAvatarUrl as string) || "/templates/birthday-surprise/images/1.jpg"
+  const welcomeSubText    = (config.welcomeSubText as string) || (config.firstSubtext as string) || (defaults.welcomeSubText as string) || "For someone who makes my life so special."
+  const welcomeButtonText = (config.welcomeButtonText as string) || (config.firstButtonText as string) || (defaults.welcomeButtonText as string) || "Start Surprise 🎁"
+  const welcomeGifUrl     = (config.welcomeGifUrl as string) || (defaults.welcomeGifUrl as string) || "/templates/birthday-surprise/gifs/heppi.gif"
+  const cakeHeadingUnlit  = (config.cakeHeadingUnlit as string) || (defaults.cakeHeadingUnlit as string) || "Make a Wish 🕯️"
+  const cakeHeadingLit    = (config.cakeHeadingLit as string) || (defaults.cakeHeadingLit as string) || "Happy Birthday! 🎉"
+  const cakeBirthdayText  = (config.cakeBirthdayText as string) || (defaults.cakeBirthdayText as string) || "Happy Birthday!"
+  const wishCardsHeading  = (config.wishCardsHeading as string) || (config.thirdTitle as string) || (config.secondTitle as string) || (defaults.wishCardsHeading as string) || "Special Wishes For You"
+  const memoriesHeading   = (config.memoriesHeading as string) || (config.secondTitle as string) || (defaults.memoriesHeading as string) || "Moments We Cherish"
+  const letterHeading     = (config.letterHeading as string) || (config.fourthTitle as string) || (defaults.letterHeading as string) || "A Message From The Heart"
+  const letterText        = (config.letterText as string) || (defaults.letterText as string) || "Happy Birthday!\n\nI hope your special day is overflowing with laughter, sweet treats, and everything you love most.\n\nKeep shining bright! ❤️"
+  const hugGifUrl         = (config.hugGifUrl as string) || (defaults.hugGifUrl as string) || "/templates/birthday-surprise/gifs/hug.gif"
+
+  const bgGradientFrom    = (config.bgGradientFrom as string) || (defaults.bgGradientFrom as string) || "#3d0000"
+  const bgGradientMid     = (config.bgGradientMid as string) || (defaults.bgGradientMid as string) || "#1a0000"
+  const bgGradientTo      = (config.bgGradientTo as string) || (defaults.bgGradientTo as string) || "#000000"
 
   const wishCards: string[] = (() => {
-    const raw = config.wishCards
+    const raw = config.wishCards || config.reasonsCards
     if (Array.isArray(raw) && raw.length > 0) {
-      return raw.map(w => typeof w === "string" ? w : String(w))
+      return raw.map((w: any) => {
+        if (typeof w === "string") return w
+        if (w && typeof w === "object") return w.text ? `${w.title ? w.title + ': ' : ''}${w.text}` : (w.title || String(w))
+        return String(w)
+      })
     }
     return defaults.wishCards as string[]
   })()
 
   const memoryPhotos: string[] = (() => {
-    const raw = config.memoryPhotos
-    if (Array.isArray(raw) && raw.length > 0) return raw as string[]
+    const raw = config.memoryPhotos || config.photos
+    if (Array.isArray(raw) && raw.length > 0) return (raw as string[]).filter(Boolean)
     return defaults.memoryPhotos as string[]
   })()
 
-  // Background — lives on the root div only, screens are transparent (matches original page.jsx).
-  // Middle stop is an explicit color (not `${bgGradientFrom}40`) so it stays valid for any
-  // color format the user enters (3/6-digit hex, rgb(), named colors).
-  const bgGradientMid = (config.bgGradientMid as string) || (defaults.bgGradientMid as string) || "#1a0000"
+  // Background — lives on the root div, screens are transparent.
+  // Explicit colors ensure it remains 100% valid under all browser conditions.
   const bgGradient = `radial-gradient(ellipse at 50% 0%, ${bgGradientFrom} 0%, ${bgGradientMid} 40%, ${bgGradientTo} 100%)`
 
   // ── Screens array — identical to original page.jsx (screens are transparent, root div holds the bg) ──
@@ -112,21 +114,13 @@ export function BirthdaySurpriseRenderer({ config }: Props) {
   ]
 
   return (
-    /*
-     * Root wrapper:
-     * - minHeight: "100dvh" — CRITICAL: ensures the template fills the full
-     *   viewport height even when rendered with no parent wrapper (demo/public
-     *   routes render directly into <body>). Using "100%" would collapse to 0.
-     * - position: "relative" — VaultScreen uses absolute positioning; needs
-     *   a positioned ancestor with a defined size.
-     * - Dark red radial gradient background, Kalam font, no user-select.
-     */
     <div
       style={{
         position: "relative",
         minHeight: "100dvh",
         overflowX: "hidden",
-        background: bgGradient,
+        backgroundColor: bgGradientTo,
+        backgroundImage: bgGradient,
         fontFamily: '"Kalam", cursive',
         color: "#f5f5f5",
         userSelect: "none",
@@ -148,7 +142,7 @@ export function BirthdaySurpriseRenderer({ config }: Props) {
         }}
       />
 
-      {/* VaultScreen — absolute inset-0, needs the root div to have a real size */}
+      {/* VaultScreen — absolute inset-0 */}
       <AnimatePresence>
         {currentScreen === -1 && !showIntro && (
           <VaultScreen key="vault" onUnlock={handleUnlock} pin={pin} avatarUrl={vaultAvatarUrl} />

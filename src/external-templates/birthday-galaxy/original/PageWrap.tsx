@@ -27,7 +27,7 @@ export function CursiveTitle({
 }) {
   return (
     <h2
-      className={`font-cursive text-gold-gradient shimmer text-5xl leading-tight md:text-6xl ${className}`}
+      className={`font-cursive text-gold-gradient shimmer text-5xl leading-[1.25] py-1 md:text-6xl ${className}`}
     >
       {children}
     </h2>

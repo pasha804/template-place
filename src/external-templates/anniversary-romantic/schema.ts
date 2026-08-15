@@ -130,7 +130,7 @@ export const defaults: TemplateConfig = {
   letterTitle: "My Dearest Love",
   letterText: "My dearest love,\n\nEvery single day with you feels like a beautiful dream I never want to wake from. You have brought so much joy, warmth, and meaning into my life — more than words could ever capture.\n\nThank you for being my person, my safe place, my greatest adventure.\n\nForever yours ❤️",
   signature: "Forever Yours ❤️",
-  audioSrc: "/templates/anniversary-romantic/music.mp3",
+  audioSrc: "",
   replayButtonText: "Relive Our Journey 💖",
 
   _page_title: "Happy Anniversary 💑",

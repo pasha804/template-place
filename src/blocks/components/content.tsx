@@ -49,7 +49,7 @@ function Hero({ props, theme }: BlockRenderProps<HeroProps>) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-4xl leading-[1.05] font-bold sm:text-5xl md:text-6xl"
+          className="text-4xl leading-[1.14] font-bold sm:text-5xl md:text-6xl"
           style={{ fontFamily: theme.displayFont, color: theme.foreground }}
         >
           {props.title}

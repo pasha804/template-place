@@ -285,9 +285,10 @@ function AdminPendingWebsitesPage() {
                     );
                   }
                   const RendererComponent = plugin.Renderer;
+                  const config = { ...plugin.defaults, ...((previewItem.page.content as Record<string, unknown>) ?? {}) };
                   return (
                     <div className="min-h-full">
-                      <RendererComponent config={(previewItem.page.content as Record<string, unknown>) ?? {}} mode="view" />
+                      <RendererComponent config={config} mode="view" />
                     </div>
                   );
                 })()}

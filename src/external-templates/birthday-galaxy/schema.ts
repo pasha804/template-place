@@ -168,7 +168,7 @@ export const defaults: TemplateConfig = {
 
   songTitle: "Happy Birthday",
   songArtist: "Dedicated to You",
-  audioSrc: "/templates/birthday-galaxy/music.mp3",
+  audioSrc: "",
 
   finalTitle: "Happy Birthday!",
   finalMessage: "May your day be magical and your year extraordinary.",

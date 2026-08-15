@@ -4,20 +4,21 @@ import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Volume2, VolumeX } from "lucide-react"
 
-export default function MusicToggle({ audioSrc = "/templates/birthday-aurora/music.mp3" }) {
+export default function MusicToggle({ audioSrc }) {
+  if (!audioSrc) return null;
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [ready, setReady] = useState(false)
   const fadeRef = useRef(null)
 
   useEffect(() => {
+    if (!audioSrc) return;
     const audio = new Audio(audioSrc)
     audio.loop = true
     audio.volume = 0
     audioRef.current = audio
 
     audio.addEventListener("canplaythrough", () => setReady(true), { once: true })
-    // Try loading silently — may fail if file absent, that's fine
     audio.load()
 
     return () => {

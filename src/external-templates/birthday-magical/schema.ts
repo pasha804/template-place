@@ -230,7 +230,7 @@ export const defaults: TemplateConfig = {
 
   celebrationTitle: "Happy Birthday!",
   celebrationMessage: "May your year ahead be as extraordinary as you are ✨",
-  audioSrc: "/templates/birthday-magical/music.mp3",
+  audioSrc: "",
 
   _page_title: "Happy Birthday — Magical Surprise",
   _page_seoTitle: "Happy Birthday — Magical Surprise",

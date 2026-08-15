@@ -84,15 +84,15 @@ export const defaults: TemplateConfig = {
 
   photosTitle: "Remembering Our Happiness",
   memoryPhotos: [
-    "/templates/sorry-apology/1.jpg",
-    "/templates/sorry-apology/2.jpg",
+    "/templates/sorry-apology/heppi.gif",
+    "/templates/sorry-apology/hug.gif",
   ],
 
   forgiveQuestion: "Will you forgive me?",
   yesButtonText: "I Forgive You ❤️",
   noButtonText: "Still Thinking 🥺",
   forgivenMessage: "Thank you for giving me another chance! I promise to make you smile every day ❤️",
-  audioSrc: "/templates/sorry-apology/music.mp3",
+  audioSrc: "",
 
   _page_title: "I Am Sorry — Heartfelt Apology",
   _page_seoTitle: "I Am Sorry — Heartfelt Apology",

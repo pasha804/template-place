@@ -95,7 +95,7 @@ export const defaults: TemplateConfig = {
   hugTitle: "Sending Big Hugs!",
   hugMessage: "Sending you the warmest hugs! ❤️",
   hugButtonText: "Send Big Hug 🤗",
-  audioSrc: "/templates/birthday-bloom/music.mp3",
+  audioSrc: "",
 
   _page_title: "Happy Birthday — A Surprise Just For You",
   _page_seoTitle: "Happy Birthday — A Surprise Just For You",

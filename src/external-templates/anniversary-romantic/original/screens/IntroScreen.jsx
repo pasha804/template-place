@@ -45,7 +45,7 @@ export default function IntroScreen({
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const btnRef = useMagneticButton()
   const headingText = introHeading || (partnerName ? `Happy Anniversary, ${partnerName}!` : "It's Our Special Day")
-  const gifSrc = introGifUrl || "/templates/anniversary-romantic/images/intro.gif"
+  const gifSrc = introGifUrl || "/templates/anniversary-romantic/gifs/intro.gif"
   const subtext = introSubtext || "I made something special for you..."
   const btnText = introButtonText || "Start Our Journey ✨"
 

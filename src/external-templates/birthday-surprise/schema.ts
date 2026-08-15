@@ -6,37 +6,10 @@ export const schema: SectionDef[] = [
     label: "First Screen",
     icon: "🎁",
     fields: [
-      { key: "firstTitle", label: "Heading", kind: "text", placeholder: "A Secret Surprise Awaits..." },
+      { key: "firstTitle", label: "Heading", kind: "text", placeholder: "Happy Birthday! 🎂" },
       { key: "firstSubtext", label: "Subtext", kind: "text", placeholder: "For someone who makes my life so special." },
       { key: "firstButtonText", label: "Button Text", kind: "text", placeholder: "Start Surprise 🎁" },
-    ],
-  },
-  {
-    key: "second",
-    label: "Second Screen (Memories)",
-    icon: "📸",
-    fields: [
-      { key: "secondTitle", label: "Section Heading", kind: "text", placeholder: "Moments We Cherish" },
-      { key: "secondSubtext", label: "Subtext", kind: "text", placeholder: "Tap to see our favorite memories" },
-      { key: "photos", label: "Photos", kind: "list-image" },
-    ],
-  },
-  {
-    key: "third",
-    label: "Third Screen (Reasons)",
-    icon: "💖",
-    fields: [
-      { key: "thirdTitle", label: "Section Heading", kind: "text", placeholder: "Why You're So Special" },
-      { key: "reasonsCards", label: "Reasons List", kind: "list-cards" },
-    ],
-  },
-  {
-    key: "fourth",
-    label: "Fourth Screen (Letter)",
-    icon: "💌",
-    fields: [
-      { key: "fourthTitle", label: "Section Heading", kind: "text", placeholder: "A Message From The Heart" },
-      { key: "letterText", label: "Letter Body", kind: "textarea", rows: 8 },
+      { key: "welcomeGifUrl", label: "Welcome GIF", kind: "image" },
     ],
   },
   {
@@ -44,8 +17,36 @@ export const schema: SectionDef[] = [
     label: "Cake & Wish Screen",
     icon: "🎂",
     fields: [
-      { key: "cakeBirthdayText", label: "Birthday Headline", kind: "text", placeholder: "Happy Birthday!" },
-      { key: "candleInstruction", label: "Instruction Text", kind: "text", placeholder: "Make a wish and blow out the candles!" },
+      { key: "cakeHeadingUnlit", label: "Heading (Before Blowing)", kind: "text", placeholder: "Make a Wish 🕯️" },
+      { key: "cakeHeadingLit", label: "Heading (After Blowing)", kind: "text", placeholder: "Happy Birthday! 🎉" },
+      { key: "cakeBirthdayText", label: "Birthday Subtitle / Wish text", kind: "text", placeholder: "your wish has been sent ✨" },
+    ],
+  },
+  {
+    key: "second",
+    label: "Second Screen (Wish Cards)",
+    icon: "💖",
+    fields: [
+      { key: "wishCardsHeading", label: "Section Heading", kind: "text", placeholder: "Special Wishes For You" },
+      { key: "wishCards", label: "Wish Cards List", kind: "list-cards" },
+    ],
+  },
+  {
+    key: "third",
+    label: "Third Screen (Memories)",
+    icon: "📸",
+    fields: [
+      { key: "memoriesHeading", label: "Section Heading", kind: "text", placeholder: "Moments We Cherish" },
+      { key: "memoryPhotos", label: "Photos", kind: "list-image" },
+    ],
+  },
+  {
+    key: "fourth",
+    label: "Fourth Screen (Letter)",
+    icon: "💌",
+    fields: [
+      { key: "letterHeading", label: "Letter Heading", kind: "text", placeholder: "A Letter, Just For You" },
+      { key: "letterText", label: "Letter Body", kind: "textarea", rows: 8 },
     ],
   },
   {
@@ -54,8 +55,8 @@ export const schema: SectionDef[] = [
     icon: "🔒",
     fields: [
       { key: "vaultTitle", label: "Vault Heading", kind: "text", placeholder: "The Secret Vault" },
-      { key: "vaultPin", label: "Unlock Code / PIN", kind: "pin", placeholder: "1234" },
-      { key: "vaultSecretText", label: "Secret Revealed Text", kind: "textarea", rows: 4 },
+      { key: "pin", label: "Unlock PIN Code", kind: "pin", placeholder: "1234" },
+      { key: "vaultAvatarUrl", label: "Vault Avatar Photo", kind: "image" },
     ],
   },
   {
@@ -65,13 +66,17 @@ export const schema: SectionDef[] = [
     fields: [
       { key: "hugTitle", label: "Overlay Heading", kind: "text", placeholder: "Sending You A Big Hug!" },
       { key: "hugMessage", label: "Hug Message", kind: "text", placeholder: "Warmest hugs across the miles! ❤️" },
+      { key: "hugGifUrl", label: "Hug GIF URL", kind: "image" },
     ],
   },
   {
-    key: "music",
-    label: "Background Music",
-    icon: "🎵",
+    key: "theme",
+    label: "Theme Colors & Background",
+    icon: "🎨",
     fields: [
+      { key: "bgGradientFrom", label: "Background Radial (Center/Top)", kind: "color" },
+      { key: "bgGradientMid", label: "Background Radial (Mid)", kind: "color" },
+      { key: "bgGradientTo", label: "Background Radial (Outer)", kind: "color" },
       { key: "audioSrc", label: "Background Music URL", kind: "audio" },
     ],
   },
@@ -91,38 +96,75 @@ export const schema: SectionDef[] = [
 ];
 
 export const defaults: TemplateConfig = {
-  firstTitle: "A Secret Surprise Awaits...",
+  // First screen
+  firstTitle: "Happy Birthday! 🎂",
   firstSubtext: "For someone who makes my life so special.",
   firstButtonText: "Start Surprise 🎁",
+  welcomeSubText: "For someone who makes my life so special.",
+  welcomeButtonText: "Start Surprise 🎁",
+  welcomeGifUrl: "/templates/birthday-surprise/gifs/heppi.gif",
 
+  // Cake screen
+  cakeHeadingUnlit: "Make a Wish 🕯️",
+  cakeHeadingLit: "Happy Birthday! 🎉",
+  cakeBirthdayText: "Happy Birthday!",
+  candleInstruction: "Make a wish and blow out the candles!",
+
+  // Wish cards screen
+  wishCardsHeading: "Special Wishes For You",
+  thirdTitle: "Special Wishes For You",
+  wishCards: [
+    "Wishing you a day as bright and beautiful as your smile — Happy Birthday!",
+    "May this birthday bring you all the love, laughter, and joy you deserve!",
+    "Another year older, another year more amazing. You just keep getting better!",
+    "You make everyone around you happier just by existing. Today we celebrate YOU!",
+    "Today is YOUR day — make a wish, eat the cake, and let yourself be celebrated!",
+  ],
+  reasonsCards: [
+    { title: "Your Smile", text: "Brightens up every single day." },
+    { title: "Your Soul", text: "Pure gold and full of love." },
+  ],
+
+  // Memories screen
   secondTitle: "Moments We Cherish",
   secondSubtext: "Tap to see our favorite memories",
+  memoriesHeading: "Moments We Cherish",
   photos: [
     "/templates/birthday-surprise/images/1.jpg",
     "/templates/birthday-surprise/images/2.jpg",
     "/templates/birthday-surprise/images/3.jpg",
     "/templates/birthday-surprise/images/4.jpg",
   ],
-
-  thirdTitle: "Why You're So Special",
-  reasonsCards: [
-    { title: "Your Smile", text: "Brightens up every single day." },
-    { title: "Your Soul", text: "Pure gold and full of love." },
+  memoryPhotos: [
+    "/templates/birthday-surprise/images/1.jpg",
+    "/templates/birthday-surprise/images/2.jpg",
+    "/templates/birthday-surprise/images/3.jpg",
+    "/templates/birthday-surprise/images/4.jpg",
   ],
 
+  // Letter screen
   fourthTitle: "A Message From The Heart",
+  letterHeading: "A Message From The Heart",
   letterText: "Happy Birthday!\n\nI hope your special day is overflowing with laughter, sweet treats, and everything you love most.\n\nKeep shining bright! ❤️",
 
-  cakeBirthdayText: "Happy Birthday!",
-  candleInstruction: "Make a wish and blow out the candles!",
-
+  // Vault screen
   vaultTitle: "The Secret Vault",
   vaultPin: "1234",
+  pin: "1234",
+  vaultAvatarUrl: "/templates/birthday-surprise/images/1.jpg",
   vaultSecretText: "You unlocked the vault! You deserve all the happiness in the universe! 🎉",
 
+  // Hug overlay
   hugTitle: "Sending You A Big Hug!",
   hugMessage: "Warmest hugs across the miles! ❤️",
-  audioSrc: "/templates/birthday-surprise/music.mp3",
+  hugGifUrl: "/templates/birthday-surprise/gifs/hug.gif",
+
+  // Background gradient colors
+  bgGradientFrom: "#3d0000",
+  bgGradientMid: "#1a0000",
+  bgGradientTo: "#000000",
+
+  audioSrc: "",
 
   _page_title: "Happy Birthday — Ultimate Surprise",
   _page_seoTitle: "Happy Birthday — Ultimate Surprise",

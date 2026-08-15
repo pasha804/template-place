@@ -249,8 +249,8 @@ export default function Page({ config = {} }: { config?: any }) {
   const heroCouplePhoto = config.heroImgUrl || heroCouple;
   const subtitle = config.heroSubtitle || "For My Jaaan 💗";
   const title = config.heroTitle || "Happy Birthday";
-  const tagline = config.heroTagline || "To My Love";
-  const msg = config.birthdayMessage || BIRTHDAY_MSG;
+  const tagline = config.birthdayName ? `To ${config.birthdayName}` : (config.heroTagline || "To My Love");
+  const msg = config.letterBody || config.birthdayMessage || BIRTHDAY_MSG;
 
   function tryUnlock(e: React.FormEvent) {
     e.preventDefault();
@@ -273,14 +273,14 @@ export default function Page({ config = {} }: { config?: any }) {
     }
   }
 
-  const galleryItems = [
-    { img: config.photo1 || p1, emoji: "🥰" },
-    { img: config.photo2 || p2, emoji: "🤍" },
-    { img: config.photo3 || p3, emoji: "✨" },
-    { img: config.photo4 || p4, emoji: "💜" },
-    { img: config.photo5 || p5, emoji: "❤️" },
-    { img: config.photo6 || p6, emoji: "🤍" },
-  ];
+  const rawPhotos = Array.isArray(config.photos) && config.photos.length > 0 ? config.photos : null;
+  const defaultPhotos = [p1, p2, p3, p4, p5, p6];
+  const emojis = ["🥰", "🤍", "✨", "💜", "❤️", "🤍"];
+
+  const galleryItems = Array.from({ length: 6 }).map((_, i) => ({
+    img: (rawPhotos && rawPhotos[i]) || config[`photo${i + 1}`] || defaultPhotos[i],
+    emoji: emojis[i % emojis.length],
+  }));
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">

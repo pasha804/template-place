@@ -7,6 +7,7 @@
 import { useState, useEffect } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import type { TemplateConfig } from "@/engine/types"
+import { defaults } from "./schema"
 
 // Original components — verbatim JSX copies
 import Loader        from "./original/Loader"
@@ -118,7 +119,7 @@ const AURORA_CSS = `
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function BirthdayAuroraRenderer({ config }: Props) {
+export function BirthdayAuroraRenderer({ config = {} }: Props) {
   const [screen, setScreen] = useState(S.INTRO)
   const [isLoading, setIsLoading] = useState(true)
   const [birthdayUnlocked, setBirthdayUnlocked] = useState(false)
@@ -141,8 +142,15 @@ export function BirthdayAuroraRenderer({ config }: Props) {
   const go = (n: number) => () => setScreen(n)
   const handleCountdownComplete = () => { setBirthdayUnlocked(true); setScreen(S.CELEBRATE) }
 
-  const photos = Array.isArray(config.photos)
-    ? (config.photos as string[]).map(p => p.split("|")[0].trim()).filter(Boolean)
+  const defaultPhotoList = [
+    defaults.photo1 as string,
+    defaults.photo2 as string,
+    defaults.photo3 as string,
+    defaults.photo4 as string,
+  ].filter(Boolean)
+
+  const photos = Array.isArray(config.photos) && config.photos.length > 0
+    ? (config.photos as string[]).map(p => typeof p === "string" ? p.split("|")[0].trim() : String(p)).filter(Boolean)
     : [
       config.photo1 as string,
       config.photo2 as string,
@@ -150,21 +158,48 @@ export function BirthdayAuroraRenderer({ config }: Props) {
       config.photo4 as string,
     ].filter(Boolean)
 
+  const resolvedPhotos = photos.length > 0 ? photos : defaultPhotoList
+
+  const celebrationHeading    = (config.celebrationHeading as string) || (defaults.celebrationHeading as string)
+  const celebrationSubtext    = (config.celebrationSubtext as string) || (defaults.celebrationSubtext as string)
+  const celebrationButtonText = (config.celebrationButtonText as string) || (defaults.celebrationButtonText as string)
+
+  const birthdayName    = (config.birthdayName as string) || (defaults.birthdayName as string)
+  const birthdayTagline = (config.birthdayTagline as string) || (defaults.birthdayTagline as string)
+  const age             = Number(config.age) || Number(defaults.age) || 18
+  const ageFactText     = (config.ageFactText as string) || (defaults.ageFactText as string)
+
+  const bdayHeading    = (config.bdayHeading as string) || (defaults.bdayHeading as string)
+  const bdaySubheading = (config.bdaySubheading as string) || (defaults.bdaySubheading as string)
+
+  const gifVibesTitle = (config.gifVibesTitle as string) || (defaults.gifVibesTitle as string)
+  const gifVibesCards = (config.gifVibesCards as any[]) || (defaults.gifVibesCards as any[])
+
+  const wishesTitle = (config.wishesTitle as string) || (defaults.wishesTitle as string)
+  const wishesList  = (config.wishesList as any[]) || (defaults.wishesList as any[])
+
+  const letterText      = (config.letterText as string) || (defaults.letterText as string)
+  const letterSignature = (config.letterSignature as string) || (defaults.letterSignature as string)
+
+  const loaderHeading = (config.loaderHeading as string) || (defaults.loaderHeading as string)
+  const loaderSubtext = (config.loaderSubtext as string) || (defaults.loaderSubtext as string)
+  const audioSrc      = (config.audioSrc as string) || (defaults.audioSrc as string)
+
   const renderScreen = () => {
     switch (screen) {
       case S.INTRO:
         return birthdayUnlocked
-          ? <Celebration   key="celebrate" onNext={go(S.AGE)} celebrationHeading={config.celebrationHeading as string} celebrationSubtext={config.celebrationSubtext as string} celebrationButtonText={config.celebrationButtonText as string} />
+          ? <Celebration   key="celebrate" onNext={go(S.AGE)} celebrationHeading={celebrationHeading} celebrationSubtext={celebrationSubtext} celebrationButtonText={celebrationButtonText} />
           : <Countdown     key="countdown" onComplete={handleCountdownComplete} />
-      case S.CELEBRATE: return <Celebration  key="celebrate"  onNext={go(S.AGE)} celebrationHeading={config.celebrationHeading as string} celebrationSubtext={config.celebrationSubtext as string} celebrationButtonText={config.celebrationButtonText as string} />
-      case S.AGE:       return <AgeReveal    key="age"         onNext={go(S.BDAY)} age={Number(config.age) || 18} birthdayName={config.birthdayName as string} ageFactText={config.ageFactText as string} />
-      case S.BDAY:      return <HappyBirthday key="happy"      onNext={go(S.GALLERY)} birthdayName={config.birthdayName as string} birthdayTagline={config.birthdayTagline as string} bdayHeading={config.bdayHeading as string} bdaySubheading={config.bdaySubheading as string} />
-      case S.GALLERY:   return <PhotoGallery  key="gallery"    onNext={go(S.GIBS)} photos={photos} />
-      case S.GIBS:      return <GifVibes      key="gifvibes"   onNext={go(S.REEL)} title={config.gifVibesTitle as string} subtitle="Can't be there in person..." cards={config.gifVibesCards as any[]} />
+      case S.CELEBRATE: return <Celebration  key="celebrate"  onNext={go(S.AGE)} celebrationHeading={celebrationHeading} celebrationSubtext={celebrationSubtext} celebrationButtonText={celebrationButtonText} />
+      case S.AGE:       return <AgeReveal    key="age"         onNext={go(S.BDAY)} age={age} birthdayName={birthdayName} ageFactText={ageFactText} />
+      case S.BDAY:      return <HappyBirthday key="happy"      onNext={go(S.GALLERY)} birthdayName={birthdayName} birthdayTagline={birthdayTagline} bdayHeading={bdayHeading} bdaySubheading={bdaySubheading} />
+      case S.GALLERY:   return <PhotoGallery  key="gallery"    onNext={go(S.GIBS)} photos={resolvedPhotos} />
+      case S.GIBS:      return <GifVibes      key="gifvibes"   onNext={go(S.REEL)} title={gifVibesTitle} subtitle="Can't be there in person..." cards={gifVibesCards} />
       case S.REEL:      return <GifReel       key="gifreel"    onNext={go(S.WISHES)} />
-      case S.WISHES:    return <WishesWall    key="wishes"     onNext={go(S.LETTER)} title={config.wishesTitle as string} wishes={config.wishesList as any[]} />
-      case S.LETTER:    return <Letter        key="letter"     letterText={config.letterText as string} letterSignature={config.letterSignature as string} />
-      default:          return <Letter        key="letter"     letterText={config.letterText as string} letterSignature={config.letterSignature as string} />
+      case S.WISHES:    return <WishesWall    key="wishes"     onNext={go(S.LETTER)} title={wishesTitle} wishes={wishesList} />
+      case S.LETTER:    return <Letter        key="letter"     letterText={letterText} letterSignature={letterSignature} />
+      default:          return <Letter        key="letter"     letterText={letterText} letterSignature={letterSignature} />
     }
   }
 
@@ -177,7 +212,7 @@ export function BirthdayAuroraRenderer({ config }: Props) {
 
         <ParticleSystem />
 
-        {!isLoading && <MusicToggle audioSrc={config.audioSrc as string} />}
+        {!isLoading && <MusicToggle audioSrc={audioSrc} />}
 
         {!isLoading && screen < S.LETTER && (
           <motion.div
@@ -200,7 +235,7 @@ export function BirthdayAuroraRenderer({ config }: Props) {
 
         <AnimatePresence mode="wait">
           {isLoading
-            ? <Loader key="loader" loaderHeading={config.loaderHeading as string} loaderSubtext={config.loaderSubtext as string} />
+            ? <Loader key="loader" loaderHeading={loaderHeading} loaderSubtext={loaderSubtext} />
             : <AnimatePresence mode="wait">{renderScreen()}</AnimatePresence>
           }
         </AnimatePresence>
