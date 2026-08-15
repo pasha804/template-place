@@ -1,8 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
-import type { ExternalTemplateProps } from "@/engine/types";
-import { birthdayCelestialDefaults } from "./schema";
+import type { TemplateRendererProps2 } from "@/engine/types";
+import { defaults } from "./schema";
 
 // Sub-components
 import { GalaxyBackground } from "./original/components/GalaxyBackground";
@@ -249,9 +249,9 @@ const STYLES = `
 }
 `;
 
-export function BirthdayCelestialRenderer({ config }: ExternalTemplateProps) {
+export function BirthdayCelestialRenderer({ config }: TemplateRendererProps2) {
   const merged = useMemo(
-    () => ({ ...birthdayCelestialDefaults, ...(config || {}) }),
+    () => ({ ...defaults, ...(config || {}) }),
     [config]
   );
 
