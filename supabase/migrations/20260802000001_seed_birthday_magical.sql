@@ -1,4 +1,4 @@
--- Seed Birthday Magical template
+-- Seed Birthday Celestial template
 -- UUID: a9b0c1d2-e3f4-5678-9abc-def012345678
 
 insert into public.templates (
@@ -7,13 +7,13 @@ insert into public.templates (
 ) values (
   'a9b0c1d2-e3f4-5678-9abc-def012345678',
   'a9b0c1d2-e3f4-5678-9abc-def012345678',
-  'birthday-magical',
-  'Birthday Magical',
-  'A 15-chapter cinematic birthday experience unlike anything else',
-  'A fully interactive, 15-chapter cinematic birthday gift with 3D WebGL cake, mic-blow candles, constellation, scratch card, gift unboxing, and fireworks finale.',
+  'birthday-celestial',
+  'Birthday Celestial',
+  'A 15-chapter cinematic romantic galaxy celebration',
+  'A 15-chapter cinematic romantic galaxy celebration featuring interactive mic-blow candle cake, love quiz, polaroid memory wall, love letter, and celestial surprises.',
   (select id from public.categories where slug = 'birthday' limit 1),
-  array['birthday','cinematic','interactive','3d','webgl','cake','mic','constellation','scratch','unboxing','letter','balloons','confetti','aurora','premium'],
-  '/templates/birthday-magical/images/1.jpeg',
+  array['birthday','celestial','galaxy','cinematic','interactive','romantic','love','cake','quiz','memories','letter','gift','premium'],
+  '/templates/birthday-celestial/images/couple-galaxy.webp',
   2999, true, true, true, 70
 )
 on conflict (id) do update set

@@ -18,7 +18,7 @@ const birthdayTemplateSlugs = [
   "birthday-aurora",
   "birthday-bloom",
   "birthday-galaxy",
-  "birthday-magical",
+  "birthday-celestial",
   "birthday-rose",
   "golden-hour-birthday",
 ];

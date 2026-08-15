@@ -78,7 +78,7 @@ WHERE oi.page_id = p.id
 INSERT INTO public.templates (id, plugin_id, slug, name, tagline, description, category_id, tags, price_cents, plan_kind, is_premium, is_published, is_featured, cover_url, preview_video_url, rating_avg, rating_count, uses_count, views_count, sort_order)
 VALUES
   -- Birthday Templates
-  ('a9b0c1d2-e3f4-5678-9abc-def012345678', 'birthday-magical', 'birthday-magical', 'Birthday Magical', 'A 15-chapter cinematic birthday experience unlike anything else', 'A fully interactive, 15-chapter cinematic birthday gift with 3D cake, constellation, scratch cards, gift unboxing, and fireworks finale.', NULL, ARRAY['birthday','cinematic','interactive','3d','webgl','premium'], 2999, 'one_time', true, true, true, '/templates/birthday-magical/images/1.jpeg', NULL, 0, 0, 0, 0, 10),
+  ('a9b0c1d2-e3f4-5678-9abc-def012345678', 'birthday-celestial', 'birthday-celestial', 'Birthday Celestial', 'A 15-chapter cinematic romantic galaxy celebration', 'A 15-chapter cinematic romantic galaxy celebration featuring interactive mic-blow candle cake, love quiz, polaroid memory wall, love letter, and celestial surprises.', NULL, ARRAY['birthday','celestial','galaxy','cinematic','interactive','romantic','love','cake','quiz','memories','letter','gift','premium'], 2999, 'one_time', true, true, true, '/templates/birthday-celestial/images/couple-galaxy.webp', NULL, 0, 0, 0, 0, 10),
   
   ('d4e5f6a7-b8c9-0123-def0-456789012345', 'birthday-aurora', 'birthday-aurora', 'Birthday Aurora', 'Aurora-themed birthday celebration', 'Interactive birthday template with aurora borealis effects and magical animations', NULL, ARRAY['birthday','aurora','magical','animated'], 999, 'one_time', false, true, false, NULL, NULL, 0, 0, 0, 0, 20),
   
