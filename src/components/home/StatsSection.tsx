@@ -3,9 +3,9 @@ import { useEffect, useRef } from "react";
 import { Users, Layers, Globe, Shield } from "lucide-react";
 
 const stats = [
-  { icon: Users,  value: 5000,  suffix: "K+", label: "Happy Customers",   color: "#a78bfa" },
+  { icon: Users,  value: 5000,  suffix: "+",  label: "Happy Customers",   color: "#a78bfa" },
   { icon: Layers, value: 50,    suffix: "+",  label: "Premium Templates", color: "#f472b6" },
-  { icon: Globe,  value: 5000,  suffix: "K+", label: "Websites Created",  color: "#38bdf8" },
+  { icon: Globe,  value: 5000,  suffix: "+",  label: "Websites Created",  color: "#38bdf8" },
   { icon: Shield, value: 99.9,  suffix: "%",  label: "Uptime Guaranteed", color: "#34d399", isDecimal: true },
 ];
 
