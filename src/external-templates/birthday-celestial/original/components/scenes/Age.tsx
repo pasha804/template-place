@@ -19,12 +19,12 @@ export function Age({
   onNext,
   age = 25,
   birthdayName = "Jana",
-  ageNickname = "ifsaaayyyy",
-  ageSpecialMessage = "Mri yadi Happy Birthday Happy many Return off the day Kale ki bht zda Happy Birthday Day yadi ka 😭💕",
+  ageNickname = "Jana",
+  ageSpecialMessage = "Happy Birthday to the most special person in my life! Wishing you endless happiness, love, and many many happy returns of the day! 💖",
   ageNotes = [
-    "Yadr g Allah pak ap ko hemsha Happy rkhy or mry sath rkhy 🌹",
-    "Ap ki hushio ko kbi ksi ki nzr n lgay Allah pak hameha Apny hifz o Aman my rkhy ✨",
-    "Allah g ifzay ko Hamesha Apny Mani KY sath rkhy 💝",
+    "May Allah bless you with endless joy, happiness, and keep us together always 🌹",
+    "May Allah protect your beautiful smile and keep you in His divine care always ✨",
+    "Always by your side, forever and always 💝",
   ],
   ageGifUrl = "/templates/birthday-celestial/gifs/heppi.gif",
 }: AgeProps) {

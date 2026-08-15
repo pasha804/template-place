@@ -8,9 +8,9 @@ const DEFAULT_LETTER = `Happy Birthday, Jana, my love.
 
 Today is all about you — and you deserve every bit of happiness in this world.
 
-Thank you for being my world, my KuchuPuchu, and for making every moment so beautiful. Your smile lights up my darkest days, your kindness touches my soul, and everything about you is my absolute favorite.
+Thank you for being my world, my Jana, and for making every moment so beautiful. Your smile lights up my darkest days, your kindness touches my soul, and everything about you is my absolute favorite.
 
-You are my forever person, the one I want to make memories with for the rest of my life. Every laugh, every moment, every "Lairyain" - they're all treasures I hold close to my heart.
+You are my forever person, the one I want to make memories with for the rest of my life. Every laugh, every moment, every memory - they're all treasures I hold close to my heart.
 
 I wish I could give you the entire universe, but for now, let me give you this little galaxy filled with all my love.
 

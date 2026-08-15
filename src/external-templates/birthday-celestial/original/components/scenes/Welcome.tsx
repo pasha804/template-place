@@ -21,7 +21,7 @@ export function Welcome({
   birthdayName = "Jana",
   heroDate = "12th August, 2026 - Wednesday 3:00 AM",
   heroTagline = "for my special one",
-  heroDescription = "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my KuchuPuchu.",
+  heroDescription = "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my Jana.",
   heroImage = "/templates/birthday-celestial/images/couple-galaxy.webp",
   startButtonText = "Start the Celebration",
 }: WelcomeProps) {

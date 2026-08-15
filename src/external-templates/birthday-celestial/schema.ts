@@ -30,7 +30,7 @@ export const schema: SectionDef[] = [
         kind: "textarea",
         rows: 3,
         placeholder:
-          "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my KuchuPuchu.",
+          "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my Jana.",
       },
       {
         key: "heroImage",
@@ -53,7 +53,7 @@ export const schema: SectionDef[] = [
         key: "ageNickname",
         label: "Sweet Nickname",
         kind: "text",
-        placeholder: "ifsaaayyyy",
+        placeholder: "Jana",
       },
       {
         key: "ageSpecialMessage",
@@ -61,7 +61,7 @@ export const schema: SectionDef[] = [
         kind: "textarea",
         rows: 3,
         placeholder:
-          "Mri yadi Happy Birthday Happy many Return off the day Kale ki bht zda Happy Birthday Day yadi ka 😭💕",
+          "Happy Birthday to the most special person in my life! Wishing you endless happiness, love, and many many happy returns of the day! 💖",
       },
     ],
   },
@@ -237,13 +237,13 @@ export const defaults: TemplateConfig = {
   heroDate: "12th August, 2026 - Wednesday 3:00 AM",
   heroTagline: "for my special one",
   heroDescription:
-    "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my KuchuPuchu.",
+    "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my Jana.",
   heroImage: "/templates/birthday-celestial/images/couple-galaxy.webp",
 
   age: 25,
-  ageNickname: "ifsaaayyyy",
+  ageNickname: "Jana",
   ageSpecialMessage:
-    "Mri yadi Happy Birthday Happy many Return off the day Kale ki bht zda Happy Birthday Day yadi ka 😭💕",
+    "Happy Birthday to the most special person in my life! Wishing you endless happiness, love, and many many happy returns of the day! 💖",
 
   quizTitle: "How Well Do You Know Me?",
   quizSubtitle:
@@ -263,9 +263,9 @@ export const defaults: TemplateConfig = {
 
 Today is all about you — and you deserve every bit of happiness in this world.
 
-Thank you for being my world, my KuchuPuchu, and for making every moment so beautiful. Your smile lights up my darkest days, your kindness touches my soul, and everything about you is my absolute favorite.
+Thank you for being my world, my Jana, and for making every moment so beautiful. Your smile lights up my darkest days, your kindness touches my soul, and everything about you is my absolute favorite.
 
-You are my forever person, the one I want to make memories with for the rest of my life. Every laugh, every moment, every "Lairyain" - they're all treasures I hold close to my heart.
+You are my forever person, the one I want to make memories with for the rest of my life. Every laugh, every moment, every memory - they're all treasures I hold close to my heart.
 
 I wish I could give you the entire universe, but for now, let me give you this little galaxy filled with all my love.
 

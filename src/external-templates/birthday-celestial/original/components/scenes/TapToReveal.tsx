@@ -19,12 +19,12 @@ const DEFAULT_SECRETS: SecretCard[] = [
   {
     emoji: "👀",
     front: "Tap If You Love Me 👀❤️",
-    back: "Congratulations… you just unlocked a lifetime supply of my love, care and annoying messages unlimited Lairyain, Unlimited gussa from your side not mine. 😂❤️💌",
+    back: "Congratulations… you just unlocked a lifetime supply of my love, care, sweet messages, and endless hugs! 😂❤️💌",
   },
   {
     emoji: "🎁",
     front: "Your Final Surprise 🎁",
-    back: "No matter how many birthdays come and go, I hope I'm still here making you smile on every single day meri jaan. Happy Birthday, my favourite person, my life partner, my KuchuPuchu😭. ❤️🎂",
+    back: "No matter how many birthdays come and go, I hope I'm still here making you smile on every single day, Jana. Happy Birthday, my favourite person, my life partner, my love. ❤️🎂",
   },
 ];
 
