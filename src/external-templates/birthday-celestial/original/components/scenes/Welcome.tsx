@@ -18,7 +18,7 @@ interface WelcomeProps {
 
 export function Welcome({
   onNext,
-  birthdayName = "Sumaira",
+  birthdayName = "Jana",
   heroDate = "12th August, 2026 - Wednesday 3:00 AM",
   heroTagline = "for my special one",
   heroDescription = "You mean the universe to me. A special journey through our memories, love, and every reason you make every day magical, my KuchuPuchu.",

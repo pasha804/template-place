@@ -10,7 +10,7 @@ export const schema: SectionDef[] = [
         key: "recipientName",
         label: "Birthday Person Name",
         kind: "text",
-        placeholder: "Sumaira",
+        placeholder: "Jana",
       },
       {
         key: "heroDate",
@@ -233,7 +233,7 @@ export const schema: SectionDef[] = [
 ];
 
 export const defaults: TemplateConfig = {
-  recipientName: "Sumaira",
+  recipientName: "Jana",
   heroDate: "12th August, 2026 - Wednesday 3:00 AM",
   heroTagline: "for my special one",
   heroDescription:
@@ -259,7 +259,7 @@ export const defaults: TemplateConfig = {
     "This song reminds me of every beautiful moment we've shared together. Every beat, every note, every word... it's all about us. 💕",
 
   letterTitle: "A Special Message",
-  letterBody: `Happy Birthday, Sumaira, my love.
+  letterBody: `Happy Birthday, Jana, my love.
 
 Today is all about you — and you deserve every bit of happiness in this world.
 

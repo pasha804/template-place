@@ -228,6 +228,13 @@ const STYLES = `
   50% { opacity: 1; transform: scale(1.12); }
 }
 
+@keyframes shooting {
+  0% { transform: translate(0, 0) scaleX(0); opacity: 0; }
+  8% { opacity: 1; transform: scaleX(1); }
+  35% { transform: translate(360px, 240px) scaleX(0.3); opacity: 0; }
+  100% { transform: translate(360px, 240px) scaleX(0); opacity: 0; }
+}
+
 .bt-celestial-root .animate-twinkle {
   animation: twinkle 3s ease-in-out infinite;
 }

@@ -18,7 +18,7 @@ interface AgeProps {
 export function Age({
   onNext,
   age = 25,
-  birthdayName = "Sumaira",
+  birthdayName = "Jana",
   ageNickname = "ifsaaayyyy",
   ageSpecialMessage = "Mri yadi Happy Birthday Happy many Return off the day Kale ki bht zda Happy Birthday Day yadi ka 😭💕",
   ageNotes = [

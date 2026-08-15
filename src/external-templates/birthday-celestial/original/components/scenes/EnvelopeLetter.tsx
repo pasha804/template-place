@@ -4,7 +4,7 @@ import { X, ArrowRight } from "lucide-react";
 import { useTypewriter } from "../../hooks/use-typewriter";
 import { GlowButton } from "../GlowButton";
 
-const DEFAULT_LETTER = `Happy Birthday, Sumaira, my love.
+const DEFAULT_LETTER = `Happy Birthday, Jana, my love.
 
 Today is all about you — and you deserve every bit of happiness in this world.
 

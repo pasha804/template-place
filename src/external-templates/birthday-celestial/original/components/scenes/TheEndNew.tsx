@@ -16,7 +16,7 @@ interface TheEndNewProps {
 
 export function TheEndNew({
   onRestart,
-  birthdayName = "Sumaira",
+  birthdayName = "Jana",
   theEndTitle = "The End",
   theEndSubtitle = "But not really...",
   theEndParagraph1 = "This is just the beginning of all your adventures, my love.",
