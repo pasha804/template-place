@@ -141,7 +141,7 @@ export function Quiz({
           <div className="text-8xl sm:text-9xl mb-6">🎊</div>
           <div className="glass rounded-3xl px-8 py-6 max-w-lg mx-auto">
             <Heart className="h-12 w-12 text-primary mx-auto mb-4 animate-glow-pulse" />
-            <p className="script text-3xl text-primary text-glow mb-4">
+            <p className="text-2xl sm:text-3xl text-primary text-glow font-bold mb-4">
               Perfect Score!
             </p>
             <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
@@ -209,7 +209,7 @@ export function Quiz({
                 alt="Please try again"
                 className="w-40 h-40 sm:w-48 sm:h-48 rounded-2xl object-cover mb-4 glass p-2"
               />
-              <p className="script text-3xl text-red-400 text-glow mb-2">Oops! Try Again</p>
+              <p className="text-2xl sm:text-3xl text-red-400 text-glow font-bold mb-2">Oops! Try Again</p>
               <p className="text-muted-foreground text-sm">Think about what truly matters to me 💝</p>
             </motion.div>
           )}
@@ -224,11 +224,11 @@ export function Quiz({
         >
           <div className="flex items-start gap-4 mb-8">
             <div className="glass rounded-full w-12 h-12 flex items-center justify-center shrink-0">
-              <span className="script text-2xl text-primary text-glow">
+              <span className="text-xl sm:text-2xl text-primary text-glow font-bold">
                 {currentQuestion + 1}
               </span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-serif text-foreground leading-relaxed pt-1.5">
+            <h3 className="text-xl sm:text-2xl text-foreground font-semibold leading-relaxed pt-1.5">
               {q?.question}
             </h3>
           </div>

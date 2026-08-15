@@ -82,7 +82,7 @@ export function Wish({
       title={cakeHeadingUnlit}
       subtitle={
         out ? (
-          <span className="script text-2xl text-primary text-glow">{cakeHeadingLit}</span>
+          <span className="text-xl sm:text-2xl text-primary text-glow font-bold">{cakeHeadingLit}</span>
         ) : (
           <>
             Blow out the candles and

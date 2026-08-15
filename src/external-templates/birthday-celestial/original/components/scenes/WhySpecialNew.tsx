@@ -153,7 +153,7 @@ export function WhySpecialNew({
         >
           <div className="flex items-center gap-3">
             <Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-gold animate-glow-pulse" />
-            <p className="script text-lg sm:text-xl text-primary text-glow">
+            <p className="text-base sm:text-lg text-primary text-glow font-bold">
               You win every category, every time! 🏆✨
             </p>
             <Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-gold animate-glow-pulse" />

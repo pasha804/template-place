@@ -62,7 +62,7 @@ export function Age({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="script text-3xl text-muted-foreground mb-4"
+          className="text-2xl sm:text-3xl text-muted-foreground mb-4 font-medium"
         >
           Today, {birthdayName}, you turn...
         </motion.h2>
@@ -82,7 +82,7 @@ export function Age({
                 }}
                 className="glass rounded-3xl p-6 sm:p-8 w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center glow-ring"
               >
-                <span className="script text-6xl sm:text-8xl text-primary text-glow font-bold">{digit}</span>
+                <span className="text-6xl sm:text-8xl text-primary text-glow font-extrabold">{digit}</span>
               </motion.div>
             ))}
         </div>
@@ -91,7 +91,7 @@ export function Age({
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="script text-4xl sm:text-5xl text-primary text-glow mb-8"
+          className="text-3xl sm:text-4xl text-primary text-glow font-bold tracking-wider mb-8"
         >
           YEARS OLD
         </motion.div>
@@ -104,7 +104,7 @@ export function Age({
         >
           <div className="flex items-center justify-center gap-3 mb-3">
             <Sparkles className="h-5 w-5 text-gold animate-glow-pulse" />
-            <p className="script text-2xl text-primary text-glow">
+            <p className="text-xl sm:text-2xl text-primary text-glow font-semibold">
               Welcome to {age}, {ageNickname} 🎂
             </p>
             <Sparkles className="h-5 w-5 text-gold animate-glow-pulse" />

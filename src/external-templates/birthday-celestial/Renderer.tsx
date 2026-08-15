@@ -43,7 +43,7 @@ const CHAPTERS = [
 ];
 
 const STYLES = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&family=Jost:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Jost:wght@300;400;500;600;700;800&display=swap');
 
 .bt-celestial-root {
   --background: oklch(0.08 0.035 295);
@@ -81,7 +81,7 @@ const STYLES = `
   min-height: 100dvh;
   background-color: var(--background);
   color: var(--foreground);
-  font-family: 'Jost', sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow-x: hidden;
   box-sizing: border-box;
 }
@@ -90,12 +90,11 @@ const STYLES = `
   box-sizing: border-box;
 }
 
-.bt-celestial-root .script {
-  font-family: 'Great Vibes', cursive;
-}
-
+.bt-celestial-root .script,
 .bt-celestial-root .font-serif {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Plus Jakarta Sans', 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-style: normal;
+  letter-spacing: -0.01em;
 }
 
 .bt-celestial-root .galaxy-bg {

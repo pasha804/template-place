@@ -89,10 +89,10 @@ export function WishesNew({
             <Heart className="h-9 w-9 text-primary animate-glow-pulse" fill="currentColor" />
             <Heart className="h-7 w-7 text-primary animate-glow-pulse" fill="currentColor" />
           </div>
-          <h2 className="script text-5xl sm:text-6xl text-primary text-glow mb-2">
+          <h2 className="text-4xl sm:text-5xl text-primary text-glow font-bold tracking-tight mb-2">
             {wishesTitle}
           </h2>
-          <p className="script text-lg sm:text-xl text-muted-foreground">
+          <p className="text-sm sm:text-base text-muted-foreground font-medium tracking-wide uppercase">
             {wishesSubtitle}
           </p>
         </motion.div>
@@ -187,7 +187,7 @@ export function WishesNew({
           <div className="glass rounded-3xl px-6 sm:px-8 py-4 sm:py-5 inline-block">
             <div className="flex items-center gap-3">
               <Heart className="h-5 w-5 text-gold" fill="currentColor" />
-              <p className="script text-lg sm:text-xl text-primary text-glow">
+              <p className="text-base sm:text-lg text-primary text-glow font-bold">
                 These are my wishes from the bottom of my heart 💕
               </p>
               <Heart className="h-5 w-5 text-gold" fill="currentColor" />

@@ -91,8 +91,8 @@ export function Gift({
               transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="glass mt-6 w-full rounded-3xl px-6 py-5 text-center"
             >
-              <p className="script text-3xl text-primary text-glow">{giftRevealedTitle}</p>
-              <p className="mt-2 font-serif text-sm leading-relaxed text-muted-foreground">
+              <p className="text-2xl sm:text-3xl text-primary text-glow font-bold">{giftRevealedTitle}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {giftDescription}
               </p>
             </motion.div>

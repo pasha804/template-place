@@ -124,7 +124,7 @@ export function SongNew({
                   <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
                     NOW PLAYING
                   </p>
-                  <h3 className="script text-3xl text-primary text-glow">{songTitle}</h3>
+                  <h3 className="text-2xl sm:text-3xl text-primary text-glow font-bold">{songTitle}</h3>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">

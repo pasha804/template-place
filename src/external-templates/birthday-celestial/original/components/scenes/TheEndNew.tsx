@@ -144,7 +144,7 @@ export function TheEndNew({
           >
             <div className="inline-flex items-center gap-3 glass rounded-full px-6 sm:px-8 py-3.5 sm:py-4">
               <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-primary animate-glow-pulse" fill="currentColor" />
-              <p className="script text-2xl sm:text-3xl text-primary text-glow">
+              <p className="text-xl sm:text-2xl text-primary text-glow font-bold">
                 Happy Birthday, {birthdayName}! ♥♡
               </p>
               <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-primary animate-glow-pulse" fill="currentColor" />
@@ -153,7 +153,7 @@ export function TheEndNew({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2.8, duration: 0.8 }}
-              className="text-muted-foreground mt-4 script text-base sm:text-lg"
+              className="text-muted-foreground mt-4 text-sm sm:text-base font-medium"
             >
               Have the most amazing day, my love! 🎂✨
             </motion.p>

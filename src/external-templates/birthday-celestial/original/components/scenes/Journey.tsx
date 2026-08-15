@@ -66,7 +66,7 @@ export function Journey({
               >
                 <Heart className="h-full w-full" />
               </motion.span>
-              <h3 className="font-serif text-lg tracking-wide text-primary text-glow-soft font-semibold">
+              <h3 className="text-lg tracking-wide text-primary text-glow-soft font-semibold">
                 {m.title}
               </h3>
               <p className="mt-0.5 text-sm text-muted-foreground leading-relaxed">{m.text}</p>
