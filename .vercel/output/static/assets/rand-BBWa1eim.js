@@ -1,1 +1,0 @@
-function e(e){let t=e>>>0||1;return()=>(t=t*1664525+1013904223>>>0,t/4294967296)}function t(t,n,r){let i=e(t),a=[];for(let e=0;e<n;e++)a.push(r(i,e));return a}function n(e,t,n){return t+e()*(n-t)}export{t as n,n as t};

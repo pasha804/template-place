@@ -1,1 +1,0 @@
-function e(e){let t=e>>>0;return()=>(t=t*1664525+1013904223>>>0,t/4294967296)}function t(t,n,r){let i=e(t);return Array.from({length:n},(e,t)=>r(i,t))}export{t};
