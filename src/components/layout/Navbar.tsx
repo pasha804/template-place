@@ -60,12 +60,14 @@ export function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
 
         {/* ── Logo ── */}
-        <Link to="/" className="flex shrink-0 items-center gap-2.5 mr-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-violet-600 shadow-[0_0_20px_rgba(168,85,247,0.5)]">
-            <span className="text-base font-black text-white">G</span>
-          </div>
+        <Link to="/" className="group flex shrink-0 items-center gap-2.5 mr-2">
+          <img
+            src="/dp.jpeg"
+            alt="Greeting Vibes Logo"
+            className="h-9 w-9 rounded-xl object-cover shadow-[0_0_18px_rgba(236,72,153,0.45)] ring-1 ring-white/15 transition-transform duration-300 group-hover:scale-105"
+          />
           <div className="leading-tight">
-            <p className="text-sm font-bold text-white">Greeting Vibes</p>
+            <p className="text-sm font-bold text-white transition-colors group-hover:text-pink-300">Greeting Vibes</p>
             <p className="text-[10px] text-white/40">Templates</p>
           </div>
         </Link>

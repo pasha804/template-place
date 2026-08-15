@@ -119,9 +119,11 @@ export function DashboardNav() {
               {/* Drawer header */}
               <div className="mb-6 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-violet-600 shadow-[0_0_14px_rgba(168,85,247,0.5)]">
-                    <span className="text-sm font-black text-white">S</span>
-                  </div>
+                  <img
+                    src="/dp.jpeg"
+                    alt="Greeting Vibes Logo"
+                    className="h-8 w-8 rounded-xl object-cover shadow-[0_0_14px_rgba(236,72,153,0.45)] ring-1 ring-white/15"
+                  />
                   <div className="leading-tight">
                     <p className="text-sm font-bold text-white">Dashboard</p>
                     <p className="text-[10px] text-white/40">Navigation</p>

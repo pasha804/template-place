@@ -85,16 +85,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Greeting Vibes" },
       { property: "og:title", content: "Greeting Vibes Templates" },
       { property: "og:description", content: "Beautiful dedication pages for every occasion." },
-      { property: "og:type", content: "website" },
+      { property: "og:image", content: "/dp.jpeg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@GreetingVibes" },
+      { name: "twitter:image", content: "/dp.jpeg" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/dp.jpeg", type: "image/jpeg" },
+      { rel: "apple-touch-icon", href: "/dp.jpeg" },
+      { rel: "shortcut icon", href: "/dp.jpeg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {

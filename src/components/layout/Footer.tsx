@@ -40,12 +40,14 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link to="/" className="mb-5 flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-violet-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-                <span className="text-base font-black text-white">G</span>
-              </div>
+            <Link to="/" className="group mb-5 flex items-center gap-2.5">
+              <img
+                src="/dp.jpeg"
+                alt="Greeting Vibes Logo"
+                className="h-9 w-9 rounded-xl object-cover shadow-[0_0_18px_rgba(236,72,153,0.35)] ring-1 ring-white/15 transition-transform duration-300 group-hover:scale-105"
+              />
               <div>
-                <p className="text-sm font-bold text-white">Greeting Vibes</p>
+                <p className="text-sm font-bold text-white transition-colors group-hover:text-pink-300">Greeting Vibes</p>
                 <p className="text-[10px] text-white/35">Templates</p>
               </div>
             </Link>
