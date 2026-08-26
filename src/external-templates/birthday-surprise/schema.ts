@@ -6,6 +6,7 @@ export const schema: SectionDef[] = [
     label: "First Screen",
     icon: "🎁",
     fields: [
+      { key: "birthdayName", label: "Birthday Person's Name", kind: "text", placeholder: "Ayesha ❤️" },
       { key: "firstTitle", label: "Heading", kind: "text", placeholder: "Happy Birthday! 🎂" },
       { key: "firstSubtext", label: "Subtext", kind: "text", placeholder: "For someone who makes my life so special." },
       { key: "firstButtonText", label: "Button Text", kind: "text", placeholder: "Start Surprise 🎁" },
@@ -97,6 +98,7 @@ export const schema: SectionDef[] = [
 
 export const defaults: TemplateConfig = {
   // First screen
+  birthdayName: "Ayesha ❤️",
   firstTitle: "Happy Birthday! 🎂",
   firstSubtext: "For someone who makes my life so special.",
   firstButtonText: "Start Surprise 🎁",
@@ -164,7 +166,7 @@ export const defaults: TemplateConfig = {
   bgGradientMid: "#1a0000",
   bgGradientTo: "#000000",
 
-  audioSrc: "",
+  audioSrc: "/music/1.mp3",
 
   _page_title: "Happy Birthday — Ultimate Surprise",
   _page_seoTitle: "Happy Birthday — Ultimate Surprise",

@@ -4,19 +4,21 @@ import { useRef, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Volume2, VolumeX } from "lucide-react"
 
-export default function MusicPlayer({ musicPlaying, setMusicPlaying }) {
+export default function MusicPlayer({ musicPlaying, setMusicPlaying, audioSrc = "/templates/sorry-teddy/audio/bg.mp3" }) {
   const audioRef = useRef(null)
 
   useEffect(() => {
     if (audioRef.current) {
-      // audioRef.current.volume = 0.5; // Adjust the song volume here
+      if (audioSrc && audioRef.current.src !== audioSrc) {
+        audioRef.current.src = audioSrc
+      }
       if (musicPlaying) {
-        audioRef.current.play().catch(console.error)
+        audioRef.current.play().catch(() => {})
       } else {
         audioRef.current.pause()
       }
     }
-  }, [musicPlaying])
+  }, [musicPlaying, audioSrc])
 
   const toggleMusic = () => {
     setMusicPlaying(!musicPlaying)
@@ -38,10 +40,7 @@ export default function MusicPlayer({ musicPlaying, setMusicPlaying }) {
         {musicPlaying ? <Volume2 size={20} /> : <VolumeX size={20} />}
       </motion.button>
 
-      {/* Change the audio source to original one */}
-      <audio ref={audioRef} loop preload="auto">
-        <source src="/templates/sorry-teddy/audio/bg.mp3" type="audio/wav" />
-      </audio>
+      <audio ref={audioRef} src={audioSrc || "/templates/sorry-teddy/audio/bg.mp3"} loop preload="auto" />
     </motion.div>
   )
 }

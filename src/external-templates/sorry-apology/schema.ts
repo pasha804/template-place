@@ -92,7 +92,7 @@ export const defaults: TemplateConfig = {
   yesButtonText: "I Forgive You ❤️",
   noButtonText: "Still Thinking 🥺",
   forgivenMessage: "Thank you for giving me another chance! I promise to make you smile every day ❤️",
-  audioSrc: "",
+  audioSrc: "/music/5.mp3",
 
   _page_title: "I Am Sorry — Heartfelt Apology",
   _page_seoTitle: "I Am Sorry — Heartfelt Apology",

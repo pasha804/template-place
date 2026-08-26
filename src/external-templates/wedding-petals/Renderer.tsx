@@ -14,6 +14,7 @@ import { Events } from "./original/components/Events"
 import { Gallery } from "./original/components/Gallery"
 import { Rsvp } from "./original/components/Rsvp"
 import { Footer } from "./original/components/Footer"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const WP_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Parisienne&family=Jost:wght@300;400;500;600&display=swap');
@@ -100,6 +101,7 @@ export function WeddingPetalsRenderer({ config }: { config?: TemplateConfig }) {
     <div className="wp-root">
       <style>{WP_CSS}</style>
       <Petals />
+      <BackgroundMusic src={c.audioSrc || "/music/16.mp3"} />
       <Nav brideName={c.brideName} groomName={c.groomName} />
       <main className="relative z-10">
         <Hero

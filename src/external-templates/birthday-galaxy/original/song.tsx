@@ -1,8 +1,17 @@
-﻿import { PageWrap, CursiveTitle, GalaxyLink } from "./PageWrap";
+import { PageWrap, CursiveTitle, GalaxyLink } from "./PageWrap";
 const songImg = "/templates/birthday-galaxy/gifs/5-screen.gif";
 
 
-export default function SongPage({ onNext }: { onNext?: () => void }) {
+export default function SongPage({
+  onNext,
+  songTitle = "A Song For You",
+  songArtist,
+}: {
+  onNext?: () => void;
+  songTitle?: string;
+  songArtist?: string;
+  audioSrc?: string;
+}) {
   return (
     <PageWrap>
       <div className="flex flex-col items-center gap-8 md:grid md:grid-cols-2 md:items-center md:gap-10">
@@ -22,7 +31,12 @@ export default function SongPage({ onNext }: { onNext?: () => void }) {
 
         {/* Content card */}
         <div className="glass-card w-full rounded-2xl p-7 md:p-8">
-          <CursiveTitle>A Song For You</CursiveTitle>
+          <CursiveTitle>{songTitle || "A Song For You"}</CursiveTitle>
+          {songArtist && (
+            <p className="mt-1 text-xs text-pink-400 font-medium tracking-wide">
+              {songArtist}
+            </p>
+          )}
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base">
             If I could bottle the way you make me feel, it would sound like your favorite song on
             repeat — soft, warm, and impossible to forget.

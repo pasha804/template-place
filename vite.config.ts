@@ -24,7 +24,7 @@ export default defineConfig({
     alias: {
       tslib: tslibEsm,
     },
-  },
+  } as any,
   vite: {
     resolve: {
       alias: {

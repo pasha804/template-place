@@ -15,6 +15,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import type { TemplateConfig } from "@/engine/types"
 import { defaults } from "./schema"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 import VaultScreen    from "./original/VaultScreen"
 import IntroScreen    from "./original/IntroScreen"
@@ -61,17 +62,20 @@ export function BirthdaySurpriseRenderer({ config = {} }: Props) {
   // ── Config extraction with safe dual-alias fallbacks ────────────────────
   const pin               = (config.pin as string) || (config.vaultPin as string) || (defaults.pin as string) || "1234"
   const vaultAvatarUrl    = (config.vaultAvatarUrl as string) || (defaults.vaultAvatarUrl as string) || "/templates/birthday-surprise/images/1.jpg"
+  const birthdayName      = (config.birthdayName as string) || (config.name as string) || (defaults.birthdayName as string) || ""
+  const firstTitle        = (config.firstTitle as string) || (defaults.firstTitle as string) || ""
   const welcomeSubText    = (config.welcomeSubText as string) || (config.firstSubtext as string) || (defaults.welcomeSubText as string) || "For someone who makes my life so special."
   const welcomeButtonText = (config.welcomeButtonText as string) || (config.firstButtonText as string) || (defaults.welcomeButtonText as string) || "Start Surprise 🎁"
   const welcomeGifUrl     = (config.welcomeGifUrl as string) || (defaults.welcomeGifUrl as string) || "/templates/birthday-surprise/gifs/heppi.gif"
   const cakeHeadingUnlit  = (config.cakeHeadingUnlit as string) || (defaults.cakeHeadingUnlit as string) || "Make a Wish 🕯️"
   const cakeHeadingLit    = (config.cakeHeadingLit as string) || (defaults.cakeHeadingLit as string) || "Happy Birthday! 🎉"
-  const cakeBirthdayText  = (config.cakeBirthdayText as string) || (defaults.cakeBirthdayText as string) || "Happy Birthday!"
+  const cakeBirthdayText  = (config.cakeBirthdayText as string) || (defaults.cakeBirthdayText as string) || (birthdayName ? `Happy Birthday ${birthdayName}!` : "Happy Birthday!")
   const wishCardsHeading  = (config.wishCardsHeading as string) || (config.thirdTitle as string) || (config.secondTitle as string) || (defaults.wishCardsHeading as string) || "Special Wishes For You"
   const memoriesHeading   = (config.memoriesHeading as string) || (config.secondTitle as string) || (defaults.memoriesHeading as string) || "Moments We Cherish"
   const letterHeading     = (config.letterHeading as string) || (config.fourthTitle as string) || (defaults.letterHeading as string) || "A Message From The Heart"
   const letterText        = (config.letterText as string) || (defaults.letterText as string) || "Happy Birthday!\n\nI hope your special day is overflowing with laughter, sweet treats, and everything you love most.\n\nKeep shining bright! ❤️"
   const hugGifUrl         = (config.hugGifUrl as string) || (defaults.hugGifUrl as string) || "/templates/birthday-surprise/gifs/hug.gif"
+  const audioSrc          = (config.audioSrc as string) || (defaults.audioSrc as string) || "/music/1.mp3"
 
   const bgGradientFrom    = (config.bgGradientFrom as string) || (defaults.bgGradientFrom as string) || "#3d0000"
   const bgGradientMid     = (config.bgGradientMid as string) || (defaults.bgGradientMid as string) || "#1a0000"
@@ -102,7 +106,7 @@ export function BirthdaySurpriseRenderer({ config = {} }: Props) {
   // ── Screens array — identical to original page.jsx (screens are transparent, root div holds the bg) ──
   const screens = [
     <FirstScreen  key="first"  onNext={() => setCurrentScreen(1)}
-      subText={welcomeSubText} buttonText={welcomeButtonText} gifUrl={welcomeGifUrl} />,
+      title={firstTitle} birthdayName={birthdayName} subText={welcomeSubText} buttonText={welcomeButtonText} gifUrl={welcomeGifUrl} />,
     <CakeScreen   key="cake"   onFinish={() => setCurrentScreen(2)}
       headingUnlit={cakeHeadingUnlit} headingLit={cakeHeadingLit} birthdayText={cakeBirthdayText} />,
     <SecondScreen key="second" onNext={() => setCurrentScreen(3)}
@@ -126,6 +130,9 @@ export function BirthdaySurpriseRenderer({ config = {} }: Props) {
         userSelect: "none",
       }}
     >
+      {/* Background Audio */}
+      <BackgroundMusic src={audioSrc} />
+
       {/* Global top ambient glow — identical to original page.jsx */}
       <div
         style={{

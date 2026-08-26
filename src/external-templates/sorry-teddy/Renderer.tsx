@@ -37,12 +37,13 @@ const pageTransition = { type: "tween" as const, ease: [0.25,0.46,0.45,0.94], du
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function SorryTeddyRenderer({ config }: Props) {
+export function SorryTeddyRenderer({ config = {} }: Props) {
   const [currentPage, setCurrentPage] = useState("opening")
   const [musicPlaying, setMusicPlaying] = useState(false)
   const [showMusicPlayer, setShowMusicPlayer] = useState(false)
 
-  const personName = (config.personName as string) || "Jana"
+  const personName = (config.partnerName as string) || (config.personName as string) || (config.name as string) || "My Cutie"
+  const audioSrc = (config.audioSrc as string) || "/templates/sorry-teddy/audio/bg.mp3"
 
   useEffect(() => {
     const id = "st-teddy-styles"
@@ -65,7 +66,7 @@ export function SorryTeddyRenderer({ config }: Props) {
       <div className="st-root">
         <div className="min-h-screen bg-gray-900 relative overflow-hidden">
           <StarryBackground />
-          {showMusicPlayer && <MusicPlayer musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} />}
+          {showMusicPlayer && <MusicPlayer musicPlaying={musicPlaying} setMusicPlaying={setMusicPlaying} audioSrc={audioSrc} />}
           <AnimatePresence mode="wait">
             <motion.div key={currentPage} initial="initial" animate="in" exit="out"
               variants={pageVariants} transition={pageTransition} className="relative z-10">

@@ -29,6 +29,7 @@ import SpecialYouScreen     from "./original/SpecialYouScreen"
 import PhotoGalleryScreen   from "./original/PhotoGalleryScreen"
 import PremiumBackground    from "./original/PremiumBackground"
 import { finalFireworks }   from "./original/lib/fireworks"
+import { BackgroundMusic }  from "@/components/audio/BackgroundMusic"
 
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@300;400;500;600;700&display=swap');
@@ -165,12 +166,13 @@ function FinalScreen({ onRestart, personName }: { onRestart: () => void; personN
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function ProposalCookRenderer({ config }: Props) {
+export function ProposalCookRenderer({ config = {} }: Props) {
   const [currentScreen, setCurrentScreen] = useState("loader")
   const [isLoading, setIsLoading] = useState(true)
-  const personName = (config.personName as string) || "Jana"
-  const galleryPhotos = config.galleryPhotos as string[] || undefined
-  const letterText = config.letterText as string || undefined
+  const personName = (config.partnerName as string) || (config.personName as string) || (config.name as string) || "My Angel"
+  const audioSrc = (config.audioSrc as string) || "/templates/proposal-cook/audio/bg.mp3"
+  const galleryPhotos = config.galleryPhotos as string[] || config.photos as string[] || undefined
+  const letterText = (config.letterText as string) || (config.noteText as string) || undefined
 
   useEffect(() => {
     const id = "pc-cook-styles"
@@ -190,26 +192,27 @@ export function ProposalCookRenderer({ config }: Props) {
   return (
     <div style={{ position: "relative", minHeight: "100%", overflowX: "hidden" }}>
       <div className="pc-root">
+        <BackgroundMusic src={audioSrc} />
         <div className="min-h-screen relative overflow-hidden" style={{ background: "#0d0008" }}>
           <AnimatePresence mode="wait">
-            {isLoading && <CuteLoader key="loader" onComplete={() => setCurrentScreen("first")} />}
-            {currentScreen === "first" && <FirstScreen key="first" onNext={() => nextScreen("question1")} />}
+            {isLoading && <CuteLoader key="loader" onComplete={() => setCurrentScreen("first")} personName={personName} />}
+            {currentScreen === "first" && <FirstScreen key="first" onNext={() => nextScreen("question1")} personName={personName} />}
             {currentScreen === "question1" && <QuestionScreen key="q1" question={`${personName}, do you like surprises?`} onYes={() => nextScreen("question2")} isFirst={true} />}
-            {currentScreen === "question2" && <DoYouLikeMeScreen key="q2" onYes={() => nextScreen("willYouBeMine")} />}
-            {currentScreen === "willYouBeMine" && <WillYouBeMineScreen key="wubm" onYes={() => { setTimeout(() => nextScreen("celebration"), 800) }} />}
-            {currentScreen === "celebration" && <CelebrationScreen key="cel" onNext={() => nextScreen("gifts")} />}
+            {currentScreen === "question2" && <DoYouLikeMeScreen key="q2" onYes={() => nextScreen("willYouBeMine")} personName={personName} />}
+            {currentScreen === "willYouBeMine" && <WillYouBeMineScreen key="wubm" onYes={() => { setTimeout(() => nextScreen("celebration"), 800) }} personName={personName} />}
+            {currentScreen === "celebration" && <CelebrationScreen key="cel" onNext={() => nextScreen("gifts")} personName={personName} />}
             {currentScreen === "gifts" && <GiftsScreen key="gifts"
               onGiftClick={(id: number) => { if (id===1) nextScreen("quiz"); else if (id===2) nextScreen("gift2"); else if (id===3) nextScreen("gift3") }}
               onContinue={() => nextScreen("photoGallery")} />}
-            {currentScreen === "gift2" && <Gift2Screen key="g2" onBack={() => nextScreen("gifts")} />}
-            {currentScreen === "gift3" && <Gift3Screen key="g3" onBack={() => nextScreen("gifts")} />}
-            {currentScreen === "quiz" && <QuizScreen key="quiz" onBack={() => nextScreen("gifts")} />}
+            {currentScreen === "gift2" && <Gift2Screen key="g2" onBack={() => nextScreen("gifts")} personName={personName} />}
+            {currentScreen === "gift3" && <Gift3Screen key="g3" onBack={() => nextScreen("gifts")} personName={personName} />}
+            {currentScreen === "quiz" && <QuizScreen key="quiz" onBack={() => nextScreen("gifts")} personName={personName} />}
             {currentScreen === "photoGallery" && <PhotoGalleryScreen key="pg" onContinue={() => nextScreen("heyBeautiful")} galleryPhotos={galleryPhotos} />}
-            {currentScreen === "heyBeautiful" && <HeyBeautifulScreen key="hb" onOpenHeart={() => nextScreen("cutenessLoader")} />}
-            {currentScreen === "cutenessLoader" && <CutenessLoaderScreen key="cl" onComplete={() => nextScreen("messageReveal")} />}
+            {currentScreen === "heyBeautiful" && <HeyBeautifulScreen key="hb" onOpenHeart={() => nextScreen("cutenessLoader")} personName={personName} />}
+            {currentScreen === "cutenessLoader" && <CutenessLoaderScreen key="cl" onComplete={() => nextScreen("messageReveal")} personName={personName} />}
             {currentScreen === "messageReveal" && <MessageRevealScreen key="mr" onContinue={() => nextScreen("littleNote")} personName={personName} />}
-            {currentScreen === "littleNote" && <LittleNoteScreen key="ln" onNext={() => nextScreen("specialYou")} letterText={letterText} />}
-            {currentScreen === "specialYou" && <SpecialYouScreen key="sy" onNext={() => nextScreen("final")} />}
+            {currentScreen === "littleNote" && <LittleNoteScreen key="ln" onNext={() => nextScreen("specialYou")} letterText={letterText} personName={personName} />}
+            {currentScreen === "specialYou" && <SpecialYouScreen key="sy" onNext={() => nextScreen("final")} personName={personName} />}
             {currentScreen === "final" && <FinalScreen key="final" onRestart={() => setCurrentScreen("first")} personName={personName} />}
           </AnimatePresence>
           <motion.div initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 1, delay: 1 }}

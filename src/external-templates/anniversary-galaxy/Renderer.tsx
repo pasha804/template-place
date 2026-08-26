@@ -14,6 +14,7 @@ import { defaults } from "./schema"
 import { GalaxyBackground } from "./original/components/GalaxyBackground"
 import { CursorGlow }       from "./original/components/CursorGlow"
 import { Welcome }          from "./original/scenes/Welcome"
+import { BackgroundMusic }  from "@/components/audio/BackgroundMusic"
 
 // Lazy scenes
 const Journey       = lazy(() => import("./original/scenes/Journey").then(m => ({ default: m.Journey })))
@@ -173,6 +174,7 @@ export function AnniversaryGalaxyRenderer({ config }: Props) {
   const songSectionTitle = (config.songSectionTitle as string) || (defaults.songSectionTitle as string)
   const songTitle       = (config.songTitle       as string) || (defaults.songTitle       as string)
   const songArtist      = (config.songArtist      as string) || (defaults.songArtist      as string)
+  const audioSrc        = (config.audioSrc        as string) || (defaults.audioSrc        as string) || "/music/11.mp3"
   const couplePhotoUrl  = (config.couplePhotoUrl  as string) || "/templates/anniversary-galaxy/couple-galaxy.webp"
   const whySpecialTitle = (config.whySpecialTitle as string) || (defaults.whySpecialTitle as string)
   const whySpecialSubtitle = (config.whySpecialSubtitle as string) || (defaults.whySpecialSubtitle as string)
@@ -228,6 +230,7 @@ export function AnniversaryGalaxyRenderer({ config }: Props) {
     <div className="ag-root" style={{ minHeight: "100dvh", position: "relative", background: "oklch(0.09 0.035 300)" }}>
       <GalaxyBackground />
       <CursorGlow />
+      <BackgroundMusic src={audioSrc} />
 
       <main className="relative z-10 flex min-h-screen flex-col overflow-hidden">
         <h1 className="sr-only">Happy Anniversary — an interactive galaxy love story</h1>

@@ -11,6 +11,7 @@ export const schema: SectionDef[] = [
       { key: "weddingDate", label: "Wedding Date", kind: "date" },
       { key: "heroTagline", label: "Hero Tagline", kind: "text", placeholder: "Save The Date" },
       { key: "venueLocation", label: "Venue Location / City", kind: "text", placeholder: "Udaipur, Rajasthan" },
+      { key: "audioSrc", label: "Background Music URL", kind: "audio", help: "Romantic background music track" },
     ],
   },
   {
@@ -123,6 +124,7 @@ export const defaults: TemplateConfig = {
   whatsappContact: "+92 300 1234567",
 
   footerMessage: "With blessings from both families ❤️",
+  audioSrc: "/music/16.mp3",
 
   _page_title: "Aariyan & Ananya — Wedding Invitation",
   _page_seoTitle: "Aariyan & Ananya — Wedding Invitation",

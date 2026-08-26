@@ -14,6 +14,7 @@ export const schema: SectionDef[] = [
     label: "Intro Screen",
     icon: "🎁",
     fields: [
+      { key: "birthdayName", label: "Birthday Person's Name", kind: "text", placeholder: "Cutiepie 🌸" },
       { key: "introTitle", label: "Intro headline", kind: "text", placeholder: "A Cutiepie was born today, 21 years ago!" },
       { key: "introSubtext", label: "Intro subtext", kind: "text", placeholder: "Yes, it's YOU! A little surprise awaits..." },
       { key: "introButtonText", label: "Button text", kind: "text", placeholder: "Open My Surprise 🎁" },
@@ -77,6 +78,7 @@ export const schema: SectionDef[] = [
 export const defaults: TemplateConfig = {
   loaderHeading: "Preparing a sweet surprise...",
 
+  birthdayName: "Cutiepie",
   introTitle: "A Cutiepie was born today, 21 years ago!",
   introSubtext: "Yes, it's YOU! A little surprise awaits...",
   introButtonText: "Open My Surprise 🎁",
@@ -95,7 +97,7 @@ export const defaults: TemplateConfig = {
   hugTitle: "Sending Big Hugs!",
   hugMessage: "Sending you the warmest hugs! ❤️",
   hugButtonText: "Send Big Hug 🤗",
-  audioSrc: "",
+  audioSrc: "/music/14.mp3",
 
   _page_title: "Happy Birthday — A Surprise Just For You",
   _page_seoTitle: "Happy Birthday — A Surprise Just For You",

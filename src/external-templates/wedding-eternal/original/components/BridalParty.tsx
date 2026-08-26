@@ -71,7 +71,20 @@ function Members({ people, side }: { people: Array<{ name: string; role: string;
   )
 }
 
-export function BridalParty() {
+export function BridalParty({ brideName = "Sophia", groomName = "Alexander" }: { brideName?: string; groomName?: string }) {
+  const bridesmaids = [
+    { name: "Zara Ahmed", role: "Maid of Honour", fact: `Has known ${brideName} since kindergarten.` },
+    { name: "Hira Malik", role: "Bridesmaid", fact: "Official keeper of the wedding playlist." },
+    { name: "Sana Iqbal", role: "Bridesmaid", fact: "Cries at every single toast." },
+    { name: "Mariam Khan", role: "Bridesmaid", fact: "Can find any lost earring in seconds." },
+  ]
+  const groomsmen = [
+    { name: "Bilal Raza", role: "Best Man", fact: `Roommate, referee and ${groomName}'s lifelong co-conspirator.` },
+    { name: "Omar Sheikh", role: "Groomsman", fact: "Will absolutely start the dance floor." },
+    { name: "Danish Ali", role: "Groomsman", fact: "Never once arrived on time." },
+    { name: "Faris Javed", role: "Groomsman", fact: "The reason they all still play football." },
+  ]
+
   return (
     <section id="party" className="section-pad relative overflow-hidden bg-navy-abyss">
       <div className="mx-auto max-w-[1400px] px-6 sm:px-10">
@@ -83,8 +96,8 @@ export function BridalParty() {
         />
 
         <div className="mt-20 grid gap-20 lg:grid-cols-2 lg:gap-14">
-          <Members people={PARTY.bridesmaids} side="Bridesmaids" />
-          <Members people={PARTY.groomsmen} side="Groomsmen" />
+          <Members people={bridesmaids} side="Bridesmaids" />
+          <Members people={groomsmen} side="Groomsmen" />
         </div>
       </div>
     </section>

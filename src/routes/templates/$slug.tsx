@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowLeft, Heart, Sparkles, Check, Lock, Wand2, Play } from "lucide-react";
+import { ArrowLeft, Heart, Sparkles, Check, Lock, Wand2, Play, KeyRound } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getUnifiedTemplate } from "@/engine/combined";
@@ -127,7 +127,7 @@ function TemplateDetailPage() {
                   </div>
 
                   {/* Price */}
-                  <div className="flex items-baseline gap-2 mb-5">
+                  <div className="flex items-baseline gap-2 mb-4">
                     <span className="text-3xl font-black"
                       style={{ background: "linear-gradient(135deg,#a78bfa,#f472b6)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
                       {unified.priceCents === 0 ? "Free" : `Rs. ${unified.priceCents.toLocaleString("en-PK")}`}
@@ -138,6 +138,34 @@ function TemplateDetailPage() {
                       </span>
                     )}
                   </div>
+
+                  {/* Password / PIN Lock Notification */}
+                  {(() => {
+                    const lockCode =
+                      (extPlugin?.defaults?.pin as string) ||
+                      (extPlugin?.defaults?.vaultPin as string) ||
+                      (extPlugin?.defaults?.password as string) ||
+                      (unified.slug === "birthday-surprise" ? "1234" : unified.slug === "birthday-rose" ? "0818" : null);
+
+                    if (!lockCode) return null;
+
+                    return (
+                      <div className="mb-5 flex items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-amber-200">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-300">
+                            <KeyRound className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-amber-300">Password / PIN Protected</p>
+                            <p className="text-[11px] text-amber-200/70 truncate">Demo & preview unlock code</p>
+                          </div>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1 rounded-xl border border-amber-500/40 bg-black/40 px-3 py-1 font-mono text-sm font-bold tracking-widest text-amber-300">
+                          {lockCode}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* CTA buttons */}
                   <div className="flex gap-2 mb-4">

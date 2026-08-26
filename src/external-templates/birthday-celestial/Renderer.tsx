@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import type { TemplateRendererProps2 } from "@/engine/types";
 import { defaults } from "./schema";
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic";
 
 // Sub-components
 import { GalaxyBackground } from "./original/components/GalaxyBackground";
@@ -257,7 +258,7 @@ const STYLES = `
 
 export function BirthdayCelestialRenderer({ config }: TemplateRendererProps2) {
   const merged = useMemo(
-    () => ({ ...defaults, ...(config || {}) }),
+    () => ({ ...defaults, ...(config || {}) }) as Record<string, any>,
     [config]
   );
 
@@ -277,6 +278,7 @@ export function BirthdayCelestialRenderer({ config }: TemplateRendererProps2) {
       <style>{STYLES}</style>
       <GalaxyBackground />
       <CursorGlow />
+      <BackgroundMusic src={merged.audioSrc} />
 
       <main className="relative flex min-h-screen flex-col items-center justify-between overflow-x-hidden">
         {inCountdown ? (
@@ -404,6 +406,7 @@ export function BirthdayCelestialRenderer({ config }: TemplateRendererProps2) {
                       songTitle={merged.songTitle}
                       songSubtitle={merged.songSubtitle}
                       songDescription={merged.songDescription}
+                      audioSrc={merged.audioSrc}
                     />
                   )}
                   {page === 11 && (

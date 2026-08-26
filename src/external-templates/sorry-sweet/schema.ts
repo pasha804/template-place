@@ -82,7 +82,7 @@ export const defaults: TemplateConfig = {
 
   lyricsTitle: "Our Song Lyrics",
   songLyrics: "Every day with you is a gift...\nI am sorry for my mistakes...",
-  audioSrc: "",
+  audioSrc: "/templates/sorry-sweet/audio/song.mp3",
 
   forgiveQuestion: "Can we be okay again?",
   yesButtonText: "Yes ❤️",

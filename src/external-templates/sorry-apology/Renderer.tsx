@@ -9,6 +9,7 @@ import type { TemplateConfig } from "@/engine/types"
 
 // Import the self-contained App component
 import SorryApp from "./original/App"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 // Scoped CSS
 const SORRY_APOLOGY_CSS = `
@@ -79,8 +80,9 @@ const SORRY_APOLOGY_CSS = `
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function SorryApologyRenderer({ config }: Props) {
-  const personName = (config.partnerName as string) || (config.personName as string) || "Kashaf"
+export function SorryApologyRenderer({ config = {} }: Props) {
+  const personName = (config.partnerName as string) || (config.personName as string) || (config.name as string) || "My Dearest"
+  const audioSrc = (config.audioSrc as string) || "/music/5.mp3"
 
   // Inject CSS once
   useEffect(() => {
@@ -96,6 +98,7 @@ export function SorryApologyRenderer({ config }: Props) {
   return (
     <div style={{ position: "relative", minHeight: "100%" }}>
       <div className="sa-root">
+        <BackgroundMusic src={audioSrc} theme="light" />
         <SorryApp personName={personName} />
         {/* Watermark */}
         <motion.div

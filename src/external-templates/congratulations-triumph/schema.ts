@@ -158,7 +158,7 @@ export const defaults: TemplateConfig = {
 
   anthemTitle: "We Are The Champions",
   anthemArtist: "Queen",
-  audioSrc: "",
+  audioSrc: "/music/9.mp3",
 
   rewardTitle: "Your Crown Of Success",
   rewardMessage: "Wear your success with honor — you worked relentlessly for it!",

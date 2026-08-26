@@ -97,7 +97,7 @@ export const defaults: TemplateConfig = {
   apologyQuestion: "Will you forgive your Teddy?",
   yesButtonText: "Yes, I forgive you! ❤️",
   noButtonText: "Still Thinking 🥺",
-  audioSrc: "",
+  audioSrc: "/templates/sorry-teddy/audio/bg.mp3",
 
   _page_title: "I Am Sorry — Cute Teddy Edition",
   _page_seoTitle: "I Am Sorry — Cute Teddy Edition",

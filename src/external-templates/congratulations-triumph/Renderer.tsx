@@ -6,10 +6,10 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react"
 import { AnimatePresence } from "framer-motion"
 import { ChevronLeft } from "lucide-react"
-import type { TemplateConfig } from "@/engine/types"
 import { defaults } from "./schema"
 import { TriumphBackground } from "./original/components/TriumphBackground"
 import { Welcome } from "./original/scenes/Welcome"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const Journey           = lazy(() => import("./original/scenes/Journey").then(m => ({ default: m.Journey })))
 const Memories          = lazy(() => import("./original/scenes/Memories").then(m => ({ default: m.Memories })))
@@ -145,6 +145,7 @@ export function CongratulationsTriumphRenderer({ config }: Props) {
   return (
     <div className="ct-root" style={{ background: "oklch(0.12 0.04 160)" }}>
       <TriumphBackground />
+      <BackgroundMusic src={(config?.audioSrc as string) || "/music/9.mp3"} />
 
       <h1 className="sr-only">Congratulations {name} — an eleven chapter celebration</h1>
 

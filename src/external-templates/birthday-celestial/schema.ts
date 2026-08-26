@@ -135,6 +135,12 @@ export const schema: SectionDef[] = [
         placeholder:
           "This song reminds me of every beautiful moment we've shared together. Every beat, every note, every word... it's all about us. 💕",
       },
+      {
+        key: "audioSrc",
+        label: "Background Music / Track URL",
+        kind: "audio",
+        help: "Upload or select an .mp3 track",
+      },
     ],
   },
   {
@@ -257,6 +263,7 @@ export const defaults: TemplateConfig = {
   songSubtitle: "Walks like every moment with you",
   songDescription:
     "This song reminds me of every beautiful moment we've shared together. Every beat, every note, every word... it's all about us. 💕",
+  audioSrc: "/music/6.mp3",
 
   letterTitle: "A Special Message",
   letterBody: `Happy Birthday, Jana, my love.

@@ -7,6 +7,7 @@
 import { useEffect } from "react"
 import type { TemplateConfig } from "@/engine/types"
 import RosePage from "./original/index"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 // Scoped CSS — original BT3 styles.css, but scoped inside .bt3-root
 // and without the Tailwind @import lines
@@ -237,6 +238,7 @@ export function BirthdayRoseRenderer({ config }: Props) {
       overflowX: "hidden",
     }}>
       <div className="bt3-root">
+        <BackgroundMusic src={(config?.audioSrc as string) || "/music/8.mp3"} />
         <RosePage config={config} />
       </div>
     </div>

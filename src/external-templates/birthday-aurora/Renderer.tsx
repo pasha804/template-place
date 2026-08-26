@@ -21,7 +21,7 @@ import GifReel       from "./original/GifReel"
 import WishesWall    from "./original/WishesWall"
 import Letter        from "./original/Letter"
 import ParticleSystem from "./original/ParticleSystem"
-import MusicToggle   from "./original/MusicToggle"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const S = { INTRO:0, CELEBRATE:1, AGE:2, BDAY:3, GALLERY:4, GIBS:5, REEL:6, WISHES:7, LETTER:8 }
 const TOTAL_DOTS = 8
@@ -212,7 +212,7 @@ export function BirthdayAuroraRenderer({ config = {} }: Props) {
 
         <ParticleSystem />
 
-        {!isLoading && <MusicToggle audioSrc={audioSrc} />}
+        <BackgroundMusic src={audioSrc} />
 
         {!isLoading && screen < S.LETTER && (
           <motion.div

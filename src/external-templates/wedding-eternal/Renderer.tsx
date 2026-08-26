@@ -19,6 +19,7 @@ import { Hotels } from "./original/components/Hotels"
 import { BridalParty } from "./original/components/BridalParty"
 import { Faq } from "./original/components/FAQ"
 import { Footer } from "./original/components/Footer"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const WE_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap');
@@ -81,6 +82,7 @@ export function WeddingEternalRenderer({ config }: { config?: TemplateConfig }) 
     <div className="we-root">
       <style>{WE_CSS}</style>
       <Ambient />
+      <BackgroundMusic src={c.audioSrc || "/music/4.mp3"} />
       <Navbar brideName={c.brideName} groomName={c.groomName} />
       <main className="relative z-10">
         <Hero
@@ -113,7 +115,7 @@ export function WeddingEternalRenderer({ config }: { config?: TemplateConfig }) 
         />
         <Registry />
         <Hotels />
-        <BridalParty />
+        <BridalParty brideName={c.brideName} groomName={c.groomName} />
         <Faq />
       </main>
       <Footer

@@ -32,9 +32,9 @@ const SORRY_SWEET_CSS = `
 
 interface Props { config: TemplateConfig; mode?: string }
 
-export function SorrySweetRenderer({ config }: Props) {
-  const personName = (config.personName as string) || "Khadija"
-  const bgMusicUrl = (config.bgMusicUrl as string) || "/templates/sorry-sweet/audio/song.mp3"
+export function SorrySweetRenderer({ config = {} }: Props) {
+  const personName = (config.partnerName as string) || (config.personName as string) || (config.name as string) || "My Sweetheart"
+  const bgMusicUrl = (config.audioSrc as string) || (config.bgMusicUrl as string) || "/templates/sorry-sweet/audio/song.mp3"
   const voiceNoteUrl = (config.voiceNoteUrl as string) || "/templates/sorry-sweet/audio/voice-note.mp3"
 
   const [currentScreen, setCurrentScreen] = useState(0)

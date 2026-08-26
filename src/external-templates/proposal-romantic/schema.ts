@@ -163,7 +163,7 @@ export const defaults: TemplateConfig = {
 
   celebrationTitle: "SHE SAID YES! 💍✨",
   celebrationMessage: "Our forever starts today ❤️",
-  audioSrc: "",
+  audioSrc: "/templates/proposal-romantic/audio/bg.mp3",
 
   _page_title: "Romantic Proposal — Midnight Edition",
   _page_seoTitle: "Romantic Proposal — Midnight Edition",

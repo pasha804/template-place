@@ -2,12 +2,13 @@
  * FieldWidget — renders the right input control for any FieldDef.
  * Generic: works for every external template, no template-specific logic.
  */
-import { useRef, useState } from "react";
-import { Upload, X, Plus, RefreshCw, Loader2, Image as ImageIcon, Trash2 } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { Upload, X, Plus, RefreshCw, Loader2, Image as ImageIcon, Trash2, Music, Play, Pause, Volume2, Check, Sparkles, FolderOpen } from "lucide-react";
 import { toast } from "sonner";
 import type { FieldDef } from "@/engine/types";
 import { cn } from "@/lib/utils";
 import { compressImage, validateImageFile, uploadToSupabaseStorage } from "@/lib/image-optimizer";
+import { DEMO_TRACKS, getTrackByUrl, type DemoTrack } from "@/lib/demo-music";
 
 interface Props {
   field: FieldDef;
@@ -163,8 +164,13 @@ export function FieldWidget({ field, value, onChange, defaultValue }: Props) {
     );
   }
 
-  /* ── image / gif / audio / video ── */
-  if (kind === "image" || kind === "gif" || kind === "audio" || kind === "video") {
+  /* ── audio ── */
+  if (kind === "audio") {
+    return <AudioFieldWidget field={field} value={value as string} onChange={onChange} />;
+  }
+
+  /* ── image / gif / video ── */
+  if (kind === "image" || kind === "gif" || kind === "video") {
     return <MediaUploadWidget field={field} value={value as string} onChange={onChange} />;
   }
 
@@ -384,6 +390,295 @@ export function FieldWidget({ field, value, onChange, defaultValue }: Props) {
 
   return (
     <p className="text-xs text-white/30 italic">Unsupported field kind: {kind}</p>
+  );
+}
+
+/* ── Audio Field Widget with In-Editor Preview & Demo Music Library ── */
+function AudioFieldWidget({
+  field,
+  value,
+  onChange,
+}: {
+  field: FieldDef;
+  value: string;
+  onChange: (v: unknown) => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const audioPreviewRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+  const [previewingTrackUrl, setPreviewingTrackUrl] = useState<string | null>(null);
+  const [showDemoPicker, setShowDemoPicker] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [uploading, setUploading] = useState(false);
+
+  const currentUrl = typeof value === "string" ? value.trim() : "";
+  const currentTrack = getTrackByUrl(currentUrl);
+
+  // Stop preview on unmount
+  useEffect(() => {
+    return () => {
+      if (audioPreviewRef.current) {
+        audioPreviewRef.current.pause();
+        audioPreviewRef.current = null;
+      }
+    };
+  }, []);
+
+  function toggleAudioPreview(url: string) {
+    if (!url) return;
+
+    // If already playing this track, pause it
+    if (isPlayingPreview && previewingTrackUrl === url) {
+      if (audioPreviewRef.current) {
+        audioPreviewRef.current.pause();
+      }
+      setIsPlayingPreview(false);
+      return;
+    }
+
+    // Stop current audio
+    if (audioPreviewRef.current) {
+      audioPreviewRef.current.pause();
+      audioPreviewRef.current = null;
+    }
+
+    // Play new track
+    const audio = new Audio(url);
+    audioPreviewRef.current = audio;
+    setPreviewingTrackUrl(url);
+
+    audio.onended = () => {
+      setIsPlayingPreview(false);
+    };
+    audio.onerror = () => {
+      setIsPlayingPreview(false);
+      toast.error("Could not preview audio file");
+    };
+
+    audio.play().then(() => {
+      setIsPlayingPreview(true);
+    }).catch(() => {
+      setIsPlayingPreview(false);
+    });
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 25 * 1024 * 1024) {
+      toast.error("Audio file exceeds 25MB limit");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const url = await uploadToSupabaseStorage(file, { bucket: "template-assets" });
+      onChange(url);
+      toast.success("Audio track uploaded successfully");
+    } catch {
+      const reader = new FileReader();
+      reader.onload = () => {
+        onChange(reader.result as string);
+        toast.success("Audio track attached");
+      };
+      reader.readAsDataURL(file);
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  }
+
+  const categories = ["All", "Birthday", "Romantic", "Wedding", "Apology", "Celebration", "Chill"];
+  const filteredTracks = activeCategory === "All"
+    ? DEMO_TRACKS
+    : DEMO_TRACKS.filter((t) => t.category === activeCategory);
+
+  return (
+    <div className="space-y-3">
+      {/* ── Active Track Card ── */}
+      {currentUrl ? (
+        <div className="flex flex-col gap-2 rounded-xl border border-violet-500/30 bg-violet-950/20 p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <button
+                type="button"
+                onClick={() => toggleAudioPreview(currentUrl)}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600 text-white hover:bg-violet-500 transition-colors shadow"
+                title={isPlayingPreview && previewingTrackUrl === currentUrl ? "Pause" : "Play Preview"}
+              >
+                {isPlayingPreview && previewingTrackUrl === currentUrl ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4 ml-0.5" />
+                )}
+              </button>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-white/90 truncate">
+                  {currentTrack ? currentTrack.title : "Custom Audio Track"}
+                </p>
+                <p className="text-[10px] text-white/40 truncate">
+                  {currentTrack ? `${currentTrack.artist} • ${currentTrack.category}` : currentUrl}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  if (audioPreviewRef.current) audioPreviewRef.current.pause();
+                  setIsPlayingPreview(false);
+                  onChange("");
+                }}
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors"
+                title="Remove Track"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-3 text-center">
+          <p className="text-xs text-white/40">No audio track selected</p>
+        </div>
+      )}
+
+      {/* ── Action Buttons ── */}
+      <div className="flex flex-wrap gap-2">
+        {/* Choose Demo Music */}
+        <button
+          type="button"
+          onClick={() => setShowDemoPicker((prev) => !prev)}
+          className={cn(
+            "flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-medium transition-colors",
+            showDemoPicker
+              ? "border-violet-500 bg-violet-600/25 text-violet-300"
+              : "border-white/10 bg-white/[0.04] text-white/70 hover:border-violet-500/40 hover:text-white",
+          )}
+        >
+          <Sparkles className="h-3.5 w-3.5 text-violet-400" />
+          {showDemoPicker ? "Hide Demo Library" : "Choose Demo Music"}
+        </button>
+
+        {/* Upload Button */}
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="flex items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-white/70 hover:border-violet-500/40 hover:text-white transition-colors disabled:opacity-50"
+        >
+          {uploading ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin text-violet-400" />
+          ) : (
+            <Upload className="h-3.5 w-3.5 text-white/50" />
+          )}
+          Upload .mp3
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="audio/*,.mp3,.wav,.m4a"
+          className="hidden"
+          onChange={handleFileUpload}
+        />
+      </div>
+
+      {/* ── Demo Music Library Dropdown / Drawer ── */}
+      {showDemoPicker && (
+        <div className="space-y-3 rounded-2xl border border-white/15 bg-[#0e0c24] p-3.5 shadow-2xl">
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap gap-1.5 pb-1">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={cn(
+                  "rounded-lg px-2.5 py-1 text-[11px] font-medium transition-colors",
+                  activeCategory === cat
+                    ? "bg-violet-600 text-white font-semibold shadow"
+                    : "bg-white/[0.05] text-white/50 hover:bg-white/[0.08] hover:text-white/80",
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Track Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+            {filteredTracks.map((track) => {
+              const isSelected = currentUrl === track.url;
+              const isAuditioning = isPlayingPreview && previewingTrackUrl === track.url;
+              return (
+                <div
+                  key={track.id}
+                  className={cn(
+                    "flex items-center justify-between gap-2 rounded-xl border p-2 transition-all",
+                    isSelected
+                      ? "border-violet-500 bg-violet-600/20 text-white"
+                      : "border-white/10 bg-white/[0.03] text-white/70 hover:border-white/20 hover:bg-white/[0.06]",
+                  )}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => toggleAudioPreview(track.url)}
+                      className={cn(
+                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors",
+                        isAuditioning
+                          ? "bg-violet-500 text-white animate-pulse"
+                          : "bg-white/10 text-white/70 hover:bg-violet-600 hover:text-white",
+                      )}
+                      title={isAuditioning ? "Pause Preview" : "Listen Preview"}
+                    >
+                      {isAuditioning ? <Pause className="h-3 w-3" /> : <Play className="h-3 w-3 ml-0.5" />}
+                    </button>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold truncate">{track.title}</p>
+                      <p className="text-[10px] text-white/40 truncate">{track.category}</p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onChange(track.url);
+                      toast.success(`Selected "${track.title}"`);
+                    }}
+                    className={cn(
+                      "flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold transition-colors shrink-0",
+                      isSelected
+                        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                        : "bg-white/10 text-white/70 hover:bg-violet-600 hover:text-white",
+                    )}
+                  >
+                    {isSelected ? (
+                      <>
+                        <Check className="h-3 w-3" /> Selected
+                      </>
+                    ) : (
+                      "Select"
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ── Custom URL Input ── */}
+      <input
+        type="text"
+        value={currentUrl}
+        placeholder="Or paste custom audio URL (https://...)"
+        className={cn(inputCls, "text-xs font-mono")}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
   );
 }
 

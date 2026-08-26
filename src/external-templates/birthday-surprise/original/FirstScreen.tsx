@@ -4,7 +4,7 @@
 import { motion } from "framer-motion"
 import { Heart } from "lucide-react"
 
-export default function FirstScreen({ onNext, subText, buttonText, gifUrl }) {
+export default function FirstScreen({ onNext, title, birthdayName, subText, buttonText, gifUrl }) {
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center px-6 text-center relative overflow-hidden"
@@ -117,7 +117,7 @@ export default function FirstScreen({ onNext, subText, buttonText, gifUrl }) {
             textShadow: "0 0 30px rgba(200,20,20,0.5)",
           }}
         >
-          Happy Birthday! 🎂
+          {title || (birthdayName ? `Happy Birthday ${birthdayName}! 🎂` : "Happy Birthday! 🎂")}
         </h1>
 
         {/* Sub text — italic, muted red-white */}

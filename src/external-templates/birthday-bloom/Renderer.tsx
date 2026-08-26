@@ -16,6 +16,7 @@ import PhotosScreen     from "./original/PhotosScreen"
 import MessageScreen    from "./original/MessageScreen"
 import HugScreen        from "./original/HugScreen"
 import HeartsBackground from "./original/HeartsBackground"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const BLOOM_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&family=Comfortaa:wght@300;400;500&display=swap');
@@ -132,9 +133,7 @@ export function BirthdayBloomRenderer({ config = {} }: Props) {
       <div className="bt5-root">
         <HeartsBackground />
 
-        {Boolean(audioSrc) && (
-          <audio src={audioSrc} autoPlay loop style={{ display: "none" }} />
-        )}
+        <BackgroundMusic src={audioSrc} />
 
         <div style={{ position:"relative", zIndex:10, display:"flex", minHeight:"100%", alignItems:"center", justifyContent:"center", padding:"1rem 1.5rem" }}>
           <AnimatePresence mode="wait">

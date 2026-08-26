@@ -89,7 +89,7 @@ export const schema: SectionDef[] = [
       { key: "songSectionTitle", label: "Section title", kind: "text", placeholder: "Our Song" },
       { key: "songTitle", label: "Song title", kind: "text", placeholder: "Perfect" },
       { key: "songArtist", label: "Artist", kind: "text", placeholder: "Ed Sheeran" },
-      { key: "audioSrc", label: "Music audio URL", kind: "text", placeholder: "/audio/song.mp3" },
+      { key: "audioSrc", label: "Music audio URL", kind: "audio", placeholder: "/music/11.mp3" },
     ],
   },
   {
@@ -181,7 +181,7 @@ export const defaults: TemplateConfig = {
   songSectionTitle: "Our Song",
   songTitle: "Perfect",
   songArtist: "Ed Sheeran",
-  audioSrc: "",
+  audioSrc: "/music/11.mp3",
 
   foreverTitle: "To Infinity & Beyond",
   foreverText: "I will love you through every universe, every life, and every galaxy.",

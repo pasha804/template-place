@@ -19,6 +19,7 @@ import WishesPage   from "./original/wishes"
 import SurprisePage from "./original/surprise"
 import LovePage     from "./original/love"
 import FinalPage    from "./original/final"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const GALAXY_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Caveat:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap');
@@ -157,13 +158,16 @@ export function BirthdayGalaxyRenderer({ config = {} }: Props) {
   const wishesTitle   = (config.wishesTitle as string) || (defaults.wishesTitle as string)
   const wishesList    = (config.wishesList as any[]) || (defaults.wishesList as any[])
   const loveLetterText = (config.loveLetterText as string) || (defaults.loveLetterText as string)
+  const songTitle     = (config.songTitle as string) || (defaults.songTitle as string) || "Happy Birthday"
+  const songArtist    = (config.songArtist as string) || (defaults.songArtist as string) || "Dedicated to You"
+  const audioSrc      = (config.audioSrc as string) || (defaults.audioSrc as string) || "/music/6.mp3"
 
   const screens: Record<number, React.ReactNode> = {
     0:  <HeroPage     onNext={next(1)}  recipientName={recipientName} />,
     1:  <MemoriesPage onNext={next(2)}  photos={resolvedPhotos} />,
     2:  <JourneyPage  onNext={next(3)}  milestones={milestones} title={journeyTitle} />,
     3:  <NotePage     onNext={next(4)}  noteText={noteText} />,
-    4:  <SongPage     onNext={next(5)}  />,
+    4:  <SongPage     onNext={next(5)}  songTitle={songTitle} songArtist={songArtist} audioSrc={audioSrc} />,
     5:  <SpecialPage  onNext={next(6)}  title={specialTitle} cards={specialCards} />,
     6:  <WishPage     onNext={next(7)}  />,
     7:  <WishesPage   onNext={next(8)}  title={wishesTitle} wishesList={wishesList} />,
@@ -176,6 +180,7 @@ export function BirthdayGalaxyRenderer({ config = {} }: Props) {
     <div style={{ position: "relative", minHeight: "100%", overflowX: "hidden" }}>
       <div className="bt2-root">
         <ButterflyTrail />
+        <BackgroundMusic src={audioSrc} />
         {screens[screen] ?? screens[0]}
       </div>
     </div>

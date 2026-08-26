@@ -16,6 +16,7 @@ import PhotoGalleryScreen from "./original/screens/PhotoGalleryScreen"
 import ReasonsScreen     from "./original/screens/ReasonsScreen"
 import PromisesScreen    from "./original/screens/PromisesScreen"
 import MessageScreen     from "./original/screens/MessageScreen"
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic"
 
 const AR_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Playpen+Sans+Deva:wght@100..800&display=swap');
@@ -141,6 +142,7 @@ export function AnniversaryRomanticRenderer({ config }: Props) {
   const letterTitle      = (config.letterTitle      as string) || undefined
   const letterText       = (config.letterText       as string) || undefined
   const signature        = (config.signature        as string) || undefined
+  const audioSrc         = (config.audioSrc         as string) || "/music/15.mp3"
 
   const galleryPhotos = Array.isArray(config.galleryPhotos) && (config.galleryPhotos as string[]).length > 0
     ? config.galleryPhotos as string[]
@@ -164,6 +166,7 @@ export function AnniversaryRomanticRenderer({ config }: Props) {
   return (
     <div style={{ position: "relative", minHeight: "100dvh" }}>
       <div className="ar-root">
+        <BackgroundMusic src={audioSrc} />
         <div className="relative overflow-hidden" style={{ background: "#0a0a12", minHeight: "100dvh" }}>
           {/* Aurora background */}
           <div className="aurora-container">

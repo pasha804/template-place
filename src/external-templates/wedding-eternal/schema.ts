@@ -12,6 +12,7 @@ export const schema: SectionDef[] = [
       { key: "heroTagline", label: "Hero Tagline", kind: "text", placeholder: "Are Getting Married" },
       { key: "venueLocation", label: "Venue City / Location", kind: "text", placeholder: "Florence, Italy" },
       { key: "heroPhotoUrl", label: "Hero Banner Image", kind: "image" },
+      { key: "audioSrc", label: "Background Music URL", kind: "audio", help: "Romantic background music track" },
     ],
   },
   {
@@ -212,6 +213,7 @@ export const defaults: TemplateConfig = {
   whatsappNumber: "+1234567890",
 
   footerText: "We can't wait to celebrate with you!",
+  audioSrc: "/music/4.mp3",
 
   _page_title: "Alexander & Sophia — Wedding Invitation",
   _page_seoTitle: "Alexander & Sophia — Wedding Invitation",
