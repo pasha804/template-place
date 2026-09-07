@@ -32,7 +32,7 @@ export default defineExternalTemplate({
       "Spectacular fireworks finale",
       "Vows reveal on final screen",
     ],
-    thumbnailUrl:  "/templates/proposal-cook/gif/1.gif",
+    thumbnailUrl: "/templates/proposal-cook/thumbnail.jpg",
     author:        "@pasha_dev_",
     previewImages: [
       "/templates/proposal-cook/gif/1.gif",

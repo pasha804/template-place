@@ -29,7 +29,7 @@ export default defineExternalTemplate({
       "WhatsApp RSVP integration",
       "Gold shimmer typography",
     ],
-    thumbnailUrl: "/templates/wedding-eternal/hero-couple.jpg",
+    thumbnailUrl: "/templates/wedding-eternal/thumbnail.jpg",
     author: "@pasha_dev_",
   },
   schema,

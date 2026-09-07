@@ -47,7 +47,7 @@ export const birthdayCelestialPlugin = defineExternalTemplate({
       "Interactive gift box unboxing",
       "Path-drawn SVG heart & infinity finale",
     ],
-    thumbnailUrl: "/templates/birthday-celestial/images/couple-galaxy.webp",
+    thumbnailUrl: "/templates/birthday-celestial/thumbnail.jpg",
     author: "Template Place",
     previewImages: [
       "/templates/birthday-celestial/images/couple-galaxy.webp",

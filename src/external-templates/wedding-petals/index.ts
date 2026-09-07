@@ -29,7 +29,7 @@ export default defineExternalTemplate({
       "WhatsApp RSVP integration",
       "Scroll-reveal animations on all sections",
     ],
-    thumbnailUrl: "/templates/wedding-petals/hero-couple.jpg",
+    thumbnailUrl: "/templates/wedding-petals/thumbnail.jpg",
     author: "@pasha_dev_",
   },
   schema,

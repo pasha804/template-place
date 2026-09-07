@@ -30,7 +30,7 @@ export default defineExternalTemplate({
       "Birthday Hugs GIF overlay",
       "Fully configurable — no code needed",
     ],
-    thumbnailUrl:    "/templates/birthday-surprise/images/1.jpg",
+    thumbnailUrl: "/templates/birthday-surprise/thumbnail.jpg",
     author:          "@pasha_dev_",
     previewImages: [
       "/templates/birthday-surprise/images/1.jpg",

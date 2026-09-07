@@ -32,7 +32,7 @@ export default defineExternalTemplate({
       "Aurora orb background + particle system",
       "Background music toggle",
     ],
-    thumbnailUrl:    "/templates/birthday-aurora/images/1.jpg",
+    thumbnailUrl: "/templates/birthday-aurora/thumbnail.jpg",
     author:          "@pasha_dev_",
     previewImages: [
       "/templates/birthday-aurora/images/1.jpg",

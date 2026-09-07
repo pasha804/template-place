@@ -30,7 +30,7 @@ export default defineExternalTemplate({
       "3-phase grand finale confetti",
       "Final hug screen with two GIFs",
     ],
-    thumbnailUrl:    "/templates/birthday-bloom/images/1.jpg",
+    thumbnailUrl: "/templates/birthday-bloom/thumbnail.jpg",
     author:          "@pasha_dev_",
     previewImages: [
       "/templates/birthday-bloom/images/1.jpg",

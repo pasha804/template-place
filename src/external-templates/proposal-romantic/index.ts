@@ -35,7 +35,7 @@ export default defineExternalTemplate({
       "Handwritten love note screen",
       "Grand finale with animated heart",
     ],
-    thumbnailUrl:  "/templates/proposal-romantic/gif/1.gif",
+    thumbnailUrl: "/templates/proposal-romantic/thumbnail.jpg",
     author:        "@pasha_dev_",
     previewImages: [
       "/templates/proposal-romantic/gif/1.gif",

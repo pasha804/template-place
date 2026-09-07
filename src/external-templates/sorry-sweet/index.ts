@@ -31,7 +31,7 @@ export default defineExternalTemplate({
       "Voice note player",
       "Confetti + heart burst forgiveness finale",
     ],
-    thumbnailUrl: "/templates/sorry-sweet/gifs/1.gif",
+    thumbnailUrl: "/templates/sorry-sweet/thumbnail.jpg",
     author: "@pasha_dev_",
     previewImages: ["/templates/sorry-sweet/gifs/1.gif", "/templates/sorry-sweet/gifs/2.gif", "/templates/sorry-sweet/gifs/3.gif"],
   },

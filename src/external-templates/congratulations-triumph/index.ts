@@ -29,7 +29,7 @@ export default defineExternalTemplate({
       "Limitless potential star animation",
       "Animated vinyl anthem player",
     ],
-    thumbnailUrl: "/templates/congratulations-triumph/hero-achievement.jpg",
+    thumbnailUrl: "/templates/congratulations-triumph/thumbnail.jpg",
     author: "@pasha_dev_",
   },
   schema,

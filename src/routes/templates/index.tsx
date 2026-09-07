@@ -62,14 +62,14 @@ function TemplateCard({ t, isFav, onFav }: { t: UnifiedTemplate; isFav: boolean;
       }}
     >
       {/* Cover */}
-      <div className="relative h-48 overflow-hidden" style={{ background: t.coverGradient }}>
-        <div className="absolute inset-0 bg-black/0 transition-all duration-300"
-          style={{ backgroundColor: hov ? "rgba(0,0,0,0.22)" : "rgba(0,0,0,0)" }} />
+      <div className="relative h-48 overflow-hidden bg-black/40" style={{ background: t.coverGradient }}>
         <div className="absolute inset-0 flex items-center justify-center">
           {t.thumbnailUrl ? (
-            <img src={t.thumbnailUrl} alt={t.name}
-              className="w-full h-full object-cover"
-              style={{ opacity: hov ? 0.85 : 0.7 }} />
+            <img
+              src={t.thumbnailUrl}
+              alt={t.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
           ) : (
             <motion.span className="text-5xl drop-shadow-2xl select-none"
               animate={{ scale: hov ? 1.15 : 1 }} transition={{ duration: 0.3 }}>
@@ -77,6 +77,8 @@ function TemplateCard({ t, isFav, onFav }: { t: UnifiedTemplate; isFav: boolean;
             </motion.span>
           )}
         </div>
+        {/* Vignette overlay for badge readability */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-black/30 transition-opacity duration-300 group-hover:opacity-75" />
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-1.5">

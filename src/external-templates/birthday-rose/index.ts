@@ -26,7 +26,7 @@ export default defineExternalTemplate({
       "Love quiz with shake animation",
       "Certificate of My Heart finale",
     ],
-    thumbnailUrl:    "/templates/birthday-rose/images/hero-couple.jpg",
+    thumbnailUrl: "/templates/birthday-rose/thumbnail.jpg",
     author:          "@pasha_dev_",
     previewImages: [
       "/templates/birthday-rose/images/hero-couple.jpg",

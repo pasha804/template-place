@@ -45,7 +45,11 @@ function TemplateCard({ t, index }: { t: UnifiedTemplate; index: number }) {
       <div className="relative h-48 overflow-hidden" style={{ background: t.coverGradient }}>
         <div className="absolute inset-0 flex items-center justify-center">
           {t.thumbnailUrl ? (
-            <img src={t.thumbnailUrl} alt={t.name} className="w-full h-full object-cover" />
+            <img
+              src={t.thumbnailUrl}
+              alt={t.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
           ) : (
             <motion.span
               className="text-5xl drop-shadow-xl select-none"

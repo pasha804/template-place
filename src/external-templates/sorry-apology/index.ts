@@ -27,7 +27,7 @@ export default defineExternalTemplate({
       "Joyful Yay celebration finale",
       "Soft pink premium aesthetic",
     ],
-    thumbnailUrl: "/templates/sorry-apology/please.gif",
+    thumbnailUrl: "/templates/sorry-apology/thumbnail.jpg",
     author: "@pasha_dev_",
     previewImages: ["/templates/sorry-apology/please.gif", "/templates/sorry-apology/heppi.gif"],
   },

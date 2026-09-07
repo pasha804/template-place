@@ -25,7 +25,7 @@ export default defineExternalTemplate({
       "Optional background music player",
       "Smooth page transitions",
     ],
-    thumbnailUrl: "/templates/sorry-teddy/gifs/sad-teddy.gif",
+    thumbnailUrl: "/templates/sorry-teddy/thumbnail.jpg",
     author: "@pasha_dev_",
     previewImages: ["/templates/sorry-teddy/gifs/sad-teddy.gif", "/templates/sorry-teddy/gifs/teddy-hug.gif", "/templates/sorry-teddy/gifs/teddy-giving-flower.gif"],
   },

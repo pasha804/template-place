@@ -34,7 +34,7 @@ export default defineExternalTemplate({
       "Confetti explosion on letter completion",
       "Virtual Hug finale button",
     ],
-    thumbnailUrl: "/templates/anniversary-romantic/images/1.jpg",
+    thumbnailUrl: "/templates/anniversary-romantic/thumbnail.jpg",
     author: "@pasha_dev_",
     previewImages: [
       "/templates/anniversary-romantic/images/1.jpg",

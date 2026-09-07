@@ -30,7 +30,7 @@ export default defineExternalTemplate({
       "Animated song player with vinyl record",
       "Heart drawing finale",
     ],
-    thumbnailUrl: "/templates/anniversary-galaxy/couple-galaxy.webp",
+    thumbnailUrl: "/templates/anniversary-galaxy/thumbnail.jpg",
     author: "@pasha_dev_",
   },
   schema,

@@ -32,7 +32,7 @@ export default defineExternalTemplate({
       "Grand finale",
       "Fully configurable — no code needed",
     ],
-    thumbnailUrl:    "/templates/birthday-galaxy/images/1.jpeg",
+    thumbnailUrl: "/templates/birthday-galaxy/thumbnail.jpg",
     author:          "@pasha_dev_",
     previewImages: [
       "/templates/birthday-galaxy/images/1.jpeg",
