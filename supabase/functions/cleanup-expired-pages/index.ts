@@ -1,46 +1,58 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// Supabase Edge Function to automatically cleanup expired pages
+// This runs on a schedule to delete expired pages and their data
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   try {
+    // Create Supabase client with service role key
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-      { auth: { persistSession: false } }
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
     )
 
-    // Call the delete_expired_pages function
-    const { data, error } = await supabaseClient.rpc('delete_expired_pages')
+    // Call the cleanup function
+    const { data, error } = await supabaseClient.rpc('cleanup_expired_pages')
 
     if (error) {
-      console.error('Error deleting expired pages:', error)
+      console.error('Error cleaning up expired pages:', error)
       return new Response(
         JSON.stringify({ error: error.message }),
-        { headers: { 'Content-Type': 'application/json' }, status: 500 }
+        { 
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
       )
     }
 
-    // Get count of expired pages
-    const { count } = await supabaseClient
-      .from('pages')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'expired')
-
-    console.log(`Cleanup completed. Expired pages: ${count}`)
+    console.log('Cleanup completed:', data)
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Expired pages cleaned up successfully',
-        expiredCount: count 
+        result: data,
+        message: 'Expired pages cleanup completed successfully'
       }),
-      { headers: { 'Content-Type': 'application/json' }, status: 200 }
+      { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
     )
+
   } catch (err) {
     console.error('Unexpected error:', err)
     return new Response(
-      JSON.stringify({ error: String(err) }),
-      { headers: { 'Content-Type': 'application/json' }, status: 500 }
+      JSON.stringify({ error: err.message }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
     )
   }
 })
