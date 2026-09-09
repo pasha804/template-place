@@ -1,5 +1,5 @@
 -- ============================================================
--- COMPLETE DATABASE SETUP
+-- COMPLETE DATABASE SETUP (WITHOUT CRON JOB)
 -- Run this entire script in Supabase SQL Editor
 -- ============================================================
 
@@ -37,7 +37,7 @@ END $$;
 DROP TABLE IF EXISTS public.packages CASCADE;
 
 -- ============ STEP 2: CREATE PACKAGES TABLE ============
-CREATE TABLE IF NOT EXISTS public.packages (
+CREATE TABLE public.packages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   price_pkr INT NOT NULL,
@@ -101,34 +101,14 @@ VALUES
     'Ideal for extended celebrations and special occasions',
     '["45 days access", "Full template customization", "Live website hosting", "Mobile responsive design", "WhatsApp sharing link", "Priority support"]'::jsonb,
     2
-  )
-ON CONFLICT DO NOTHING;
+  );
 
 -- ============ STEP 4: ADD COLUMNS TO PAGES ============
-DO $$ 
-BEGIN
-  -- Add package_id column
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns 
-    WHERE table_schema = 'public' 
-    AND table_name = 'pages' 
-    AND column_name = 'package_id'
-  ) THEN
-    ALTER TABLE public.pages 
-      ADD COLUMN package_id UUID REFERENCES public.packages(id) ON DELETE RESTRICT;
-  END IF;
+ALTER TABLE public.pages 
+  ADD COLUMN IF NOT EXISTS package_id UUID REFERENCES public.packages(id) ON DELETE RESTRICT;
 
-  -- Add activated_at column
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns 
-    WHERE table_schema = 'public' 
-    AND table_name = 'pages' 
-    AND column_name = 'activated_at'
-  ) THEN
-    ALTER TABLE public.pages 
-      ADD COLUMN activated_at TIMESTAMPTZ;
-  END IF;
-END $$;
+ALTER TABLE public.pages 
+  ADD COLUMN IF NOT EXISTS activated_at TIMESTAMPTZ;
 
 -- Create index for package lookups
 DROP INDEX IF EXISTS idx_pages_package;
@@ -146,29 +126,22 @@ AS $$
 DECLARE
   package_duration INT;
 BEGIN
-  -- Only set expiration when status changes to 'published' and package_id is set
   IF NEW.status = 'published' AND NEW.package_id IS NOT NULL THEN
-    -- Get the duration from the package
     SELECT duration_days INTO package_duration
     FROM public.packages
     WHERE id = NEW.package_id;
 
     IF package_duration IS NOT NULL THEN
-      -- Set activated_at if not already set
       IF NEW.activated_at IS NULL THEN
         NEW.activated_at := now();
       END IF;
-
-      -- Calculate expires_at based on activated_at + duration
       NEW.expires_at := NEW.activated_at + (package_duration || ' days')::interval;
     END IF;
   END IF;
-
   RETURN NEW;
 END;
 $$;
 
--- Create trigger
 DROP TRIGGER IF EXISTS trg_page_set_expiration ON public.pages;
 CREATE TRIGGER trg_page_set_expiration
   BEFORE INSERT OR UPDATE OF status, package_id, activated_at ON public.pages
@@ -189,18 +162,15 @@ DECLARE
   v_deleted_count INT := 0;
   expired_page_ids UUID[];
 BEGIN
-  -- Find all expired pages
   SELECT array_agg(id) INTO expired_page_ids
   FROM public.pages
   WHERE expires_at IS NOT NULL 
     AND expires_at <= now()
     AND deleted_at IS NULL;
 
-  -- Count how many will be deleted
   v_deleted_count := coalesce(array_length(expired_page_ids, 1), 0);
 
   IF v_deleted_count > 0 THEN
-    -- Delete related data first (if tables exist)
     BEGIN
       DELETE FROM public.page_versions WHERE page_id = ANY(expired_page_ids);
     EXCEPTION WHEN undefined_table THEN NULL;
@@ -211,7 +181,6 @@ BEGIN
     EXCEPTION WHEN undefined_table THEN NULL;
     END;
     
-    -- Soft delete pages by setting deleted_at
     UPDATE public.pages
     SET 
       deleted_at = now(),
@@ -228,36 +197,21 @@ BEGIN
 END;
 $$;
 
--- Grant execute permission
 GRANT EXECUTE ON FUNCTION public.cleanup_expired_pages TO service_role, authenticated;
 
 -- ============ STEP 7: ADD PACKAGE TO ORDERS ============
-DO $$ 
-BEGIN
-  -- Add package_id column to orders
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns 
-    WHERE table_schema = 'public' 
-    AND table_name = 'orders' 
-    AND column_name = 'package_id'
-  ) THEN
-    ALTER TABLE public.orders 
-      ADD COLUMN package_id UUID REFERENCES public.packages(id) ON DELETE RESTRICT;
-  END IF;
-END $$;
+ALTER TABLE public.orders 
+  ADD COLUMN IF NOT EXISTS package_id UUID REFERENCES public.packages(id) ON DELETE RESTRICT;
 
--- Create index for package-order lookups
 DROP INDEX IF EXISTS idx_orders_package;
 CREATE INDEX idx_orders_package 
   ON public.orders(package_id) 
   WHERE package_id IS NOT NULL;
 
 -- ============ STEP 8: UPDATE RLS POLICIES ============
--- Drop existing policies
 DROP POLICY IF EXISTS "pages_public_read_published" ON public.pages;
 DROP POLICY IF EXISTS "pages_public_read" ON public.pages;
 
--- Create new policy with expiration enforcement
 CREATE POLICY "pages_public_read_published" ON public.pages 
   FOR SELECT TO anon, authenticated
   USING (
@@ -267,7 +221,6 @@ CREATE POLICY "pages_public_read_published" ON public.pages
     AND (expires_at IS NULL OR expires_at > now())
   );
 
--- Owner policy
 DROP POLICY IF EXISTS "pages_owner_all" ON public.pages;
 CREATE POLICY "pages_owner_all" ON public.pages 
   FOR ALL TO authenticated 
@@ -280,21 +233,6 @@ CREATE POLICY "pages_owner_all" ON public.pages
     AND deleted_at IS NULL
   );
 
--- ============ STEP 9: SETUP CRON JOB (OPTIONAL) ============
--- Note: pg_cron may not be available on all Supabase plans
--- If this fails, you can setup a scheduled Edge Function instead
-
--- Uncomment and run separately if pg_cron is available:
--- CREATE EXTENSION IF NOT EXISTS pg_cron;
--- SELECT cron.schedule(
---   'cleanup-expired-pages',
---   '0 2 * * *',
---   'SELECT public.cleanup_expired_pages();'
--- );
-
--- For now, you can manually run cleanup with:
--- SELECT public.cleanup_expired_pages();
-
 -- ============ COMMENTS ============
 COMMENT ON TABLE public.packages IS 'Package definitions for pricing system with time-based expiration';
 COMMENT ON COLUMN public.pages.package_id IS 'Package purchased for this page, determines expiration duration';
@@ -303,28 +241,17 @@ COMMENT ON FUNCTION public.cleanup_expired_pages IS 'Automatically deletes expir
 COMMENT ON FUNCTION public.set_page_expiration IS 'Automatically sets expiration date when page is published';
 
 -- ============ VERIFICATION ============
--- Show packages
-SELECT 'Packages created:' AS status;
+SELECT '✅ Setup Complete!' AS status;
+SELECT 'Packages created:' AS info, COUNT(*) AS count FROM public.packages;
 SELECT name, price_pkr, duration_days FROM public.packages ORDER BY sort_order;
-
--- Show new columns
-SELECT 'New columns in pages table:' AS status;
-SELECT column_name, data_type 
-FROM information_schema.columns 
-WHERE table_name = 'pages' 
-AND column_name IN ('package_id', 'activated_at', 'expires_at')
-ORDER BY column_name;
-
--- Show functions
-SELECT 'Functions created:' AS status;
-SELECT proname FROM pg_proc WHERE proname IN ('set_page_expiration', 'cleanup_expired_pages');
 
 -- ============================================================
 -- SETUP COMPLETE!
 -- 
--- Next step: Make admin user
--- After greetingvibes786@gmail.com signs up, run:
--- UPDATE auth.users SET raw_user_meta_data = 
---   jsonb_set(COALESCE(raw_user_meta_data, '{}'::jsonb), '{role}', '"admin"')
--- WHERE email = 'greetingvibes786@gmail.com';
+-- Note: Cron job not set up (requires pg_cron extension)
+-- You can manually run cleanup with: SELECT public.cleanup_expired_pages();
+-- 
+-- Or setup Supabase Edge Function to run daily
+-- 
+-- Next: Make admin user with ADMIN_SETUP.sql
 -- ============================================================
