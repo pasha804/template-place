@@ -1,182 +1,145 @@
-# 🚀 QUICK REFERENCE — Template Weaver Repair
+# Quick Reference Guide
 
-**Status:** ✅ Ready for Deployment  
-**Date:** August 12, 2026
+## Admin Emails
+- **Primary Admin:** greetingvibes786@gmail.com
+- **Secondary Admin:** pashadev804@gmail.com (needs SQL migration applied)
 
----
+## Contact Information
+- **WhatsApp Support:** +92 332 4967481
 
-## 📋 THE FIX IN 30 SECONDS
+## Supabase Project
+- **Project ID:** qizoleiqjxylpiickeye
+- **Dashboard:** https://supabase.com/dashboard/project/qizoleiqjxylpiickeye
 
-**Problem:** Birthday Magical renders as Sorry Apology  
-**Cause:** UUID collisions + empty database table + bad fallbacks  
-**Fix:** Unique UUIDs + populate database + remove fallbacks  
-**Files Changed:** 8 (3 UUIDs + 4 app logic + 1 migration)  
-**Risk:** Low (tested, documented, rollback ready)
+## Key Features Status
 
----
+### Template System
+- **Total Templates:** 16 (all migrated)
+- **Background Music:** Enabled in all templates ✅
+- **Editor:** Full-featured with audio upload, demo library, preview
+- **Preview Mode:** Removed from editor (only available on published pages)
 
-## ✅ PRE-DEPLOYMENT CHECKLIST
+### User Roles
+- **Available Roles:** user, support, moderator, admin
+- **Role Management:** Admins can change any user's role (except their own)
+- **Location:** `/admin/users`
 
-```bash
-# 1. Verify TypeScript (should pass)
-npx tsc --noEmit
+### Payment Flow
+1. User creates template
+2. User submits for payment
+3. Admin reviews in dashboard
+4. Admin approves → status becomes "published"
+5. Template link appears for user
+6. User can contact support via WhatsApp (+92 332 4967481)
 
-# 2. Verify UUIDs (should show 16 unique)
-node verify-templates.mjs
+### Database Structure
+- **Templates:** 16 templates in `templates` table
+- **Packages:** 2 packages in `packages` table
+- **Users:** Managed via `profiles` table with `role` column
+- **Pages:** User-created pages with status (draft, pending, published)
 
-# 3. Check changes
-git status
-```
+## Admin Tasks
 
----
-
-## 🚀 DEPLOYMENT COMMANDS
-
-```bash
-# === BACKUP (CRITICAL) ===
-supabase db dump > backup-$(date +%Y%m%d).sql
-
-# === APPLY MIGRATION ===
-# Option A: CLI
-supabase db push
-
-# Option B: Dashboard
-# Copy: supabase/migrations/20260812100000_populate_external_templates.sql
-# Paste into: Supabase Dashboard → SQL Editor → Run
-
-# === VERIFY MIGRATION ===
-# Run in SQL Editor:
-# SELECT COUNT(*) FROM public.templates;
-# Should return: 16
-
-# === COMMIT & DEPLOY ===
-git add src/external-templates/birthday-galaxy/index.ts \
-        src/external-templates/birthday-rose/index.ts \
-        src/external-templates/sorry-sweet/index.ts \
-        src/routes/editor/template/\$templateId.tsx \
-        src/hooks/use-orders.ts \
-        src/routes/p/\$slug.tsx \
-        src/routes/admin/pending.tsx \
-        supabase/migrations/20260812100000_populate_external_templates.sql
-
-git commit -m "fix: resolve template identity bug (UUID collisions + FK constraints)"
-
-git push origin main
-```
-
----
-
-## 🧪 CRITICAL TEST (5 minutes)
-
-1. Go to `/templates`
-2. Click "Birthday Magical"
-3. **VERIFY:** Editor shows Birthday Magical (NOT Sorry)
-4. Save → Checkout → Admin → Publish
-5. **VERIFY:** Published page shows Birthday Magical (NOT Sorry)
-
-**If FAILS → ROLLBACK immediately!**
-
----
-
-## 🔙 ROLLBACK (If Needed)
-
-```bash
-# Revert code
-git revert HEAD
-git push origin main
-
-# Revert database (in SQL Editor)
-DELETE FROM public.templates 
-WHERE plugin_id IN (
-  'birthday-magical', 'birthday-aurora', 'birthday-bloom',
-  'birthday-galaxy', 'birthday-rose', 'birthday-surprise',
-  'anniversary-galaxy', 'anniversary-romantic',
-  'sorry-apology', 'sorry-sweet', 'sorry-teddy',
-  'proposal-cook', 'proposal-romantic',
-  'congratulations-triumph', 'wedding-eternal', 'wedding-petals'
-);
-```
-
----
-
-## 📊 POST-DEPLOYMENT CHECK
-
+### Make Someone Admin
+**Option 1 - Via SQL (for existing users):**
 ```sql
--- No NULL template_id in new pages
-SELECT COUNT(*) 
-FROM public.pages 
-WHERE template_id IS NULL 
-  AND created_at > now() - interval '1 hour';
--- Should return: 0
+UPDATE profiles 
+SET role = 'admin', updated_at = NOW() 
+WHERE email = 'user@example.com';
 ```
 
----
+**Option 2 - Via Trigger (for new signups):**
+Add email to the trigger function in `20260909000003_add_pashadev_admin.sql`
 
-## 📚 FULL DOCUMENTATION
+### Approve Payment
+1. Go to `/admin/pages`
+2. Find pending page
+3. Change status to "published"
+4. User will now see the template link
 
-- **STATUS_REPORT.md** — Overview
-- **EXECUTIVE_SUMMARY.md** — What was fixed
-- **DEPLOYMENT_GUIDE.md** — Detailed steps
-- **TESTING_CHECKLIST.md** — All 16 templates
-- **REPAIR_REPORT.md** — Complete investigation
+### Check Template
+1. User creates page → shows in `/dashboard/pages`
+2. Admin sees it in `/admin/pages`
+3. After approval, user sees external link icon
+4. Link format: `https://yourdomain.com/view/{pageId}`
 
----
+## Common Issues & Solutions
 
-## 🎯 FILES CHANGED
+### Issue: "Invalid API key"
+**Solution:** Already fixed! API keys updated in all client files.
 
-**UUIDs Fixed (3):**
-- `src/external-templates/birthday-galaxy/index.ts`
-- `src/external-templates/birthday-rose/index.ts`
-- `src/external-templates/sorry-sweet/index.ts`
+### Issue: User can't see template link
+**Solution:** Admin must change page status to "published" in `/admin/pages`
 
-**Logic Fixed (4):**
-- `src/routes/editor/template/$templateId.tsx`
-- `src/hooks/use-orders.ts`
-- `src/routes/p/$slug.tsx`
-- `src/routes/admin/pending.tsx`
+### Issue: Music not playing in template
+**Solution:** 
+- Check if audio file uploaded successfully
+- Try using demo music from the library
+- Verify audio URL is accessible
 
-**Database (1):**
-- `supabase/migrations/20260812100000_populate_external_templates.sql`
+### Issue: Can't change user role
+**Solution:** 
+- Make sure you're logged in as admin
+- You cannot change your own role
+- Refresh page after role change
 
----
+### Issue: Preview button not working
+**Solution:** Preview button removed intentionally. View published pages from dashboard instead.
 
-## ⚠️ CRITICAL WARNINGS
+## File Locations
 
-1. **BACKUP DATABASE FIRST** — No exceptions
-2. **APPLY MIGRATION BEFORE CODE** — Order matters
-3. **TEST IMMEDIATELY AFTER** — Don't wait
-4. **HAVE ROLLBACK READY** — Just in case
+### Configuration
+- Supabase Client: `src/integrations/supabase/client.ts`
+- Supabase Server: `src/integrations/supabase/client.server.ts`
+- Auth Middleware: `src/integrations/supabase/auth-middleware.ts`
 
----
+### Admin Pages
+- User Management: `src/routes/admin/users.tsx`
+- Page Approval: `src/routes/admin/pages.tsx`
 
-## ✅ VERIFICATION COMMANDS
+### Editor
+- Form Panel: `src/components/template-editor/EditorFormPanel.tsx`
+- Field Widget: `src/components/template-editor/FieldWidget.tsx`
+- Topbar: `src/components/editor/EditorTopbar.tsx`
+
+### Templates
+- All templates: `src/external-templates/{template-name}/`
+- Schema files: `src/external-templates/{template-name}/schema.ts`
+- Component files: `src/external-templates/{template-name}/index.tsx`
+
+### Migrations
+- All migrations: `supabase/migrations/`
+- Latest: `supabase/migrations/20260909000003_add_pashadev_admin.sql`
+
+## Development Commands
 
 ```bash
-# Before deployment
-npx tsc --noEmit              # Should pass
-node verify-templates.mjs     # Should show 16 unique
+# Install dependencies
+npm install
 
-# After migration
-# SELECT COUNT(*) FROM public.templates;  # Should return 16
+# Run development server
+npm run dev
 
-# After deployment
-# Check no NULL template_id in new pages
+# Build for production
+npm run build
+
+# Run Supabase locally (optional)
+npx supabase start
+
+# Push migrations to remote database
+npx supabase db push
+
+# Generate TypeScript types from database
+npx supabase gen types typescript --local > src/integrations/supabase/types.ts
 ```
 
----
+## Support
 
-## 🏁 SUCCESS METRICS
+For technical issues with the codebase, check:
+1. `DEPLOYMENT_SUMMARY.md` - Latest changes and status
+2. `INVALID_API_KEY_FIXED.md` - API key fix documentation
+3. This file - Quick reference for common tasks
 
-- ✅ 16/16 templates in database
-- ✅ 0% pages with NULL template_id
-- ✅ Birthday Magical shows correctly
-- ✅ No collision pair mix-ups
-- ✅ 0 "Template not found" errors
-
----
-
-**Estimated Time:** 1-2 hours (backup + deploy + test)  
-**Risk Level:** LOW (tested, documented, reversible)  
-**Recommendation:** DEPLOY when ready
-
-**Questions?** Read the full documentation above.
+For user support:
+- WhatsApp: +92 332 4967481
+- Admin Dashboard: `/admin`
