@@ -39,12 +39,11 @@ export function useAuth() {
 
   async function checkAdminRole(userId: string) {
     const { data } = await supabase
-      .from("user_roles")
+      .from("profiles")
       .select("role")
-      .eq("user_id", userId)
-      .in("role", ["admin", "moderator"])
-      .maybeSingle();
-    setIsAdmin(!!data);
+      .eq("id", userId)
+      .single();
+    setIsAdmin(data?.role === "admin" || data?.role === "moderator");
   }
 
   async function handleSignOut() {
