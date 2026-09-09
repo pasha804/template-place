@@ -7,20 +7,21 @@ import { cn } from "@/lib/utils";
 const plans = [
   {
     id: "package1",
-    tier: "Package 1",
-    price: "Rs. 1,000",
-    period: "",
-    tagline: "Perfect for a one-time surprise",
+    tier: "21-Day Package",
+    price: "Rs. 1,499",
+    period: "21 days",
+    tagline: "Perfect for short-term celebrations",
     icon: Zap,
     iconColor: "#a78bfa",
     gradient: "from-violet-500/15 to-purple-600/8",
     border: "rgba(167,139,250,0.2)",
     glow: "rgba(167,139,250,0.25)",
     features: [
-      "1 personalized page",
-      "Full customization via editor",
+      "21 days website access",
+      "Full template customization",
+      "Live website hosting",
+      "Mobile responsive design",
       "WhatsApp sharing link",
-      "Standard support",
     ],
     cta: "Get Started",
     ctaHref: "/auth/signup",
@@ -28,10 +29,10 @@ const plans = [
   },
   {
     id: "package2",
-    tier: "Package 2",
-    price: "Rs. 2,000",
-    period: "",
-    tagline: "Everything included, priority delivery",
+    tier: "45-Day Package",
+    price: "Rs. 2,999",
+    period: "45 days",
+    tagline: "Ideal for extended celebrations",
     icon: Crown,
     iconColor: "#f59e0b",
     gradient: "from-amber-500/20 to-orange-500/10",
@@ -39,11 +40,12 @@ const plans = [
     glow: "rgba(251,191,36,0.35)",
     badge: "Most Popular",
     features: [
-      "1 personalized page",
-      "Full customization via editor",
-      "Custom URL slug",
+      "45 days website access",
+      "Full template customization",
+      "Live website hosting",
+      "Mobile responsive design",
+      "WhatsApp sharing link",
       "Priority support",
-      "VIP delivery",
     ],
     cta: "Get Package 2",
     ctaHref: "/auth/signup",
@@ -93,7 +95,7 @@ export function PricingSection() {
             transition={{ delay: 0.18 }}
             className="mt-2 text-sm text-white/50"
           >
-            All prices in PKR. Pay once, your page goes live after admin approval.
+            All prices in PKR. Your page expires after the package duration.
           </motion.p>
         </div>
 
@@ -220,7 +222,8 @@ export function PricingSection() {
           className="mt-10 text-center text-xs text-muted-foreground"
         >
           All pages include SSL security, mobile-responsive design, and 99.9% uptime.
-          Payment via EasyPaisa · Bank Transfer · PayPal.
+          <br />
+          Pages automatically expire after the selected duration. Payment via EasyPaisa · Bank Transfer · PayPal.
         </motion.p>
       </div>
     </section>
