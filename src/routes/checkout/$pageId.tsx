@@ -144,7 +144,7 @@ Thank you.`
 
   function openWhatsApp() {
     const msg = buildWhatsAppMessage();
-    window.open(`https://wa.me/923084453846?text=${msg}`, "_blank");
+    window.open(`https://wa.me/923324967481?text=${msg}`, "_blank");
     if (orderId) markWhatsapp.mutate(orderId);
     setWhatsappSent(true);
   }

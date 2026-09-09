@@ -44,34 +44,25 @@ function AdminUsersPage() {
     },
   });
 
-  const { data: roles = [] } = useQuery({
-    queryKey: ["admin-user-roles"],
-    queryFn: async () => {
-      const { data } = await supabase.from("user_roles").select("*");
-      return data ?? [];
-    },
-  });
-
   const setRole = useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: AppRole }) => {
-      // Remove existing non-user roles
-      await supabase.from("user_roles").delete().eq("user_id", userId).neq("role", "user");
-      if (role !== "user") {
-        await supabase.from("user_roles").upsert({ user_id: userId, role }, { onConflict: "user_id,role" });
-      }
+      const { error } = await supabase
+        .from("profiles")
+        .update({ role: role as any, updated_at: new Date().toISOString() })
+        .eq("id", userId);
+      if (error) throw error;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["admin-user-roles"] });
-      toast.success("Role updated");
+      qc.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success("Role updated successfully");
+    },
+    onError: (error) => {
+      toast.error("Failed to update role: " + error.message);
     },
   });
 
-  function getUserRole(userId: string): AppRole {
-    const userRoles = roles.filter(r => r.user_id === userId).map(r => r.role as AppRole);
-    if (userRoles.includes("admin"))     return "admin";
-    if (userRoles.includes("moderator")) return "moderator";
-    if (userRoles.includes("support"))   return "support";
-    return "user";
+  function getUserRole(profile: typeof profiles[0]): AppRole {
+    return (profile.role as AppRole) || "user";
   }
 
   const ROLE_STYLES: Record<AppRole, { color: string; bg: string }> = {
@@ -115,7 +106,7 @@ function AdminUsersPage() {
               </thead>
               <tbody>
                 {profiles.map((profile, i) => {
-                  const role = getUserRole(profile.id);
+                  const role = getUserRole(profile);
                   const rs   = ROLE_STYLES[role];
                   return (
                     <motion.tr key={profile.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -139,17 +130,17 @@ function AdminUsersPage() {
                       <td className="px-4 py-3">
                         <div className="relative inline-block">
                           <select
-                            value={role}
+                            value={getUserRole(profile)}
                             onChange={(e) => setRole.mutate({ userId: profile.id, role: e.target.value as AppRole })}
                             disabled={profile.id === user?.id}
                             className="appearance-none rounded-xl border px-3 py-1.5 text-xs font-semibold capitalize cursor-pointer outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                            style={{ color: rs.color, background: rs.bg, borderColor: rs.color + "40" }}>
+                            style={{ color: ROLE_STYLES[getUserRole(profile)].color, background: ROLE_STYLES[getUserRole(profile)].bg, borderColor: ROLE_STYLES[getUserRole(profile)].color + "40" }}>
                             {(["user","support","moderator","admin"] as AppRole[]).map(r => (
                               <option key={r} value={r} className="bg-[#1a1730] text-white capitalize">{r}</option>
                             ))}
                           </select>
                           <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2"
-                            style={{ color: rs.color }} />
+                            style={{ color: ROLE_STYLES[getUserRole(profile)].color }} />
                         </div>
                       </td>
                     </motion.tr>

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Monitor, Tablet, Smartphone, Undo2, Redo2, Save, Eye, Loader2, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Monitor, Tablet, Smartphone, Undo2, Redo2, Save, Loader2, CheckCircle2 } from "lucide-react";
 import { useEditorStore } from "@/store/editor";
 import { cn } from "@/lib/utils";
 
@@ -83,15 +83,6 @@ export function EditorTopbar({ onSave }: { onSave: () => void }) {
           {isSaving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
           Save
         </button>
-
-        <Link
-          to="/p/$slug"
-          params={{ slug: page?.slug ?? "" }}
-          target="_blank"
-          className="flex items-center gap-1.5 rounded-xl border border-border px-4 py-2 text-xs font-medium transition-all hover:border-primary/40"
-        >
-          <Eye className="h-3.5 w-3.5" /> Preview
-        </Link>
       </div>
     </header>
   );
