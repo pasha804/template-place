@@ -4,6 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { runPublishPipeline, isValidUUID } from "@/lib/publish-pipeline";
 
+type Package = {
+  id: string;
+  name: string;
+  price_pkr: number;
+  duration_days: number;
+  features: string[];
+  is_popular: boolean;
+  is_active: boolean;
+  created_at: string;
+};
+
 type Order = Database["public"]["Tables"]["orders"]["Row"] & {
   payment_method?: string;
   payment_screenshot?: string;
@@ -21,23 +32,57 @@ export const PLANS_PKR = [
   {
     key:          "basic",
     label:        "Package 1",
-    pricePKR:     1000,
-    pricePaisa:   100000,
-    features:     ["1 personalized page", "Full customization", "WhatsApp sharing", "Standard support"],
+    pricePKR:     1499,
+    pricePaisa:   149900,
+    features:     ["1 personalized page", "Full customization", "WhatsApp sharing", "21 days hosting"],
     popular:      false,
+    duration_days: 21,
   },
   {
     key:          "premium",
     label:        "Package 2",
-    pricePKR:     2000,
-    pricePaisa:   200000,
-    features:     ["1 personalized page", "Full customization", "Custom URL slug", "Priority support", "VIP delivery"],
+    pricePKR:     2999,
+    pricePaisa:   299900,
+    features:     ["1 personalized page", "Full customization", "Custom URL slug", "Priority support", "45 days hosting"],
     popular:      true,
+    duration_days: 45,
   },
 ] as const;
 
 export function formatPKR(paisa: number) {
   return `Rs. ${(paisa / 100).toLocaleString("en-PK")}`;
+}
+
+/* ── Fetch packages from database ── */
+export function usePackages() {
+  return useQuery({
+    queryKey: ["packages"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("packages")
+        .select("*")
+        .eq("is_active", true)
+        .order("price_pkr", { ascending: true });
+      
+      if (error) {
+        console.error("Failed to fetch packages from database:", error);
+        // Fallback to hardcoded packages if database query fails
+        return PLANS_PKR.map((plan, index) => ({
+          id: plan.key,
+          name: plan.label,
+          price_pkr: plan.pricePKR,
+          duration_days: plan.duration_days,
+          features: plan.features,
+          is_popular: plan.popular,
+          is_active: true,
+          created_at: new Date().toISOString(),
+        }));
+      }
+      
+      return (data || []) as Package[];
+    },
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+  });
 }
 
 /* ── User's own orders ── */

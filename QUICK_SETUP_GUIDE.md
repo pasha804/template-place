@@ -22,7 +22,7 @@
 **Option A - Using CLI (Recommended):**
 ```bash
 supabase login
-supabase link --project-ref ptcbaphzoceumekzymsa
+supabase link --project-ref qizoleiqjxylpiickeye
 supabase functions deploy cleanup-expired-pages
 ```
 

@@ -7,7 +7,7 @@ The automatic cleanup function is already deployed and ready.
 
 ### 1️⃣ Run the Database Setup (5 minutes)
 
-**Go to:** [Supabase SQL Editor](https://supabase.com/dashboard/project/ptcbaphzoceumekzymsa/sql)
+**Go to:** [Supabase SQL Editor](https://supabase.com/dashboard/project/qizoleiqjxylpiickeye/sql)
 
 **Copy and paste this entire file:**
 ```
@@ -25,7 +25,7 @@ This creates:
 
 ### 2️⃣ Enable Automatic Daily Cleanup (2 minutes)
 
-**Go to:** [Supabase Edge Functions](https://supabase.com/dashboard/project/ptcbaphzoceumekzymsa/functions)
+**Go to:** [Supabase Edge Functions](https://supabase.com/dashboard/project/qizoleiqjxylpiickeye/functions)
 
 **Steps:**
 1. Find function: **"cleanup-expired-pages"** (already deployed!)
@@ -42,7 +42,7 @@ This creates:
 
 **After** greetingvibes786@gmail.com signs up:
 
-**Go to:** [Supabase SQL Editor](https://supabase.com/dashboard/project/ptcbaphzoceumekzymsa/sql)
+**Go to:** [Supabase SQL Editor](https://supabase.com/dashboard/project/qizoleiqjxylpiickeye/sql)
 
 **Run this:**
 ```sql

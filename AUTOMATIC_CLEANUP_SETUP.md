@@ -11,7 +11,7 @@ Run these commands in your terminal:
 supabase login
 
 # Link your project
-supabase link --project-ref ptcbaphzoceumekzymsa
+supabase link --project-ref qizoleiqjxylpiickeye
 
 # Deploy the cleanup function
 supabase functions deploy cleanup-expired-pages
@@ -35,7 +35,7 @@ supabase functions invoke cleanup-expired-pages
 
 Or test via HTTP:
 ```bash
-curl -X POST https://ptcbaphzoceumekzymsa.supabase.co/functions/v1/cleanup-expired-pages \
+curl -X POST https://qizoleiqjxylpiickeye.supabase.co/functions/v1/cleanup-expired-pages \
   -H "Authorization: Bearer YOUR_ANON_KEY"
 ```
 

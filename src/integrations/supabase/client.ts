@@ -28,8 +28,8 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 
 // Hardcoded Supabase credentials (publishable key — safe to commit)
-const SUPABASE_URL = 'https://ptcbaphzoceumekzymsa.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_EBoyRTPTdkcKmvkqJsMEbg_rpCjOANU';
+const SUPABASE_URL = 'https://qizoleiqjxylpiickeye.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_JY2lrUz1vqi2qMJreIfprg_3xbJ4jCCC';
 
 function createSupabaseClient() {
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
