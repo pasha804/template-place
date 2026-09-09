@@ -34,7 +34,7 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
   async ({ next }) => {
     
     const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qizoleiqjxylpiickeye.supabase.co';
-    const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_JY2lrUz1vqi2qMJreIfprg_3xbJ4jCCC';
+    const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpem9sZWlxanh5bHBpaWNrZXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5MzA3MTUsImV4cCI6MjEwNDUwNjcxNX0.OeJ_UcfalSzTocwcA89NQ_FeKjUuNcuZsUdNZmU8G3g';
 
 
     const request = getRequest();

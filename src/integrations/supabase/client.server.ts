@@ -31,7 +31,7 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 
 // Hardcoded Supabase credentials (publishable key — safe to commit)
 const HARDCODED_SUPABASE_URL = 'https://qizoleiqjxylpiickeye.supabase.co';
-const HARDCODED_SUPABASE_KEY = 'sb_publishable_JY2lrUz1vqi2qMJreIfprg_3xbJ4jCCC';
+const HARDCODED_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpem9sZWlxanh5bHBpaWNrZXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5MzA3MTUsImV4cCI6MjEwNDUwNjcxNX0.OeJ_UcfalSzTocwcA89NQ_FeKjUuNcuZsUdNZmU8G3g';
 
 function createSupabaseAdminClient() {
   const SUPABASE_URL = process.env.SUPABASE_URL || HARDCODED_SUPABASE_URL;

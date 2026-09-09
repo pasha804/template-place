@@ -16,7 +16,7 @@ import { createClient } from '@supabase/supabase-js';
 // === CONFIGURATION ===
 // Paste your keys from: https://supabase.com/dashboard/project/qizoleiqjxylpiickeye/settings/api
 const SUPABASE_URL = 'https://qizoleiqjxylpiickeye.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_JY2lrUz1vqi2qMJreIfprg_3xbJ4jCCC'; // anon/public key
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpem9sZWlxanh5bHBpaWNrZXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5MzA3MTUsImV4cCI6MjEwNDUwNjcxNX0.OeJ_UcfalSzTocwcA89NQ_FeKjUuNcuZsUdNZmU8G3g'; // anon/public key
 
 console.log('🔍 Testing Supabase API Keys...\n');
 console.log('━'.repeat(80));
