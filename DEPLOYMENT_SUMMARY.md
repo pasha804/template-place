@@ -36,62 +36,37 @@ All changes have been committed and pushed to GitHub (commit: b4ff8e0).
 - Admin cannot change their own role (disabled)
 - Working correctly
 
-### 6. ⚠️ Add pashadev804@gmail.com as Admin
-- **Status:** MIGRATION READY (Needs Manual Application)
-- Migration file created: `supabase/migrations/20260909000003_add_pashadev_admin.sql`
+### 6. ⚠️ Add pashadev804@gmail.com as Admin + Fix Role Column
+- **Status:** SQL READY (Needs Manual Application)
+- **Issue Found:** The `profiles` table was missing the `role` column
+- **Solution:** Created comprehensive SQL fix in `FIX_ADMIN_ROLES.sql`
 - **Action Required:** Run SQL manually in Supabase Dashboard
 
-**SQL to run in Supabase Dashboard SQL Editor:**
+## 🚨 IMPORTANT - Run This First!
 
-```sql
--- Add pashadev804@gmail.com as admin
--- This migration makes pashadev804@gmail.com an admin user when they sign up
+The error you saw: `column "role" of relation "profiles" does not exist`
 
--- Create a function to auto-assign admin role for specific emails
-CREATE OR REPLACE FUNCTION public.handle_admin_users()
-RETURNS TRIGGER AS $$
-BEGIN
-  -- Check if the email should be admin
-  IF NEW.email IN ('greetingvibes786@gmail.com', 'pashadev804@gmail.com') THEN
-    -- Update or insert profile with admin role
-    INSERT INTO public.profiles (id, role, full_name, email, created_at, updated_at)
-    VALUES (
-      NEW.id,
-      'admin'::public.user_role,
-      COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
-      NEW.email,
-      NOW(),
-      NOW()
-    )
-    ON CONFLICT (id) DO UPDATE SET
-      role = 'admin'::public.user_role,
-      updated_at = NOW();
-  END IF;
-  
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+This means we need to add the `role` column to the `profiles` table.
 
--- Drop existing trigger if it exists
-DROP TRIGGER IF EXISTS on_auth_user_created_admin ON auth.users;
+**Complete Fix - Copy from `FIX_ADMIN_ROLES.sql` or `RUN_THIS_IN_SUPABASE.md`**
 
--- Create trigger on auth.users  
-CREATE TRIGGER on_auth_user_created_admin
-  AFTER INSERT OR UPDATE ON auth.users
-  FOR EACH ROW
-  EXECUTE FUNCTION public.handle_admin_users();
-```
+The SQL file will:
+1. ✅ Add `role` column to `profiles` table
+2. ✅ Make greetingvibes786@gmail.com admin
+3. ✅ Make pashadev804@gmail.com admin
+4. ✅ Set up trigger for future auto-admin assignment
+5. ✅ Update all admin-checking functions
+6. ✅ Add security policies
 
-**How to Apply:**
-1. Go to your Supabase project: https://supabase.com/dashboard/project/qizoleiqjxylpiickeye
-2. Navigate to SQL Editor
-3. Paste the SQL above
-4. Click "Run"
+**Quick Instructions:**
+1. Go to: https://supabase.com/dashboard/project/qizoleiqjxylpiickeye/sql/new
+2. Open the file `FIX_ADMIN_ROLES.sql` in your project
+3. Copy ALL the SQL
+4. Paste in Supabase SQL Editor
+5. Click "Run"
+6. Check results - both emails should show as admin
 
-**Note:** If pashadev804@gmail.com already has an account, you can make them admin directly:
-```sql
-UPDATE profiles SET role = 'admin', updated_at = NOW() WHERE email = 'pashadev804@gmail.com';
-```
+**See `RUN_THIS_IN_SUPABASE.md` for complete step-by-step instructions.**
 
 ### 7. ✅ Background Music Options in All Templates
 - **Status:** ALREADY COMPLETE - NO CHANGES NEEDED
@@ -161,6 +136,8 @@ UPDATE profiles SET role = 'admin', updated_at = NOW() WHERE email = 'pashadev80
 ## Summary
 
 ✅ **7 out of 8 tasks complete**  
-⚠️ **1 task requires manual SQL execution** (admin migration)
+⚠️ **1 task requires manual SQL execution** (add role column + make both emails admin)
 
-All code changes are deployed. The only remaining action is to run the SQL migration in the Supabase Dashboard to enable the admin trigger for pashadev804@gmail.com.
+All code changes are deployed. The only remaining action is to run the SQL from `FIX_ADMIN_ROLES.sql` in the Supabase Dashboard.
+
+**Read `RUN_THIS_IN_SUPABASE.md` for complete step-by-step instructions!**
